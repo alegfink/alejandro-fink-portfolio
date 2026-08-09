@@ -90,12 +90,20 @@ export function ScrollDirector() {
       document.querySelectorAll<HTMLElement>("[data-horizontal-story]").forEach((element) => {
         const rect = element.getBoundingClientRect();
         const travel = Math.max(1, element.offsetHeight - viewport);
-        const progress = clamp(-rect.top / travel);
+        const rawProgress = clamp(-rect.top / travel);
         const rail = element.querySelector<HTMLElement>("[data-capability-rail]");
         const cards = rail ? Array.from(rail.children) as HTMLElement[] : [];
         const railTravel = cards.length > 1 ? cards[cards.length - 1].offsetLeft - cards[0].offsetLeft : 0;
-        element.style.setProperty("--horizontal-progress", String(progress));
-        element.style.setProperty("--horizontal-shift", `${railTravel * progress * -1}px`);
+        const edgeProgress = clamp((rawProgress - 0.06) / 0.82);
+        const stopCount = Math.max(1, cards.length - 1);
+        const position = edgeProgress * stopCount;
+        const stopIndex = Math.min(stopCount - 1, Math.floor(position));
+        const localProgress = edgeProgress === 1 ? 1 : position - stopIndex;
+        const transitionProgress = clamp((localProgress - 0.22) / 0.56);
+        const easedProgress = transitionProgress * transitionProgress * (3 - 2 * transitionProgress);
+        const readableProgress = edgeProgress === 1 ? 1 : (stopIndex + easedProgress) / stopCount;
+        element.style.setProperty("--horizontal-progress", String(readableProgress));
+        element.style.setProperty("--horizontal-shift", `${railTravel * readableProgress * -1}px`);
       });
 
       document.querySelectorAll<HTMLElement>("[data-scroll-manifesto]").forEach((element) => {

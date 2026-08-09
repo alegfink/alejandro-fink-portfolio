@@ -751,3 +751,69 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
   .project-slide[data-state="active"] .project-slide__copy,
   .project-slide[data-state="active"] .project-slide__image img { transform: none; }
 }
+
+/* Capability story: guarantee a complete reading state on short viewports. */
+.capability-story__sticky { padding-top: clamp(64px, 9vh, 96px); }
+.capability-story__heading h2 { font-size: clamp(40px, 4.7vw, 68px); }
+.capability-rail { margin-top: clamp(24px, 4vh, 42px); }
+.capability-rail li {
+  min-height: clamp(330px, 40svh, 360px);
+  padding: clamp(26px, 2.7vw, 40px);
+}
+.capability-rail h3 {
+  margin-top: clamp(36px, 5vh, 54px);
+  font-size: clamp(36px, 4.15vw, 64px);
+}
+.capability-rail p { margin-top: 18px; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.46; }
+.capability-rail i { top: 24px; right: 24px; }
+.capability-story__hint { bottom: 16px; }
+
+@media (max-width: 760px) {
+  .capability-story__sticky { padding-top: 76px; }
+  .capability-story__heading h2 { font-size: clamp(36px, 9.4vw, 45px); }
+  .capability-rail { margin-top: 26px; }
+  .capability-rail li { min-height: 330px; padding: 22px; }
+  .capability-rail h3 { margin-top: 42px; font-size: clamp(34px, 9vw, 41px); }
+  .capability-rail p { margin-top: 16px; font-size: 15px; line-height: 1.44; }
+  .capability-story__sticky::after { display: none; }
+  .capability-story__hint { bottom: 12px; font-size: 9.5px; }
+}
+
+@media (max-height: 760px) and (min-width: 761px) {
+  .capability-story__sticky { min-height: 100svh; padding-top: 82px; }
+  .capability-story__heading h2 { font-size: clamp(38px, 4.2vw, 60px); }
+  .capability-rail { margin-top: 20px; }
+  .capability-rail li { min-height: 320px; padding-block: 28px; }
+  .capability-rail h3 { margin-top: 32px; font-size: clamp(34px, 3.75vw, 56px); }
+  .capability-rail p { margin-top: 14px; font-size: 16px; }
+  .capability-story__hint { bottom: 10px; }
+}
+
+@media (max-width: 760px) and (max-height: 740px) {
+  .capability-story__hint { display: none; }
+}
+
+@media (max-width: 760px) and (max-height: 700px) {
+  .capability-story__sticky { min-height: 100svh; padding-top: 72px; }
+  .capability-story__heading h2 { font-size: clamp(34px, 9vw, 38px); }
+  .capability-rail { margin-top: 20px; }
+  .capability-rail li { min-height: 310px; padding: 20px; }
+  .capability-rail h3 { margin-top: 34px; font-size: clamp(30px, 8.2vw, 34px); }
+  .capability-rail p { margin-top: 14px; font-size: 14.5px; }
+}
+
+@media (min-width: 761px) and (max-height: 640px) {
+  .capability-story__heading h2 { font-size: clamp(36px, 3.8vw, 52px); }
+  .capability-rail { margin-top: 16px; }
+  .capability-rail li { min-height: 300px; }
+  .capability-story__hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capability-story__sticky { padding-block: 100px; }
+  .capability-rail li { min-height: 440px; }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .capability-rail li { min-height: 420px; }
+}
