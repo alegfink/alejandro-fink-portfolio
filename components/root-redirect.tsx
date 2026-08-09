@@ -16,7 +16,7 @@ export function RootRedirect() {
     <main className="language-gate">
       <div className="language-gate__mark">AF</div>
       <p>Elegí un idioma · Choose a language</p>
-      <div><Link href="/es">Español</Link><Link href="/en">English</Link></div>
+      <div><Link prefetch={false} href="/es">Español</Link><Link prefetch={false} href="/en">English</Link></div>
     </main>
   );
 }

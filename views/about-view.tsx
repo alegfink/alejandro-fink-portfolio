@@ -13,7 +13,7 @@ export function AboutView({ locale }: { locale: Locale }) {
         <div className="about-story__copy">{copy.about.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       </section>
       <section className="section section--ink"><div className="shell about-principles"><div><p className="eyebrow">{copy.about.principlesTitle}</p><h2>{locale === "es" ? "Cuatro criterios para elegir mejor." : "Four principles for better choices."}</h2></div><ol>{copy.about.principles.map((principle, index) => <li key={principle}><span>0{index + 1}</span><strong>{principle}</strong></li>)}</ol></div></section>
-      <section className="section shell about-collaboration"><p className="eyebrow">{copy.about.collaborationTitle}</p><h2>{copy.about.collaborationText}</h2><Link className="button button--primary" href={routeNames[locale].contact}>{copy.common.contact}</Link></section>
+      <section className="section shell about-collaboration"><p className="eyebrow">{copy.about.collaborationTitle}</p><h2>{copy.about.collaborationText}</h2><Link prefetch={false} className="button button--primary" href={routeNames[locale].contact}>{copy.common.contact}</Link></section>
     </main>
   );
 }

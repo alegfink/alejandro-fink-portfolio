@@ -40,7 +40,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                 <p>{copy.home.intro}</p>
                 <div className="button-row">
                   <TrackedLink className="button button--primary" href={routes.contact} eventName="contact_cta" eventPayload={{ locale, placement: "hero" }}>{copy.home.primaryCta}</TrackedLink>
-                  <Link className="button button--secondary" href="#proyectos">{copy.home.secondaryCta}</Link>
+                  <Link prefetch={false} className="button button--secondary" href="#proyectos">{copy.home.secondaryCta}</Link>
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ export function HomeView({ locale }: { locale: Locale }) {
             <p className="eyebrow">{copy.home.perspectiveEyebrow}</p>
             <h2>{copy.home.perspectiveTitle}</h2>
             <p>{copy.home.perspectiveText}</p>
-            <Link className="text-link" href={routes.about}>{copy.nav.about}<span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} className="text-link" href={routes.about}>{copy.nav.about}<span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </section>

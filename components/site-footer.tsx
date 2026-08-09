@@ -14,10 +14,10 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <p>{copy.footer.note}</p>
         </div>
         <nav aria-label={locale === "es" ? "Navegación de pie" : "Footer navigation"}>
-          <Link href={routes.work}>{copy.nav.work}</Link>
-          <Link href={routes.about}>{copy.nav.about}</Link>
-          <Link href={routes.contact}>{copy.nav.contact}</Link>
-          <Link href={routes.privacy}>{copy.footer.privacy}</Link>
+          <Link prefetch={false} href={routes.work}>{copy.nav.work}</Link>
+          <Link prefetch={false} href={routes.about}>{copy.nav.about}</Link>
+          <Link prefetch={false} href={routes.contact}>{copy.nav.contact}</Link>
+          <Link prefetch={false} href={routes.privacy}>{copy.footer.privacy}</Link>
         </nav>
         <div className="site-footer__locale">
           <span>{copy.footer.language}</span>

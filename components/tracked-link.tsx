@@ -11,10 +11,11 @@ type TrackedLinkProps<Name extends AnalyticsEventName> = LinkProps &
     eventPayload?: AnalyticsEventMap[Name];
   };
 
-export function TrackedLink<Name extends AnalyticsEventName>({ eventName, eventPayload, onClick, ...props }: TrackedLinkProps<Name>) {
+export function TrackedLink<Name extends AnalyticsEventName>({ eventName, eventPayload, onClick, prefetch = false, ...props }: TrackedLinkProps<Name>) {
   return (
     <Link
       {...props}
+      prefetch={prefetch}
       onClick={(event) => {
         if (eventName && eventPayload) trackEvent(eventName, eventPayload);
         onClick?.(event);

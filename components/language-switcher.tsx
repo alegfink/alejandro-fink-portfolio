@@ -17,6 +17,7 @@ export function LanguageSwitcher({ locale, compact = false }: { locale: Locale; 
       <span aria-hidden="true">/</span>
       <span aria-current={locale === "en" ? "page" : undefined}>EN</span>
       <Link
+        prefetch={false}
         className="language-switcher__hit"
         href={href}
         aria-label={label}

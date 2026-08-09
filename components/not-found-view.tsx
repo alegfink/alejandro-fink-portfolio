@@ -14,7 +14,7 @@ export function NotFoundView({ forceLocale }: { forceLocale?: Locale }) {
       <p className="eyebrow">{copy.notFound.eyebrow}</p>
       <h1>{copy.notFound.title}</h1>
       <p>{copy.notFound.text}</p>
-      <div className="button-row"><Link className="button button--primary" href={routeNames[locale].home}>{copy.common.backHome}</Link><Link className="button button--secondary" href={routeNames[locale].work}>{copy.nav.work}</Link></div>
+      <div className="button-row"><Link prefetch={false} className="button button--primary" href={routeNames[locale].home}>{copy.common.backHome}</Link><Link prefetch={false} className="button button--secondary" href={routeNames[locale].work}>{copy.nav.work}</Link></div>
     </main>
   );
 }
