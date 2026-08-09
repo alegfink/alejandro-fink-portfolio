@@ -3,6 +3,7 @@
 
 # Next.js
 /.next
+/.vinext
 /out
 /dist
 /.wrangler
@@ -15,6 +16,8 @@
 # test and tooling output
 /coverage
 *.tsbuildinfo
+/artifacts/reference-video/
+/artifacts/qa/motion-*.png
 
 # OS/editor
 .DS_Store

@@ -20,7 +20,7 @@ export function buildMetadata({ locale, path, alternatePath, title, description,
   const esPath = locale === "es" ? path : alternatePath;
   const enPath = locale === "en" ? path : alternatePath;
   const shouldIndex = indexingEnabled() && !noIndex;
-  const ogImage = image ?? "/og-default.png";
+  const ogImage = image ?? "/og.png";
 
   return {
     title,

@@ -6,6 +6,7 @@ import "../globals.css";
 import "../portfolio.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { ScrollDirector } from "@/components/scroll-director";
 import { isLocale } from "@/lib/i18n";
 import { getSiteUrl } from "@/lib/urls";
 import { siteCopy } from "@/content/site";
@@ -30,6 +31,7 @@ export default async function LocaleLayout({ children, params }: Readonly<{ chil
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <body>
+        <ScrollDirector />
         <a className="skip-link" href="#main-content">{copy.skip}</a>
         <SiteHeader locale={locale} />
         {children}

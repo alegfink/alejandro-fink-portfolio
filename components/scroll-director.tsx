@@ -1,0 +1,113 @@
+"use client";
+
+import { useEffect } from "react";
+
+const clamp = (value: number) => Math.min(1, Math.max(0, value));
+
+export function ScrollDirector() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const story = document.querySelector<HTMLElement>("[data-project-story]");
+    const storySlides = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-slide]")) : [];
+    const storyMarkers = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-marker]")) : [];
+
+    const selectStorySlide = (activeIndex: number) => {
+      storySlides.forEach((slide, index) => {
+        const state = index < activeIndex ? "before" : index === activeIndex ? "active" : "after";
+        slide.dataset.state = state;
+        slide.setAttribute("aria-hidden", state === "active" ? "false" : "true");
+        slide.querySelectorAll<HTMLElement>("a, button").forEach((control) => {
+          control.tabIndex = state === "active" ? 0 : -1;
+        });
+      });
+      storyMarkers.forEach((marker, index) => {
+        marker.dataset.state = index === activeIndex ? "active" : "idle";
+      });
+      story?.style.setProperty("--active-project", String(activeIndex));
+    };
+
+    if (reducedMotion) {
+      root.dataset.motion = "reduced";
+      storySlides.forEach((slide) => {
+        slide.dataset.state = "active";
+        slide.setAttribute("aria-hidden", "false");
+        slide.querySelectorAll<HTMLElement>("a, button").forEach((control) => {
+          control.tabIndex = 0;
+        });
+      });
+      document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+        element.dataset.reveal = "visible";
+      });
+      return;
+    }
+
+    root.dataset.motion = "ready";
+    selectStorySlide(0);
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) (entry.target as HTMLElement).dataset.reveal = "visible";
+        });
+      },
+      { rootMargin: "0px 0px -12%", threshold: 0.12 },
+    );
+
+    document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => revealObserver.observe(element));
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const viewport = window.innerHeight;
+      const documentTravel = document.documentElement.scrollHeight - viewport;
+      root.style.setProperty("--page-progress", String(documentTravel > 0 ? clamp(window.scrollY / documentTravel) : 0));
+
+      document.querySelectorAll<HTMLElement>("[data-scroll-hero]").forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const travel = Math.max(1, element.offsetHeight - viewport);
+        element.style.setProperty("--hero-progress", String(clamp(-rect.top / travel)));
+      });
+
+      if (story && storySlides.length) {
+        const rect = story.getBoundingClientRect();
+        const travel = Math.max(1, story.offsetHeight - viewport);
+        const progress = clamp(-rect.top / travel);
+        const active = Math.min(storySlides.length - 1, Math.floor(progress * storySlides.length));
+        story.style.setProperty("--story-progress", String(progress));
+        selectStorySlide(active);
+      }
+
+      document.querySelectorAll<HTMLElement>("[data-horizontal-story]").forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const travel = Math.max(1, element.offsetHeight - viewport);
+        element.style.setProperty("--horizontal-progress", String(clamp(-rect.top / travel)));
+      });
+
+      document.querySelectorAll<HTMLElement>("[data-scroll-manifesto]").forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const travel = Math.max(1, element.offsetHeight - viewport);
+        element.style.setProperty("--manifesto-progress", String(clamp(-rect.top / travel)));
+      });
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      revealObserver.disconnect();
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      delete root.dataset.motion;
+      root.style.removeProperty("--page-progress");
+    };
+  }, []);
+
+  return null;
+}

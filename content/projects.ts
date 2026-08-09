@@ -56,8 +56,8 @@ export const projects: Project[] = [
     technologies: ["Shopify Hydrogen", "TypeScript", "Storefront API", "Supabase"],
     media: [
       {
-        src: "/media/projects/torvena/cover-desktop.png",
-        mobileSrc: "/media/projects/torvena/cover-mobile.png",
+        src: "/media/projects/torvena/live-desktop.png",
+        mobileSrc: "/media/projects/torvena/live-mobile.png",
         alt: { es: "Home de Torvena con navegación comercial y presentación de un accesorio tecnológico para el auto", en: "Torvena home page with commercial navigation and a car technology product hero" },
         caption: { es: "Storefront en producción · captura de agosto de 2026", en: "Production storefront · captured August 2026" },
         tone: "dark",
@@ -116,8 +116,8 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "Cloudflare D1", "First-party analytics"],
     media: [
       {
-        src: "/media/projects/brisa-do-mar/cover-desktop.png",
-        mobileSrc: "/media/projects/brisa-do-mar/cover-mobile.png",
+        src: "/media/projects/brisa-do-mar/live-desktop.png",
+        mobileSrc: "/media/projects/brisa-do-mar/live-mobile.png",
         alt: { es: "Home multilingüe de Brisa do Mar sobre experiencias turísticas en Arraial do Cabo", en: "Multilingual Brisa do Mar home page for tourism experiences in Arraial do Cabo" },
         caption: { es: "Experiencia pública en ES, PT y EN", en: "Public experience in ES, PT and EN" },
         tone: "color",
@@ -176,8 +176,8 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "Cloudflare D1", "Drizzle ORM"],
     media: [
       {
-        src: "/media/projects/cuidalo/cover-desktop.png",
-        mobileSrc: "/media/projects/cuidalo/cover-mobile.png",
+        src: "/media/projects/cuidalo/live-desktop.png",
+        mobileSrc: "/media/projects/cuidalo/live-mobile.png",
         alt: { es: "Home del MVP CUIDALO con un localizador compacto y una propuesta centrada en tranquilidad", en: "CUIDALO MVP home with a compact item finder and a peace-of-mind value proposition" },
         caption: { es: "MVP público de validación · no es un e-commerce operativo", en: "Public validation MVP · not an operational e-commerce store" },
         tone: "light",
@@ -248,8 +248,8 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "Typeform", "dataLayer events"],
     media: [
       {
-        src: "/media/projects/salto-cuantico/cover-desktop.png",
-        mobileSrc: "/media/projects/salto-cuantico/cover-mobile.png",
+        src: "/media/projects/salto-cuantico/live-desktop.png",
+        mobileSrc: "/media/projects/salto-cuantico/live-mobile.png",
         alt: { es: "Hero oscuro del prototipo Salto Cuántico con explicación del programa y video de Anton", en: "Dark Salto Cuántico prototype hero explaining the program with an Anton video" },
         caption: { es: "Landing funcional · la nueva experiencia no fue adoptada como web operativa", en: "Functional landing · the new experience was not adopted as the operational website" },
         tone: "dark",
@@ -308,7 +308,8 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "CSS"],
     media: [
       {
-        src: "/media/projects/luca-ds/hero.png",
+        src: "/media/projects/luca-ds/live-desktop.png",
+        mobileSrc: "/media/projects/luca-ds/live-mobile.png",
         alt: { es: "Composición editorial de Luca DS con dirección visual intensa y tipografía de campaña", en: "Luca DS editorial composition with bold art direction and campaign typography" },
         caption: { es: "Dirección de arte y edición asistidas por IA con material autorizado", en: "AI-assisted art direction and editing using authorized material" },
         tone: "dark",
@@ -373,7 +374,8 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "CSS"],
     media: [
       {
-        src: "/media/projects/lourdes-mirada/work-01.jpg",
+        src: "/media/projects/lourdes-mirada/live-desktop.png",
+        mobileSrc: "/media/projects/lourdes-mirada/live-mobile.png",
         alt: { es: "Fotografía real seleccionada del archivo creativo de Lourdes", en: "Real photograph selected from Lourdes’s creative archive" },
         caption: { es: "Archivo autorizado · fotografía y curaduría editorial", en: "Authorized archive · photography and editorial curation" },
         tone: "color",
