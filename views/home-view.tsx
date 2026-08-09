@@ -32,7 +32,7 @@ export function HomeView({ locale }: { locale: Locale }) {
               <p className="eyebrow">{copy.home.eyebrow}</p>
               <h1>
                 {heroLines.map((line, index) => (
-                  <span key={line} className={`${index === 1 ? "motion-hero__serif " : ""}${index === heroLines.length - 1 ? "motion-hero__line--long" : ""}`.trim()}>{line}</span>
+                  <span key={line} className={`${index === 1 ? "motion-hero__serif " : ""}${index === heroLines.length - 1 ? "motion-hero__line--long" : ""}`.trim()}>{line}{index < heroLines.length - 1 ? " " : ""}</span>
                 ))}
               </h1>
               <div className="motion-hero__footer">
