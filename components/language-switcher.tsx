@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { switchLocalePath, type Locale } from "@/lib/i18n";
 import { trackEvent } from "@/lib/analytics";
@@ -16,8 +15,7 @@ export function LanguageSwitcher({ locale, compact = false }: { locale: Locale; 
       <span aria-current={locale === "es" ? "page" : undefined}>ES</span>
       <span aria-hidden="true">/</span>
       <span aria-current={locale === "en" ? "page" : undefined}>EN</span>
-      <Link
-        prefetch={false}
+      <a
         className="language-switcher__hit"
         href={href}
         aria-label={label}
@@ -28,7 +26,7 @@ export function LanguageSwitcher({ locale, compact = false }: { locale: Locale; 
         }}
       >
         <span className="sr-only">{label}</span>
-      </Link>
+      </a>
     </div>
   );
 }

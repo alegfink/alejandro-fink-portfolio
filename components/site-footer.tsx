@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { routeNames, type Locale } from "@/lib/i18n";
 import { siteCopy } from "@/content/site";
@@ -14,10 +13,10 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <p>{copy.footer.note}</p>
         </div>
         <nav aria-label={locale === "es" ? "Navegación de pie" : "Footer navigation"}>
-          <Link prefetch={false} href={routes.work}>{copy.nav.work}</Link>
-          <Link prefetch={false} href={routes.about}>{copy.nav.about}</Link>
-          <Link prefetch={false} href={routes.contact}>{copy.nav.contact}</Link>
-          <Link prefetch={false} href={routes.privacy}>{copy.footer.privacy}</Link>
+          <a href={routes.work}>{copy.nav.work}</a>
+          <a href={routes.about}>{copy.nav.about}</a>
+          <a href={routes.contact}>{copy.nav.contact}</a>
+          <a href={routes.privacy}>{copy.footer.privacy}</a>
         </nav>
         <div className="site-footer__locale">
           <span>{copy.footer.language}</span>

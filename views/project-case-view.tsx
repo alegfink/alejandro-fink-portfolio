@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { projectPath } from "@/lib/urls";
 import { projects, type Project } from "@/content/projects";
@@ -22,7 +21,7 @@ export function ProjectCaseView({ project, locale }: { project: Project; locale:
         <p className="case-hero__summary">{content.summary}</p>
         <div className="case-hero__actions">
           <TrackedLink className="button button--primary" href={project.publicUrl} target="_blank" rel="noreferrer" eventName="external_link" eventPayload={{ locale, destination: project.publicUrl, context: "project" }}>{copy.common.visit}<span aria-hidden="true">↗</span></TrackedLink>
-          <Link prefetch={false} className="text-link" href={locale === "es" ? "/es/proyectos" : "/en/work"}>{locale === "es" ? "Volver al índice" : "Back to work"}</Link>
+          <a className="text-link" href={locale === "es" ? "/es/proyectos" : "/en/work"}>{locale === "es" ? "Volver al índice" : "Back to work"}</a>
         </div>
       </header>
 
@@ -66,7 +65,7 @@ export function ProjectCaseView({ project, locale }: { project: Project; locale:
       </section>
 
       <section className="case-next" data-reveal>
-        <div className="shell"><p className="eyebrow">{copy.common.next} · {String(nextProject.order).padStart(2, "0")}</p><Link prefetch={false} href={projectPath(locale, nextProject.slug[locale])}><span>{nextContent.category}</span><strong>{nextContent.title}</strong><span aria-hidden="true">↗</span></Link><p>{nextContent.statusLabel}</p></div>
+        <div className="shell"><p className="eyebrow">{copy.common.next} · {String(nextProject.order).padStart(2, "0")}</p><a href={projectPath(locale, nextProject.slug[locale])}><span>{nextContent.category}</span><strong>{nextContent.title}</strong><span aria-hidden="true">↗</span></a><p>{nextContent.statusLabel}</p></div>
       </section>
 
       <section className="closing-cta closing-cta--case">

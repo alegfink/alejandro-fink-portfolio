@@ -1,22 +1,21 @@
 "use client";
 
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- Native navigation avoids the Vinext Link runtime failure in Sites production. */
+
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export function RootRedirect() {
-  const router = useRouter();
   useEffect(() => {
     const stored = window.localStorage.getItem("af-language");
     const locale = stored === "es" || stored === "en" ? stored : navigator.language.toLowerCase().startsWith("es") ? "es" : "en";
-    router.replace(`/${locale}`);
-  }, [router]);
+    window.location.replace(`/${locale}`);
+  }, []);
 
   return (
     <main className="language-gate">
       <div className="language-gate__mark">AF</div>
       <p>Elegí un idioma · Choose a language</p>
-      <div><Link prefetch={false} href="/es">Español</Link><Link prefetch={false} href="/en">English</Link></div>
+      <div><a href="/es">Español</a><a href="/en">English</a></div>
     </main>
   );
 }
