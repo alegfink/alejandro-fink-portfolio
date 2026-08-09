@@ -10,6 +10,7 @@
 # local configuration
 .env*
 !.env.example
+!.env.production
 
 # test and tooling output
 /coverage
