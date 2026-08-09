@@ -19,8 +19,8 @@ export function HomeView({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
   const routes = routeNames[locale];
   const heroLines = locale === "es"
-    ? ["Diseño y desarrollo", "sitios web y productos digitales", "que resuelven problemas reales de negocio."]
-    : ["I design and build", "websites and digital products", "that solve real business problems."];
+    ? ["Diseño y desarrollo", "sitios web y productos", "digitales que resuelven", "problemas reales de negocio."]
+    : ["I design and build", "websites and digital products", "that solve real", "business problems."];
 
   return (
     <main id="main-content" className="motion-home">
@@ -31,9 +31,9 @@ export function HomeView({ locale }: { locale: Locale }) {
             <div className="motion-hero__copy">
               <p className="eyebrow">{copy.home.eyebrow}</p>
               <h1>
-                <span>{heroLines[0]}</span>
-                <span className="motion-hero__serif">{heroLines[1]}</span>
-                <span>{heroLines[2]}</span>
+                {heroLines.map((line, index) => (
+                  <span key={line} className={`${index === 1 ? "motion-hero__serif " : ""}${index === heroLines.length - 1 ? "motion-hero__line--long" : ""}`.trim()}>{line}</span>
+                ))}
               </h1>
               <div className="motion-hero__footer">
                 <p>{copy.home.intro}</p>
@@ -92,7 +92,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                 return (
                   <article
                     key={project.id}
-                    className="project-slide"
+                    className={`project-slide project-slide--${project.id}`}
                     data-story-slide
                     data-state={index === 0 ? "active" : "after"}
                     aria-hidden={index === 0 ? "false" : "true"}
@@ -142,7 +142,7 @@ export function HomeView({ locale }: { locale: Locale }) {
             <p className="eyebrow">{copy.home.servicesEyebrow}</p>
             <h2>{copy.home.servicesTitle}</h2>
           </div>
-          <ol className="capability-rail">
+          <ol className="capability-rail" data-capability-rail>
             {copy.services.map((service, index) => (
               <li key={service.number} style={{ "--service-index": index } as React.CSSProperties}>
                 <span>{service.number}</span>
@@ -168,7 +168,6 @@ export function HomeView({ locale }: { locale: Locale }) {
               <span>{step.number}</span>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
-              <i aria-hidden="true" />
             </li>
           ))}
         </ol>

@@ -9,7 +9,7 @@ export function ProjectCard({ project, locale, placement, featured = false }: { 
   const content = project.content[locale];
   return (
     <article data-reveal className={`project-card project-card--${project.id}${featured ? " project-card--featured" : ""}`} style={{ "--project-accent": project.accent } as React.CSSProperties}>
-      <ProjectVisual media={project.media[0]} locale={locale} priority={project.order === 1 && placement === "home"} />
+      <ProjectVisual media={project.media[0]} locale={locale} priority={project.order === 1 && placement === "home"} className={`project-visual--${project.id}`} />
       <div className="project-card__body">
         <div className="project-card__meta"><span>{String(project.order).padStart(2, "0")}</span><span>{content.category}</span><span>{project.year}</span></div>
         <h3>{content.title}</h3>

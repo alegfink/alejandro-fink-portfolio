@@ -39,7 +39,10 @@ export function ScrollDirector() {
       document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
         element.dataset.reveal = "visible";
       });
-      return;
+      return () => {
+        delete root.dataset.motion;
+        root.style.removeProperty("--page-progress");
+      };
     }
 
     root.dataset.motion = "ready";
@@ -73,15 +76,26 @@ export function ScrollDirector() {
         const rect = story.getBoundingClientRect();
         const travel = Math.max(1, story.offsetHeight - viewport);
         const progress = clamp(-rect.top / travel);
-        const active = Math.min(storySlides.length - 1, Math.floor(progress * storySlides.length));
+        const storyPosition = progress * storySlides.length;
+        const active = Math.min(storySlides.length - 1, Math.floor(storyPosition));
+        const localProgress = active === storySlides.length - 1 && progress === 1 ? 1 : storyPosition - active;
         story.style.setProperty("--story-progress", String(progress));
+        story.style.setProperty("--story-drift", `${(0.5 - localProgress) * 22}px`);
+        story.style.setProperty("--story-copy-drift", `${(0.5 - localProgress) * 14}px`);
+        story.style.setProperty("--story-scale", String(0.985 + localProgress * 0.015));
+        story.style.setProperty("--story-image-shift", `${localProgress * -2.4}%`);
         selectStorySlide(active);
       }
 
       document.querySelectorAll<HTMLElement>("[data-horizontal-story]").forEach((element) => {
         const rect = element.getBoundingClientRect();
         const travel = Math.max(1, element.offsetHeight - viewport);
-        element.style.setProperty("--horizontal-progress", String(clamp(-rect.top / travel)));
+        const progress = clamp(-rect.top / travel);
+        const rail = element.querySelector<HTMLElement>("[data-capability-rail]");
+        const cards = rail ? Array.from(rail.children) as HTMLElement[] : [];
+        const railTravel = cards.length > 1 ? cards[cards.length - 1].offsetLeft - cards[0].offsetLeft : 0;
+        element.style.setProperty("--horizontal-progress", String(progress));
+        element.style.setProperty("--horizontal-shift", `${railTravel * progress * -1}px`);
       });
 
       document.querySelectorAll<HTMLElement>("[data-scroll-manifesto]").forEach((element) => {

@@ -7,11 +7,14 @@ import { ProjectCard } from "@/components/project-card";
 export function WorkIndexView({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
   return (
-    <main id="main-content">
-      <section className="page-hero shell">
+    <main id="main-content" className="work-index-page">
+      <section className="page-hero page-hero--work shell">
         <p className="eyebrow">{copy.workIndex.eyebrow}</p>
-        <h1>{copy.workIndex.title}</h1>
-        <p>{copy.workIndex.intro}</p>
+        <div className="page-hero__work-grid">
+          <h1>{copy.workIndex.title}</h1>
+          <p>{copy.workIndex.intro}</p>
+        </div>
+        <div className="page-hero__index-strip" aria-hidden="true"><span>06</span><span>{locale === "es" ? "PROYECTOS SELECCIONADOS" : "SELECTED PROJECTS"}</span></div>
       </section>
       <section className="work-index shell" aria-label={locale === "es" ? "Lista de proyectos" : "Project list"}>
         {projects.map((project) => <ProjectCard key={project.id} project={project} locale={locale} placement="index" featured={project.caseType === "full"} />)}
