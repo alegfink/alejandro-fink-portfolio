@@ -1,0 +1,21 @@
+# dependencies
+/node_modules
+
+# Next.js
+/.next
+/out
+/dist
+/.wrangler
+
+# local configuration
+.env*
+!.env.example
+
+# test and tooling output
+/coverage
+*.tsbuildinfo
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.log

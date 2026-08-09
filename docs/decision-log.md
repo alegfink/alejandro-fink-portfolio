@@ -1,0 +1,38 @@
+# Registro de decisiones
+
+Las decisiones de este archivo son la baseline operativa. Pueden cambiar, pero cada cambio debe registrar fecha, motivo e impacto.
+
+| ID | Fecha | Decisión | Estado | Motivo |
+|---|---|---|---|---|
+| D-001 | 2026-08-08 | Usar `docs/` como raíz documental y no crear una carpeta `/portfolio` dentro del propio repositorio. | Vigente | Evita una capa redundante y mantiene código y documentación en el mismo proyecto. |
+| D-002 | 2026-08-08 | Escribir la Home primero para compradores directos de soluciones web. | Vigente | El brief original daba el mismo peso a demasiadas audiencias y debilitaba el mensaje. |
+| D-003 | 2026-08-08 | Agrupar la oferta en cuatro familias de soluciones. | Vigente | Una lista de más de diez servicios dificulta elegir y transmite amplitud sin jerarquía. |
+| D-004 | 2026-08-08 | Presentar la IA como una ventaja del proceso, no como la promesa central. | Vigente | Es coherente con la evidencia disponible y evita posicionamiento exagerado. |
+| D-005 | 2026-08-08 | No incluir una sección protagonista de logos o tecnologías en la Home. | Vigente | La tecnología se explica en contexto dentro de casos, capacidades y proceso. |
+| D-006 | 2026-08-08 | Destacar Torvena, Brisa do Mar y CUIDALO; mostrar Salto Cuántico, Luca DS y Lourdes Mirada como trabajo adicional. | Vigente | Los tres primeros cubren operación real, solución operativa y MVP sin mezclar niveles de evidencia. |
+| D-007 | 2026-08-08 | Dar URL individual a los seis proyectos, con profundidad proporcional a la evidencia. | Vigente | Evita casos artificialmente extensos y permite ampliar cada uno sin cambiar el sitemap. |
+| D-008 | 2026-08-08 | Usar rutas separadas `/es/` y `/en/`, con selección inicial por idioma del navegador y preferencia persistente. | Vigente | Mejora naturalidad, SEO y control del usuario. |
+| D-009 | 2026-08-08 | Hacer del formulario breve el contacto principal; email será alternativa. WhatsApp y calendario quedan sujetos a validación. | Vigente | Reduce dispersión y mantiene una experiencia internacional y profesional. |
+| D-010 | 2026-08-08 | No depender de una foto personal en el Hero ni en la composición principal. | Vigente | La foto definitiva aún no existe; el trabajo debe ser la prueba visual principal. |
+| D-011 | 2026-08-08 | Usar una dirección visual “Editorial Product” con detalles de Precision Interface. | Vigente | Equilibra negocio, personalidad y precisión digital sin caer en estética SaaS o de portfolio junior. |
+| D-012 | 2026-08-08 | No elegir stack ni comenzar desarrollo hasta superar el gate de implementación. | Reemplazada | Las seis fichas factuales y el brief de implementación ya permiten separar desarrollo local de publicación. |
+| D-013 | 2026-08-08 | Omitir GitHub de la navegación principal hasta que represente el posicionamiento actual. | Vigente | Un perfil desactualizado resta más confianza de la que aporta. |
+| D-014 | 2026-08-08 | Recomendar dominios propios para proyectos operativos antes del lanzamiento del portfolio cuando sea viable. | Pendiente de decisión | Los dominios de prototipo pueden debilitar la percepción de madurez si el caso se presenta como producción. |
+| D-015 | 2026-08-08 | Confirmar Torvena como “Negocio propio · En producción” y caso ancla del portfolio. | Vigente | La ficha de Alejandro, el sitio público y los repositorios verifican operación real, alcance end-to-end y una implementación headless personalizada. |
+| D-016 | 2026-08-08 | Confirmar Brisa do Mar como “Solución web · Operativa” y segundo caso completo. | Vigente | Está activa, se utiliza para generar consultas y combina experiencia multilingüe, precios administrables, funnel a WhatsApp y analytics first-party. |
+| D-017 | 2026-08-08 | Presentar CUIDALO como “MVP de validación · Sin lanzamiento comercial” y proyecto propio en colaboración. | Vigente | El repositorio verifica una propuesta de marca, storefront, captura de intención, analytics y panel; no existen pagos, pedidos, inventario ni resultados de venta. |
+| D-018 | 2026-08-08 | Presentar Salto Cuántico como “Propuesta estratégica · Prototipo funcional”. | Vigente | Alejandro detectó la oportunidad desde su experiencia previa como closer, presentó la propuesta a un socio de Anton y construyó dos páginas funcionales; el programa está activo, pero la nueva experiencia no fue adoptada como web operativa. |
+| D-019 | 2026-08-08 | Incluir Salto Cuántico en la primera versión del portfolio aunque continúe en evaluación y actualizar su estado si evoluciona. | Vigente | La propuesta tuvo una recepción favorable y existe autorización para mostrarla; fechar y clasificar la versión actual permite publicarla sin presentarla como implementación adoptada. |
+| D-020 | 2026-08-08 | Presentar Luca DS como “Proyecto en desarrollo · Lanzamiento próximo”. | Vigente | Es un proyecto compartido con Luca, las ofertas y el caso están autorizados y la landing está construida, pero todavía no existe lanzamiento comercial ni medición atribuible. |
+| D-021 | 2026-08-08 | Presentar Lourdes Mirada como “Portfolio aprobado · Activación pendiente”. | Vigente | Lourdes aprobó la propuesta, los servicios y trabajos son reales y existen permisos; la página no se utiliza para captar demanda por una restricción actual de capacidad y sus testimonios siguen siendo ilustrativos. |
+| D-022 | 2026-08-08 | Usar `Alejandro Fink` como nombre profesional público. | Vigente | Es la identidad establecida en el brief original y en la documentación del portfolio. |
+| D-023 | 2026-08-08 | Aprobar el inicio del desarrollo local y mantener un gate separado para publicación. | Vigente | Dominio, email, proveedores y política de privacidad no cambian la arquitectura y pueden configurarse antes del lanzamiento. |
+| D-024 | 2026-08-08 | Usar Next.js con App Router y TypeScript, contenido local tipado y enfoque static-first como baseline técnica. | Vigente | Resuelve SEO, rutas bilingües, medios y mantenibilidad sin introducir CMS, base de datos o infraestructura innecesaria. |
+| D-025 | 2026-08-08 | Usar “Desarrollador web y creador de productos digitales” / “Web Developer & Digital Product Builder” como descriptores de trabajo. | Vigente para implementación | Expresan la oferta con claridad y pueden ajustarse editorialmente sin modificar la arquitectura. |
+
+## Cómo modificar una decisión
+
+1. No borrar la decisión anterior.
+2. Cambiar su estado a `Reemplazada`.
+3. Crear una nueva fila con otro ID.
+4. Explicar qué documentos y pantallas quedan afectados.
