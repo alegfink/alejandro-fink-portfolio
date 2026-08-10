@@ -504,9 +504,14 @@ body::before {
 .project-slide__link > span { padding-inline: 20px; }
 .project-slide__link b { display: grid; height: 54px; place-items: center; border-left: 1px solid #4b5362; background: var(--acid); color: var(--ink); font-size: 20px; transition: transform 220ms var(--ease); }
 .project-slide__link:hover b { transform: rotate(45deg); }
-.project-story__markers { position: absolute; z-index: 8; right: 0; bottom: 28px; left: 0; display: flex; justify-content: center; gap: 8px; }
-.project-story__markers span { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid #424a59; border-radius: 50%; color: #7f8998; font-family: var(--font-mono); font-size: 8px; transition: width 320ms var(--ease), color 200ms ease, background 200ms ease; }
-.project-story__markers span[data-state="active"] { width: 54px; border-color: var(--acid); background: var(--acid); color: var(--ink); }
+.project-story__markers { position: absolute; z-index: 8; right: 0; bottom: max(18px, env(safe-area-inset-bottom)); left: 0; display: flex; justify-content: center; gap: 8px; }
+.project-story__markers button { appearance: none; display: grid; width: 40px; height: 40px; padding: 0; place-items: center; border: 1px solid #424a59; border-radius: 999px; background: transparent; color: #a8b0bf; font-family: var(--font-mono); font-size: 9px; line-height: 1; cursor: pointer; touch-action: manipulation; transition: width 320ms var(--ease), border-color 200ms ease, color 200ms ease, background 200ms ease, transform 200ms ease; }
+.project-story__markers button[data-state="active"] { width: 58px; border-color: var(--acid); background: var(--acid); color: var(--ink); }
+.project-story__markers button:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+@media (hover: hover) {
+  .project-story__markers button:hover { border-color: var(--acid); color: white; transform: translateY(-2px); }
+  .project-story__markers button[data-state="active"]:hover { color: var(--ink); }
+}
 
 .capability-story { position: relative; height: 440svh; min-height: 3000px; background: var(--acid); color: var(--ink); }
 .capability-story__sticky { position: sticky; top: 0; height: 100svh; min-height: 680px; overflow: hidden; padding-top: clamp(100px, 13vh, 132px); }
@@ -616,9 +621,9 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
   .project-slide__copy > p:not(.project-slide__status) { margin-block: 14px 17px; font-size: 13px; line-height: 1.42; }
   .project-slide__link { grid-template-columns: 1fr 42px; font-size: 12px; }
   .project-slide__link b { height: 42px; }
-  .project-story__markers { bottom: 14px; gap: 5px; }
-  .project-story__markers span { width: 22px; height: 22px; font-size: 7px; }
-  .project-story__markers span[data-state="active"] { width: 38px; }
+  .project-story__markers { bottom: max(10px, env(safe-area-inset-bottom)); gap: 5px; }
+  .project-story__markers button { width: 40px; height: 40px; font-size: 8px; }
+  .project-story__markers button[data-state="active"] { width: 52px; }
 
   .capability-story { height: 390svh; min-height: 2600px; }
   .capability-story__sticky { padding-top: 94px; }
@@ -718,7 +723,7 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
 .project-slide__meta { font-size: 10px; }
 .project-slide__copy h3 { letter-spacing: -.045em; word-spacing: .1em; }
 .project-slide__status { font-size: 10.5px; }
-.project-story__markers span { font-size: 9px; }
+.project-story__markers button { font-size: 9px; }
 
 .capability-story { height: 270svh; min-height: 2200px; }
 .capability-story__sticky { min-height: 640px; }
@@ -792,8 +797,8 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
   .project-slide__copy h3 { margin: 13px 0 8px; font-size: clamp(39px, 10.8vw, 48px); letter-spacing: -.032em; word-spacing: .1em; }
   .project-slide__status { font-size: 9.5px; }
   .project-slide__copy > p:not(.project-slide__status) { margin-block: 12px 14px; font-size: 14px; line-height: 1.42; }
-  .project-story__markers span { width: 26px; height: 26px; font-size: 8px; }
-  .project-story__markers span[data-state="active"] { width: 44px; }
+  .project-story__markers button { width: 40px; height: 40px; font-size: 8px; }
+  .project-story__markers button[data-state="active"] { width: 52px; }
   .project-slide__mobile,
   .project-visual__mobile { left: 0 !important; right: auto !important; width: calc(100% + 18px) !important; max-width: none; }
   .project-slide--torvena .project-slide__mobile,

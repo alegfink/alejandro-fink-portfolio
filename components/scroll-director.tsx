@@ -11,7 +11,7 @@ export function ScrollDirector() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const story = document.querySelector<HTMLElement>("[data-project-story]");
     const storySlides = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-slide]")) : [];
-    const storyMarkers = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-marker]")) : [];
+    const storyMarkers = story ? Array.from(story.querySelectorAll<HTMLButtonElement>("[data-story-marker]")) : [];
     const viewedProjects = new Set<string>();
 
     const selectStorySlide = (activeIndex: number) => {
@@ -24,7 +24,10 @@ export function ScrollDirector() {
         });
       });
       storyMarkers.forEach((marker, index) => {
-        marker.dataset.state = index === activeIndex ? "active" : "idle";
+        const isActive = index === activeIndex;
+        marker.dataset.state = isActive ? "active" : "idle";
+        if (isActive) marker.setAttribute("aria-current", "step");
+        else marker.removeAttribute("aria-current");
       });
       story?.style.setProperty("--active-project", String(activeIndex));
       const projectId = storySlides[activeIndex]?.dataset.projectId;
@@ -54,6 +57,37 @@ export function ScrollDirector() {
 
     root.dataset.motion = "ready";
     selectStorySlide(0);
+
+    const scrollToStorySlide = (requestedIndex: number) => {
+      if (!story || !storySlides.length) return;
+      const activeIndex = Math.min(storySlides.length - 1, Math.max(0, requestedIndex));
+      const storyTop = window.scrollY + story.getBoundingClientRect().top;
+      const travel = Math.max(1, story.offsetHeight - window.innerHeight);
+      const targetProgress = (activeIndex + 0.5) / storySlides.length;
+      selectStorySlide(activeIndex);
+      window.scrollTo({
+        top: storyTop + travel * targetProgress,
+        behavior: "smooth",
+      });
+    };
+
+    const markerListeners = storyMarkers.map((marker, index) => {
+      const handleClick = () => scrollToStorySlide(index);
+      const handleKeyDown = (event: KeyboardEvent) => {
+        let targetIndex: number | null = null;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") targetIndex = (index + 1) % storyMarkers.length;
+        if (event.key === "ArrowLeft" || event.key === "ArrowUp") targetIndex = (index - 1 + storyMarkers.length) % storyMarkers.length;
+        if (event.key === "Home") targetIndex = 0;
+        if (event.key === "End") targetIndex = storyMarkers.length - 1;
+        if (targetIndex === null) return;
+        event.preventDefault();
+        storyMarkers[targetIndex]?.focus();
+        scrollToStorySlide(targetIndex);
+      };
+      marker.addEventListener("click", handleClick);
+      marker.addEventListener("keydown", handleKeyDown);
+      return { marker, handleClick, handleKeyDown };
+    });
 
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -131,6 +165,10 @@ export function ScrollDirector() {
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       revealObserver.disconnect();
+      markerListeners.forEach(({ marker, handleClick, handleKeyDown }) => {
+        marker.removeEventListener("click", handleClick);
+        marker.removeEventListener("keydown", handleKeyDown);
+      });
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       delete root.dataset.motion;

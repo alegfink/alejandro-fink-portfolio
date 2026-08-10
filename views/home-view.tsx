@@ -72,7 +72,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         <p className="eyebrow">{locale === "es" ? "Archivo de trabajo · 06 proyectos" : "Work archive · 06 projects"}</p>
         <div>
           <h2>{locale === "es" ? "Cada proyecto revela una forma distinta de convertir contexto en experiencia." : "Every project reveals a different way to turn context into experience."}</h2>
-          <p>{locale === "es" ? "Desplazate para recorrerlos. Cada caso declara qué existe, qué fue una decisión y qué todavía es un límite." : "Scroll to explore them. Every case states what exists, what was a decision and what remains a limit."}</p>
+          <p>{locale === "es" ? "Desplazate para recorrerlos o elegí un número para ir directo a un proyecto. Cada caso declara qué existe, qué fue una decisión y qué todavía es un límite." : "Scroll to explore them or choose a number to jump directly to a project. Every case states what exists, what was a decision and what remains a limit."}</p>
         </div>
       </section>
 
@@ -92,6 +92,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                 return (
                   <article
                     key={project.id}
+                    id={`project-story-${project.id}`}
                     className={`project-slide project-slide--${project.id}`}
                     data-story-slide
                     data-project-id={project.id}
@@ -130,9 +131,25 @@ export function HomeView({ locale }: { locale: Locale }) {
               })}
             </div>
 
-            <div className="project-story__markers" aria-hidden="true">
-              {projects.map((project, index) => <span key={project.id} data-story-marker data-state={index === 0 ? "active" : "idle"}>{String(index + 1).padStart(2, "0")}</span>)}
-            </div>
+            <nav className="project-story__markers" aria-label={locale === "es" ? "Ir directamente a un proyecto" : "Jump directly to a project"}>
+              {projects.map((project, index) => {
+                const number = String(index + 1).padStart(2, "0");
+                return (
+                  <button
+                    key={project.id}
+                    type="button"
+                    data-story-marker
+                    data-story-index={index}
+                    data-state={index === 0 ? "active" : "idle"}
+                    aria-controls={`project-story-${project.id}`}
+                    aria-current={index === 0 ? "step" : undefined}
+                    aria-label={`${locale === "es" ? "Ir al proyecto" : "Jump to project"} ${number}: ${project.content[locale].title}`}
+                  >
+                    {number}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
         </div>
       </section>
