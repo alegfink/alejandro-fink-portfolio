@@ -43,6 +43,7 @@ Las decisiones de este archivo son la baseline operativa. Pueden cambiar, pero c
 | D-037 | 2026-08-10 | Adoptar GA4 para adquisición, navegación, funnel y rendimiento, cargándolo sólo tras consentimiento explícito. | Vigente | No suma una suscripción, es un estándar reutilizable para clientes y permite relacionar campañas con intención. Google Signals, User-ID, datos proporcionados y personalización publicitaria quedan desactivados. |
 | D-038 | 2026-08-10 | Mantener separadas la analítica anónima y la información comercial identificable del diagnóstico. | Vigente | GA4 nunca recibe nombres, emails, empresas ni respuestas. Sheets recibe el diagnóstico sólo al confirmar y agrega atribución first-party únicamente si fue consentida. |
 | D-039 | 2026-08-10 | Retener eventos de GA4 por 14 meses sin reinicio por actividad y consultas de Sheets por un máximo de 12 meses. | Vigente | Equilibra comparación interanual, aprendizaje inicial y minimización. La operación mantiene borrado manual, exclusión del tráfico propio y revisión periódica. |
+| D-040 | 2026-08-10 | Presentar Torvena como una operación pública activa y distinguirla del acceso privado de clientes que aún no está disponible. | Vigente | Alejandro confirmó que la tienda y el seguimiento first-party de pedidos funcionan en producción y se usan en la operación habitual. Google Analytics será la siguiente capa para consolidar atribución, conversión y resultados documentados. |
 
 ## Cómo modificar una decisión
 

@@ -175,8 +175,9 @@ La falta de reposición del primer proveedor se convirtió en una decisión de d
 ## Estado actual y límites
 
 - Storefront, catálogo, carrito, checkout, campañas y operación: activos.
-- Cuenta de cliente: no habilitada públicamente; la interfaz comunica que estará disponible más adelante.
-- La integración analítica de pedidos pagados está implementada en el repositorio; su estado operativo en producción debe verificarse antes de presentarla como fuente de resultados.
+- La tienda pública, el carrito y el checkout están operativos. Lo que permanece pendiente es el acceso privado para que cada cliente inicie sesión y gestione su cuenta; esto no limita el recorrido público de compra.
+- El seguimiento first-party de pedidos pagados funciona en producción y forma parte de la operación habitual.
+- Google Analytics se incorporará como siguiente capa para consolidar tráfico, atribución y conversión. Los resultados cuantitativos se documentarán cuando exista un período y una fuente consistentes.
 - El claim sobre resistencia de Luo requiere la demostración documentada en el sistema de marca; no debe utilizarse como evidencia del caso del portfolio.
 
 ## Evidencia disponible

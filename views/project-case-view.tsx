@@ -57,7 +57,7 @@ export function ProjectCaseView({ project, locale }: { project: Project; locale:
 
       <section className="case-scope section shell" data-reveal data-analytics-section="case-scope">
         <article><p className="eyebrow">{locale === "es" ? "Alcance verificable" : "Verified scope"}</p><h2>{locale === "es" ? "Qué existe en esta versión." : "What exists in this version."}</h2><ul className="check-list">{content.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></article>
-        <article className="limits-panel"><p className="eyebrow">{copy.common.limits}</p><h2>{locale === "es" ? "Lo que no presento como terminado." : "What I do not present as finished."}</h2><ul>{content.limits.map((limit) => <li key={limit}>{limit}</li>)}</ul></article>
+        <article className="limits-panel"><p className="eyebrow">{project.id === "torvena" ? (locale === "es" ? "Estado actual" : "Current status") : copy.common.limits}</p><h2>{project.id === "torvena" ? (locale === "es" ? "Una operación activa, con medición en evolución." : "An active operation with measurement still evolving.") : (locale === "es" ? "Lo que no presento como terminado." : "What I do not present as finished.")}</h2><ul>{content.limits.map((limit) => <li key={limit}>{limit}</li>)}</ul></article>
       </section>
 
       <section className="case-outcomes section shell" data-reveal data-analytics-section="case-outcomes" aria-labelledby="outcome-title">
