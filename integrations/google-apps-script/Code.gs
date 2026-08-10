@@ -1,6 +1,6 @@
 /**
  * Portfolio contact receiver.
- * Bound to the private Google Sheet created for Alejandro Fink.
+ * Bound to Alejandro Fink's private inquiry spreadsheet.
  */
 
 const SPREADSHEET_ID = "1fl2mZywov2_JLjJhA07EXMfGxQ8_qpfVI1P667KU2QI";
@@ -8,24 +8,88 @@ const SHEET_NAME = "Consultas";
 const RECIPIENT_EMAIL = "alegfink@gmail.com";
 const SECRET_PROPERTY = "WEBHOOK_SECRET";
 
-const ALLOWED_NEEDS = ["business-site", "ecommerce", "product", "evolution", "collaboration"];
-const ALLOWED_STAGES = ["starting", "existing-site", "operating", "exploring"];
-const NEED_LABELS = {
-  "business-site": "Sitio o landing",
-  ecommerce: "E-commerce",
-  product: "MVP o producto digital",
-  evolution: "Evolución de un producto",
-  collaboration: "Agencia o contract",
-};
-const STAGE_LABELS = {
-  starting: "Idea o proyecto nuevo",
-  "existing-site": "Ya existe un sitio",
-  operating: "Producto o negocio operativo",
-  exploring: "Todavía lo está definiendo",
+const LABELS = {
+  goals: {
+    "sell-more": "Vender más / mejorar conversión",
+    "qualified-leads": "Conseguir consultas calificadas",
+    "clarify-offer": "Clarificar la propuesta de valor",
+    "build-trust": "Transmitir confianza y profesionalismo",
+    streamline: "Ordenar o automatizar la operación",
+    validate: "Validar una idea o producto",
+    other: "Otro objetivo",
+  },
+  stages: {
+    "no-site": "Sin sitio",
+    "existing-underperforming": "Sitio existente sin el resultado esperado",
+    "outdated-site": "Sitio desactualizado / no representa la marca",
+    "social-first": "Opera por redes, WhatsApp o marketplaces",
+    "digital-product": "Producto o sistema digital existente",
+    defining: "Proyecto en definición",
+  },
+  challenges: {
+    "unclear-offer": "Oferta poco clara",
+    "low-leads": "Pocas consultas / poco calificadas",
+    "low-conversion": "Interés que no convierte",
+    "weak-brand": "Marca sin diferenciación o confianza",
+    "manual-ops": "Operación manual",
+    "tech-limits": "Límites técnicos o de mantenimiento",
+    "no-direction": "Falta de prioridad o dirección",
+    other: "Otro freno",
+  },
+  actions: {
+    contact: "Contactar / dejar datos",
+    whatsapp: "Iniciar conversación por WhatsApp",
+    buy: "Comprar",
+    book: "Reservar reunión o turno",
+    quote: "Pedir cotización",
+    register: "Registrarse / sumarse a una lista",
+    other: "Otra acción",
+  },
+  brandTraits: {
+    trustworthy: "Confiable",
+    professional: "Profesional",
+    premium: "Premium",
+    clear: "Clara y simple",
+    innovative: "Innovadora",
+    human: "Cercana y humana",
+    bold: "Audaz y diferente",
+    other: "Otro atributo",
+  },
+  needs: {
+    "business-site": "Sitio o landing",
+    ecommerce: "E-commerce",
+    funnel: "Funnel / captación",
+    product: "MVP o producto digital",
+    evolution: "Rediseño o evolución",
+    automation: "Integraciones o automatización",
+    strategy: "Diagnóstico y estrategia",
+    other: "Otra necesidad",
+  },
+  investments: {
+    none: "Sin inversión actual",
+    "under-300": "Hasta USD 300 / mes",
+    "300-1000": "USD 300–1.000 / mes",
+    "1000-3000": "USD 1.000–3.000 / mes",
+    "over-3000": "Más de USD 3.000 / mes",
+    "prefer-not": "Prefiere no informar",
+  },
+  timelines: {
+    asap: "Lo antes posible",
+    "1-3-months": "1–3 meses",
+    "3-6-months": "3–6 meses",
+    flexible: "Sin fecha fija / explorando",
+  },
+  decisionStages: {
+    exploring: "Explorando posibilidades",
+    "needs-definition": "Necesita definir alcance",
+    "partly-defined": "Idea bastante definida",
+    comparing: "Comparando propuestas",
+    ready: "Listo para empezar",
+  },
 };
 
 function doGet() {
-  return jsonResponse_({ ok: true, service: "portfolio-contact", version: "1.0" });
+  return jsonResponse_({ ok: true, service: "portfolio-contact", version: "2.0" });
 }
 
 function doPost(event) {
@@ -56,8 +120,21 @@ function doPost(event) {
       safeCellText_(inquiry.email),
       safeCellText_(inquiry.company),
       safeCellText_(inquiry.website),
-      safeCellText_(NEED_LABELS[inquiry.need]),
-      safeCellText_(STAGE_LABELS[inquiry.stage]),
+      safeCellText_(LABELS.goals[inquiry.goal]),
+      safeCellText_(inquiry.goalOther),
+      safeCellText_(LABELS.stages[inquiry.stage]),
+      safeCellText_(labelsFor_(inquiry.challenges, LABELS.challenges)),
+      safeCellText_(inquiry.challengeOther),
+      safeCellText_(inquiry.audience),
+      safeCellText_(LABELS.actions[inquiry.desiredAction]),
+      safeCellText_(inquiry.desiredActionOther),
+      safeCellText_(labelsFor_(inquiry.brandTraits, LABELS.brandTraits)),
+      safeCellText_(inquiry.brandOther),
+      safeCellText_(labelsFor_(inquiry.needs, LABELS.needs)),
+      safeCellText_(inquiry.needOther),
+      safeCellText_(LABELS.investments[inquiry.investment]),
+      safeCellText_(LABELS.timelines[inquiry.timeline]),
+      safeCellText_(LABELS.decisionStages[inquiry.decisionStage]),
       safeCellText_(inquiry.message),
       "RECIBIDA",
       "Nueva",
@@ -71,16 +148,16 @@ function doPost(event) {
         to: RECIPIENT_EMAIL,
         replyTo: inquiry.email,
         name: "Alejandro Fink — Portfolio",
-        subject: "[Portfolio] Nueva consulta — " + NEED_LABELS[inquiry.need],
+        subject: "[Portfolio] Nueva consulta — " + LABELS.goals[inquiry.goal],
         body: buildEmailBody_(inquiry, receivedAt),
       });
-      sheet.getRange(row, 11).setValue("NOTIFICADA");
-      sheet.getRange(row, 14).setValue(new Date());
+      sheet.getRange(row, 24).setValue("NOTIFICADA");
+      sheet.getRange(row, 27).setValue(new Date());
       return jsonResponse_({ ok: true, id: inquiry.submissionId });
     } catch (error) {
-      sheet.getRange(row, 11).setValue("ERROR_NOTIFICACION");
-      sheet.getRange(row, 13).setValue(safeError_(error));
-      sheet.getRange(row, 14).setValue(new Date());
+      sheet.getRange(row, 24).setValue("ERROR_NOTIFICACION");
+      sheet.getRange(row, 26).setValue(safeError_(error));
+      sheet.getRange(row, 27).setValue(new Date());
       return jsonResponse_({ ok: false, code: "EMAIL_FAILED", id: inquiry.submissionId });
     }
   } catch (error) {
@@ -108,8 +185,21 @@ function normalizeAndValidateInquiry_(input) {
     email: text_(input.email).toLowerCase(),
     company: text_(input.company),
     website: text_(input.website),
-    need: text_(input.need),
+    goal: text_(input.goal),
+    goalOther: text_(input.goalOther),
     stage: text_(input.stage),
+    challenges: stringArray_(input.challenges),
+    challengeOther: text_(input.challengeOther),
+    audience: text_(input.audience),
+    desiredAction: text_(input.desiredAction),
+    desiredActionOther: text_(input.desiredActionOther),
+    brandTraits: stringArray_(input.brandTraits),
+    brandOther: text_(input.brandOther),
+    needs: stringArray_(input.needs),
+    needOther: text_(input.needOther),
+    investment: text_(input.investment),
+    timeline: text_(input.timeline),
+    decisionStage: text_(input.decisionStage),
     message: text_(input.message),
   };
 
@@ -119,25 +209,42 @@ function normalizeAndValidateInquiry_(input) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiry.email) || inquiry.email.length > 160) return null;
   if (inquiry.company.length > 120) return null;
   if (inquiry.website && (!/^https?:\/\//i.test(inquiry.website) || inquiry.website.length > 500)) return null;
-  if (ALLOWED_NEEDS.indexOf(inquiry.need) === -1) return null;
-  if (ALLOWED_STAGES.indexOf(inquiry.stage) === -1) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.goals, inquiry.goal)) return null;
+  if (!validOther_(inquiry.goal === "other", inquiry.goalOther)) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.stages, inquiry.stage)) return null;
+  if (!validSelection_(inquiry.challenges, LABELS.challenges) || !validOther_(inquiry.challenges.indexOf("other") !== -1, inquiry.challengeOther)) return null;
+  if (inquiry.audience.length < 10 || inquiry.audience.length > 400) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.actions, inquiry.desiredAction)) return null;
+  if (!validOther_(inquiry.desiredAction === "other", inquiry.desiredActionOther)) return null;
+  if (!validSelection_(inquiry.brandTraits, LABELS.brandTraits) || !validOther_(inquiry.brandTraits.indexOf("other") !== -1, inquiry.brandOther)) return null;
+  if (!validSelection_(inquiry.needs, LABELS.needs) || !validOther_(inquiry.needs.indexOf("other") !== -1, inquiry.needOther)) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.investments, inquiry.investment)) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.timelines, inquiry.timeline)) return null;
+  if (!Object.prototype.hasOwnProperty.call(LABELS.decisionStages, inquiry.decisionStage)) return null;
   if (inquiry.message.length < 20 || inquiry.message.length > 3000) return null;
   return inquiry;
+}
+
+function validSelection_(values, allowed) {
+  if (!Array.isArray(values) || values.length < 1 || values.length > 3) return false;
+  if (values.filter(function (value, index) { return values.indexOf(value) === index; }).length !== values.length) return false;
+  return values.every(function (value) { return Object.prototype.hasOwnProperty.call(allowed, value); });
+}
+
+function validOther_(selected, value) {
+  return !selected || (value.length >= 2 && value.length <= 180);
 }
 
 function findSubmissionRow_(sheet, submissionId) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return 0;
-  const match = sheet.getRange(2, 1, lastRow - 1, 1)
-    .createTextFinder(submissionId)
-    .matchEntireCell(true)
-    .findNext();
+  const match = sheet.getRange(2, 1, lastRow - 1, 1).createTextFinder(submissionId).matchEntireCell(true).findNext();
   return match ? match.getRow() : 0;
 }
 
 function buildEmailBody_(inquiry, receivedAt) {
   return [
-    "Nueva consulta recibida desde el portfolio.",
+    "Nueva consulta recibida desde el diagnóstico del portfolio.",
     "",
     "Fecha: " + Utilities.formatDate(receivedAt, "America/Buenos_Aires", "yyyy-MM-dd HH:mm:ss"),
     "Idioma: " + inquiry.locale.toUpperCase(),
@@ -145,15 +252,36 @@ function buildEmailBody_(inquiry, receivedAt) {
     "Email: " + inquiry.email,
     "Empresa o proyecto: " + (inquiry.company || "—"),
     "Sitio o referencia: " + (inquiry.website || "—"),
-    "Necesidad: " + NEED_LABELS[inquiry.need],
-    "Situación: " + STAGE_LABELS[inquiry.stage],
     "",
-    "Mensaje:",
+    "OBJETIVO: " + LABELS.goals[inquiry.goal] + otherSuffix_(inquiry.goalOther),
+    "PUNTO DE PARTIDA: " + LABELS.stages[inquiry.stage],
+    "FRENOS: " + labelsFor_(inquiry.challenges, LABELS.challenges) + otherSuffix_(inquiry.challengeOther),
+    "AUDIENCIA: " + inquiry.audience,
+    "ACCIÓN ESPERADA: " + LABELS.actions[inquiry.desiredAction] + otherSuffix_(inquiry.desiredActionOther),
+    "MARCA: " + labelsFor_(inquiry.brandTraits, LABELS.brandTraits) + otherSuffix_(inquiry.brandOther),
+    "AYUDA BUSCADA: " + labelsFor_(inquiry.needs, LABELS.needs) + otherSuffix_(inquiry.needOther),
+    "INVERSIÓN ACTUAL: " + LABELS.investments[inquiry.investment],
+    "PLAZO: " + LABELS.timelines[inquiry.timeline],
+    "ETAPA DE DECISIÓN: " + LABELS.decisionStages[inquiry.decisionStage],
+    "",
+    "CONTEXTO ADICIONAL:",
     inquiry.message,
     "",
     "ID: " + inquiry.submissionId,
     "Responder este email dirige la respuesta a " + inquiry.email + ".",
   ].join("\n");
+}
+
+function labelsFor_(values, labels) {
+  return values.map(function (value) { return labels[value]; }).join(" · ");
+}
+
+function otherSuffix_(value) {
+  return value ? " — " + value : "";
+}
+
+function stringArray_(value) {
+  return Array.isArray(value) ? value.map(text_) : [];
 }
 
 function text_(value) {

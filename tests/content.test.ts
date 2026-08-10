@@ -34,30 +34,47 @@ describe("locale route equivalence", () => {
 });
 
 describe("contact contract", () => {
-  const validSubmission = {
+  const validInquiry = {
     name: "Ada",
     email: "ada@example.com",
-    need: "product",
-    stage: "starting",
+    goal: "validate",
+    stage: "no-site",
+    challenges: ["no-direction", "unclear-offer"],
+    audience: "Independent founders preparing a first product launch.",
+    desiredAction: "contact",
+    brandTraits: ["clear", "trustworthy"],
+    needs: ["product", "strategy"],
+    investment: "prefer-not",
+    timeline: "1-3-months",
+    decisionStage: "needs-definition",
     message: "I need a useful product validation flow.",
     locale: "en",
+  } as const;
+
+  const validSubmission = {
+    ...validInquiry,
     submissionId: "d9428888-122b-4c1d-8a1a-ea7b8f1f3abc",
     startedAt: 1_000,
     botField: "",
   } as const;
 
   it("rejects invalid data", () => {
-    expect(validateContactPayload({ name: "A", email: "bad", need: "magic", message: "short", locale: "es" }).valid).toBe(false);
+    expect(validateContactPayload({ ...validInquiry, name: "A", email: "bad", needs: ["magic"], message: "short", locale: "es" }).valid).toBe(false);
   });
 
-  it("accepts a minimal valid payload", () => {
-    expect(validateContactPayload({ name: "Ada", email: "ada@example.com", need: "product", stage: "starting", message: "I need a useful product validation flow.", locale: "en" }).valid).toBe(true);
+  it("accepts a complete guided diagnostic", () => {
+    expect(validateContactPayload(validInquiry).valid).toBe(true);
   });
 
   it("accepts an optional web reference and rejects unsafe protocols", () => {
-    const base = { name: "Ada", email: "ada@example.com", need: "evolution", stage: "existing-site", message: "I need to improve an existing product flow.", locale: "en" };
-    expect(validateContactPayload({ ...base, website: "https://example.com/reference" }).valid).toBe(true);
-    expect(validateContactPayload({ ...base, website: "javascript:alert(1)" }).valid).toBe(false);
+    expect(validateContactPayload({ ...validInquiry, website: "https://example.com/reference" }).valid).toBe(true);
+    expect(validateContactPayload({ ...validInquiry, website: "javascript:alert(1)" }).valid).toBe(false);
+  });
+
+  it("limits prioritized selections and requires a written other answer", () => {
+    expect(validateContactPayload({ ...validInquiry, challenges: ["low-leads", "low-conversion", "weak-brand", "manual-ops"] }).valid).toBe(false);
+    expect(validateContactPayload({ ...validInquiry, goal: "other", goalOther: "" }).valid).toBe(false);
+    expect(validateContactPayload({ ...validInquiry, goal: "other", goalOther: "Improve post-sale onboarding" }).valid).toBe(true);
   });
 
   it("accepts a complete submission after the minimum completion time", () => {

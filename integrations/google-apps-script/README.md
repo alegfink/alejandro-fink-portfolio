@@ -1,6 +1,6 @@
 # Receptor del formulario con Google Apps Script
 
-Esta integración recibe el contrato validado de `POST /api/contact`, guarda la consulta en la hoja privada **Portfolio — Consultas de contacto** y envía una notificación a `alegfink@gmail.com` con `replyTo` configurado al email de la persona.
+Esta integración recibe el diagnóstico comercial validado de `POST /api/contact`, guarda sus 27 campos operativos en la hoja privada **Portfolio — Consultas de contacto** y envía un resumen accionable a `alegfink@gmail.com` con `replyTo` configurado al email de la persona.
 
 ## Recursos
 
@@ -27,7 +27,7 @@ Esta integración recibe el contrato validado de `POST /api/contact`, guarda la 
 
 - El secreto evita llamadas directas al receptor; nunca llega al navegador.
 - El ID de envío evita filas y emails duplicados ante un reintento.
-- Los campos se vuelven a validar dentro de Apps Script.
+- Los campos, enums, listas de una a tres prioridades y alternativas “otro” se vuelven a validar dentro de Apps Script.
 - Los valores peligrosos para fórmulas se guardan como texto para impedir formula injection.
 - `NOTIFICADA` indica que la hoja y el email quedaron resueltos.
 - `ERROR_NOTIFICACION` conserva la consulta aunque el email falle. La fila permite responder manualmente sin perder el mensaje.
@@ -35,7 +35,7 @@ Esta integración recibe el contrato validado de `POST /api/contact`, guarda la 
 
 ## Pruebas posteriores al despliegue
 
-1. `GET /exec` responde `{"ok":true,"service":"portfolio-contact","version":"1.0"}`.
+1. `GET /exec` responde `{"ok":true,"service":"portfolio-contact","version":"2.0"}`.
 2. Un secreto incorrecto responde `UNAUTHORIZED` y no agrega una fila.
 3. Una consulta válida agrega una fila, envía el email y queda `NOTIFICADA`.
 4. Repetir el mismo ID no agrega otra fila ni envía otro email.

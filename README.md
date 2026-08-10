@@ -8,7 +8,7 @@ Portfolio profesional v1 construido con Next.js App Router, TypeScript y conteni
 - Dominio: se mantiene el subdominio público de Sites; un dominio propio queda como mejora futura.
 - Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
 - Analytics: contrato definido, proveedor desactivado y adopción planificada para una etapa posterior.
-- Contacto: `alegfink@gmail.com` funciona como canal público. El formulario, la hoja privada y el receptor de Google Apps Script están implementados; el envío dentro del sitio permanece desactivado hasta completar una única autorización manual de Google y obtener la URL `/exec`.
+- Contacto: `alegfink@gmail.com` funciona como canal público. El diagnóstico conversacional bilingüe, la hoja privada y el receptor de Google Apps Script están implementados; el recorrido completo puede probarse, pero el envío final permanece desactivado hasta completar una única autorización manual de Google y obtener la URL `/exec`.
 
 ## Requisitos
 
@@ -83,7 +83,11 @@ Copiar `.env.example` a `.env.local`.
 Mientras la configuración siga incompleta:
 
 - el email público funciona mediante un enlace `mailto:`;
-- los campos —nombre, email, empresa o proyecto, URL opcional, tipo de necesidad, situación actual y contexto— se muestran desactivados;
+- el diagnóstico de diez pasos puede completarse, recorrerse hacia atrás y revisarse en español o inglés;
+- reúne objetivo principal, punto de partida, frenos, audiencia y acción, atributos de marca, soluciones buscadas, inversión actual opcional, plazo, etapa de decisión, datos de contacto y contexto abierto;
+- las selecciones múltiples se limitan a tres prioridades y cada bloque admite una alternativa escrita cuando corresponde;
+- las respuestas permanecen sólo en el estado de React de la pantalla: no se guardan en `localStorage`, cookies ni servicios externos;
+- únicamente el botón final se muestra inactivo y explica la autorización pendiente;
 - no se envían ni almacenan mensajes;
 - `POST /api/contact` responde `503 CONTACT_DISABLED` antes de leer el body;
 - no se muestra un éxito falso ni un email inventado.
