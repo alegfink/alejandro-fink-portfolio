@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { captureAttribution } from "@/lib/attribution";
@@ -179,7 +178,7 @@ export function AnalyticsProvider() {
       <div className="analytics-consent__actions">
         <button className="button button--primary" type="button" onClick={() => setAnalyticsConsent("granted")}>{copy.accept}</button>
         <button className="button button--secondary" type="button" onClick={() => setAnalyticsConsent("denied")}>{copy.reject}</button>
-        <Link href={locale === "es" ? "/es/privacidad" : "/en/privacy"}>{copy.privacy}</Link>
+        <a href={locale === "es" ? "/es/privacidad" : "/en/privacy"}>{copy.privacy}</a>
       </div>
     </aside>
   );
