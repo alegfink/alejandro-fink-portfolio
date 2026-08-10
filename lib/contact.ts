@@ -116,7 +116,7 @@ export function validateContactPayload(input: unknown): {
   if (!allowedStages.has(stage)) errors.stage = "Choose a valid starting point";
   if (challenges.length < 1 || challenges.length > 3 || !Array.isArray(candidate.challenges) || challenges.length !== new Set(candidate.challenges).size) errors.challenges = "Choose 1–3 valid challenges";
   if (!otherIsValid(challenges.includes("other"), challengeOther)) errors.challengeOther = "Describe the other challenge";
-  if (audience.length < 10 || audience.length > 400) errors.audience = "Audience must contain 10–400 characters";
+  if (!audience || audience.length > 400) errors.audience = "Audience is required and must not exceed 400 characters";
   if (!allowedActions.has(desiredAction)) errors.desiredAction = "Choose a valid action";
   if (!otherIsValid(desiredAction === "other", desiredActionOther)) errors.desiredActionOther = "Describe the other action";
   if (brandTraits.length < 1 || brandTraits.length > 3 || !Array.isArray(candidate.brandTraits) || brandTraits.length !== new Set(candidate.brandTraits).size) errors.brandTraits = "Choose 1–3 valid brand traits";
@@ -126,7 +126,7 @@ export function validateContactPayload(input: unknown): {
   if (!allowedInvestments.has(investment)) errors.investment = "Choose a valid investment range";
   if (!allowedTimelines.has(timeline)) errors.timeline = "Choose a valid timeline";
   if (!allowedDecisionStages.has(decisionStage)) errors.decisionStage = "Choose a valid decision stage";
-  if (message.length < 20 || message.length > 3000) errors.message = "Message must contain 20–3000 characters";
+  if (message.length > 3000) errors.message = "Message must not exceed 3000 characters";
   if (locale !== "es" && locale !== "en") errors.locale = "Invalid locale";
 
   if (Object.keys(errors).length > 0) return { valid: false, errors };

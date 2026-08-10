@@ -66,6 +66,11 @@ describe("contact contract", () => {
     expect(validateContactPayload(validInquiry).valid).toBe(true);
   });
 
+  it("accepts a short non-empty audience and optional additional context", () => {
+    expect(validateContactPayload({ ...validInquiry, audience: "A", message: "" }).valid).toBe(true);
+    expect(validateContactPayload({ ...validInquiry, audience: "   ", message: "" }).valid).toBe(false);
+  });
+
   it("accepts an optional web reference and rejects unsafe protocols", () => {
     expect(validateContactPayload({ ...validInquiry, website: "https://example.com/reference" }).valid).toBe(true);
     expect(validateContactPayload({ ...validInquiry, website: "javascript:alert(1)" }).valid).toBe(false);

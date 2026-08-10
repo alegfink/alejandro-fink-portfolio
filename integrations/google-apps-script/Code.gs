@@ -213,7 +213,7 @@ function normalizeAndValidateInquiry_(input) {
   if (!validOther_(inquiry.goal === "other", inquiry.goalOther)) return null;
   if (!Object.prototype.hasOwnProperty.call(LABELS.stages, inquiry.stage)) return null;
   if (!validSelection_(inquiry.challenges, LABELS.challenges) || !validOther_(inquiry.challenges.indexOf("other") !== -1, inquiry.challengeOther)) return null;
-  if (inquiry.audience.length < 10 || inquiry.audience.length > 400) return null;
+  if (!inquiry.audience || inquiry.audience.length > 400) return null;
   if (!Object.prototype.hasOwnProperty.call(LABELS.actions, inquiry.desiredAction)) return null;
   if (!validOther_(inquiry.desiredAction === "other", inquiry.desiredActionOther)) return null;
   if (!validSelection_(inquiry.brandTraits, LABELS.brandTraits) || !validOther_(inquiry.brandTraits.indexOf("other") !== -1, inquiry.brandOther)) return null;
@@ -221,7 +221,7 @@ function normalizeAndValidateInquiry_(input) {
   if (!Object.prototype.hasOwnProperty.call(LABELS.investments, inquiry.investment)) return null;
   if (!Object.prototype.hasOwnProperty.call(LABELS.timelines, inquiry.timeline)) return null;
   if (!Object.prototype.hasOwnProperty.call(LABELS.decisionStages, inquiry.decisionStage)) return null;
-  if (inquiry.message.length < 20 || inquiry.message.length > 3000) return null;
+  if (inquiry.message.length > 3000) return null;
   return inquiry;
 }
 
@@ -265,7 +265,7 @@ function buildEmailBody_(inquiry, receivedAt) {
     "ETAPA DE DECISIÓN: " + LABELS.decisionStages[inquiry.decisionStage],
     "",
     "CONTEXTO ADICIONAL:",
-    inquiry.message,
+    inquiry.message || "—",
     "",
     "ID: " + inquiry.submissionId,
     "Responder este email dirige la respuesta a " + inquiry.email + ".",

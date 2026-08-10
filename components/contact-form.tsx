@@ -158,7 +158,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
       if (form.challenges.includes("other") && (form.challengeOther ?? "").trim().length < 2) nextErrors.challengeOther = "required";
     }
     if (step === "audience") {
-      if (form.audience.trim().length < 10 || form.audience.trim().length > 400) nextErrors.audience = "invalid";
+      if (!form.audience.trim() || form.audience.trim().length > 400) nextErrors.audience = "invalid";
       if (!form.desiredAction) nextErrors.desiredAction = "required";
       if (form.desiredAction === "other" && (form.desiredActionOther ?? "").trim().length < 2) nextErrors.desiredActionOther = "required";
     }
@@ -180,7 +180,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()) || form.email.trim().length > 160) nextErrors.email = "invalid";
       if ((form.company ?? "").trim().length > 120) nextErrors.company = "invalid";
     }
-    if (step === "context" && (form.message.trim().length < 20 || form.message.trim().length > 3000)) nextErrors.message = "invalid";
+    if (step === "context" && form.message.trim().length > 3000) nextErrors.message = "invalid";
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   }
@@ -266,7 +266,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
     { key: "needs", step: 5, value: `${joinLabels(options.needs, form.needs)}${form.needOther ? ` — ${form.needOther}` : ""}` },
     { key: "readiness", step: 6, value: `${investmentLabel} · ${timelineLabel} · ${decisionLabel}` },
     { key: "contact", step: 7, value: `${form.name} · ${form.email}${form.company ? ` · ${form.company}` : ""}` },
-    { key: "context", step: 8, value: form.message },
+    { key: "context", step: 8, value: form.message || copy.notProvided },
   ] as const;
 
   if (status === "success") {
@@ -323,7 +323,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
           </> : null}
 
           {currentStep === "audience" ? <>
-            <label className="wizard-field"><span>{copy.fields.audience}</span><textarea rows={3} minLength={10} maxLength={400} value={form.audience} onChange={(event) => update("audience", event.target.value)} placeholder={copy.placeholders.audience} aria-invalid={Boolean(errors.audience)} /></label>
+            <label className="wizard-field"><span>{copy.fields.audience}</span><textarea rows={3} required maxLength={400} value={form.audience} onChange={(event) => update("audience", event.target.value)} placeholder={copy.placeholders.audience} aria-invalid={Boolean(errors.audience)} /></label>
             <div className="wizard-subquestion"><h3>{copy.fields.desiredAction}</h3><ChoiceList name="desired-action" options={options.actions} selected={form.desiredAction} onChange={(value) => update("desiredAction", value as ContactInquiry["desiredAction"])} /></div>
             {form.desiredAction === "other" ? <label className="wizard-field"><span>{copy.fields.other}</span><input maxLength={180} value={form.desiredActionOther} onChange={(event) => update("desiredActionOther", event.target.value)} placeholder={copy.placeholders.other} aria-invalid={Boolean(errors.desiredActionOther)} /></label> : null}
             {errors.audience || errors.desiredAction || errors.desiredActionOther ? <p className="field-error" role="alert">{errorFor(errors.audience ? "audience" : errors.desiredActionOther ? "desiredActionOther" : "desiredAction")}</p> : null}
@@ -357,7 +357,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
           </div> : null}
 
           {currentStep === "context" ? <>
-            <label className="wizard-field"><span>{copy.fields.message}</span><textarea required minLength={20} maxLength={3000} rows={7} value={form.message} onChange={(event) => update("message", event.target.value)} placeholder={copy.placeholders.message} aria-invalid={Boolean(errors.message)} /><small>{form.message.length}/3000</small></label>
+            <label className="wizard-field"><span>{copy.fields.message} <small>{copy.optional}</small></span><textarea maxLength={3000} rows={7} value={form.message} onChange={(event) => update("message", event.target.value)} placeholder={copy.placeholders.message} aria-invalid={Boolean(errors.message)} /><small>{form.message.length}/3000</small></label>
             {errors.message ? <p className="field-error" role="alert">{errorFor("message")}</p> : null}
           </> : null}
 
@@ -371,7 +371,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
           </> : null}
 
           <div className="wizard-actions">
-            {stepIndex > 0 ? <button className="button button--secondary" type="button" onClick={previous}>{copy.back}</button> : <span />}
+            {stepIndex > 0 ? <button className="button button--secondary wizard-back" type="button" onClick={previous}><span aria-hidden="true">←</span>{copy.back}</button> : <span />}
             {currentStep !== "review" ? <button className="button button--primary" type="button" onClick={next}>{currentStep === "context" ? copy.review : copy.continue}<span aria-hidden="true">↗</span></button> : <button className="button button--primary" type="submit" disabled={!enabled || status === "sending"} aria-describedby={!enabled ? "contact-disabled-note" : undefined}>{!enabled ? copy.disabled.button : status === "sending" ? copy.sending : copy.submit}<span aria-hidden="true">↗</span></button>}
           </div>
           {currentStep !== "review" ? <p className="wizard-keyboard-hint">{copy.keyboardHint}</p> : null}
