@@ -204,6 +204,8 @@
 .form-disabled p { max-width: 570px; color: var(--ink-soft); }
 .form-disabled small { color: var(--cobalt); font-family: var(--font-mono); text-transform: uppercase; }
 .form-status { min-height: 28px; margin-top: 18px; font-weight: 700; }
+.form-privacy a { color: var(--cobalt); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.form-privacy a:hover { text-decoration-thickness: 2px; }
 
 .legal-copy { max-width: 900px; }
 .legal-copy article { display: grid; grid-template-columns: 80px 1fr; gap: 24px; padding: 36px 0; border-top: 1px solid var(--line); }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { projects, validateProjects } from "../content/projects";
 import { switchLocalePath } from "../lib/i18n";
-import { validateContactPayload } from "../lib/contact";
+import { CONTACT_MIN_COMPLETION_MS, validateContactPayload, validateContactSubmission } from "../lib/contact";
 
 describe("project content model", () => {
   it("contains six valid bilingual projects", () => {
@@ -34,6 +34,18 @@ describe("locale route equivalence", () => {
 });
 
 describe("contact contract", () => {
+  const validSubmission = {
+    name: "Ada",
+    email: "ada@example.com",
+    need: "product",
+    stage: "starting",
+    message: "I need a useful product validation flow.",
+    locale: "en",
+    submissionId: "d9428888-122b-4c1d-8a1a-ea7b8f1f3abc",
+    startedAt: 1_000,
+    botField: "",
+  } as const;
+
   it("rejects invalid data", () => {
     expect(validateContactPayload({ name: "A", email: "bad", need: "magic", message: "short", locale: "es" }).valid).toBe(false);
   });
@@ -46,5 +58,19 @@ describe("contact contract", () => {
     const base = { name: "Ada", email: "ada@example.com", need: "evolution", stage: "existing-site", message: "I need to improve an existing product flow.", locale: "en" };
     expect(validateContactPayload({ ...base, website: "https://example.com/reference" }).valid).toBe(true);
     expect(validateContactPayload({ ...base, website: "javascript:alert(1)" }).valid).toBe(false);
+  });
+
+  it("accepts a complete submission after the minimum completion time", () => {
+    expect(validateContactSubmission(validSubmission, 1_000 + CONTACT_MIN_COMPLETION_MS).valid).toBe(true);
+  });
+
+  it("detects the honeypot and rejects submissions completed too quickly", () => {
+    expect(validateContactSubmission({ ...validSubmission, botField: "spam" }, 20_000)).toMatchObject({ valid: false, code: "BOT_DETECTED" });
+    expect(validateContactSubmission(validSubmission, 1_000 + CONTACT_MIN_COMPLETION_MS - 1)).toMatchObject({ valid: false, code: "FORM_TOO_FAST" });
+  });
+
+  it("rejects malformed identifiers and expired forms", () => {
+    expect(validateContactSubmission({ ...validSubmission, submissionId: "not-a-uuid" }, 20_000)).toMatchObject({ valid: false, code: "SUBMISSION_ID_INVALID" });
+    expect(validateContactSubmission(validSubmission, 1_000 + 2 * 60 * 60 * 1_000 + 1)).toMatchObject({ valid: false, code: "FORM_EXPIRED" });
   });
 });

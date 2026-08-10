@@ -8,7 +8,7 @@ Portfolio profesional v1 construido con Next.js App Router, TypeScript y conteni
 - Dominio: se mantiene el subdominio público de Sites; un dominio propio queda como mejora futura.
 - Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
 - Analytics: contrato definido, proveedor desactivado y adopción planificada para una etapa posterior.
-- Contacto: `alegfink@gmail.com` funciona como canal público; el formulario y su validación están preparados para revisión, pero el envío dentro del sitio permanece desactivado.
+- Contacto: `alegfink@gmail.com` funciona como canal público. El formulario, la hoja privada y el receptor de Google Apps Script están implementados; el envío dentro del sitio permanece desactivado hasta completar una única autorización manual de Google y obtener la URL `/exec`.
 
 ## Requisitos
 
@@ -56,6 +56,7 @@ app/
 └── robots.ts
 components/                 # navegación, selector, formulario y proyectos
 content/                    # fuente única tipada para sitio y seis proyectos
+integrations/google-apps-script/ # receptor, manifiesto y guía operativa del formulario
 lib/                        # i18n, URLs, metadata, analytics y contacto
 public/media/projects/      # derivados autorizados y manifiesto
 tests/                      # validación de modelo y contratos
@@ -72,8 +73,9 @@ Copiar `.env.example` a `.env.local`.
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | base para canonical, Open Graph y sitemap |
 | `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en Sites usa `true` |
 | `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | reserva explícita; no instala ni ejecuta un proveedor |
-| `CONTACT_PROVIDER` | `disabled` | solo `webhook` permite evaluar la integración |
-| `CONTACT_WEBHOOK_URL` | vacío | debe ser HTTPS y pertenecer al proveedor real |
+| `CONTACT_PROVIDER` | `disabled` | usar `google-apps-script` sólo después de autorizar y probar la app web |
+| `CONTACT_WEBHOOK_URL` | vacío | URL HTTPS de la implementación de Apps Script terminada en `/exec` |
+| `CONTACT_WEBHOOK_SECRET` | vacío | secreto de 32 caracteres o más, idéntico en Sites y en las propiedades del script; nunca se versiona |
 | `CONTACT_RECIPIENT_EMAIL` | `alegfink@gmail.com` | email confirmado de recepción; no habilita el formulario por sí solo |
 
 ### Contrato de contacto
@@ -81,12 +83,24 @@ Copiar `.env.example` a `.env.local`.
 Mientras la configuración siga incompleta:
 
 - el email público funciona mediante un enlace `mailto:`;
-- los campos propuestos —nombre, email, empresa o proyecto, URL opcional, tipo de necesidad, situación actual y contexto— se muestran desactivados para revisión;
+- los campos —nombre, email, empresa o proyecto, URL opcional, tipo de necesidad, situación actual y contexto— se muestran desactivados;
 - no se envían ni almacenan mensajes;
 - `POST /api/contact` responde `503 CONTACT_DISABLED` antes de leer el body;
 - no se muestra un éxito falso ni un email inventado.
 
-Al configurar un proveedor real, el endpoint valida origen, estructura, longitudes, email, URL, situación y tipo de necesidad antes de llamar al webhook HTTPS. La política de privacidad debe actualizarse con el proveedor, finalidad, responsable, retención y derechos antes de habilitarlo.
+El flujo elegido no suma un servicio pago: Sites valida y reenvía a una aplicación de Google Apps Script; el receptor vuelve a validar, registra la consulta en una hoja privada y usa Google Mail para avisar a `alegfink@gmail.com`. La hoja creada es [Portfolio — Consultas de contacto](https://docs.google.com/spreadsheets/d/1fl2mZywov2_JLjJhA07EXMfGxQ8_qpfVI1P667KU2QI/edit) y conserva el mensaje aunque falle la notificación.
+
+La protección sin servicios externos combina:
+
+- honeypot con respuesta silenciosa;
+- tiempo mínimo y vencimiento del formulario;
+- validación duplicada en Sites y Apps Script;
+- origen exacto y secreto servidor a servidor;
+- límite de ráfaga con clave IP anonimizada y no persistente;
+- ID idempotente para evitar filas y emails duplicados;
+- neutralización de formula injection antes de escribir en Sheets.
+
+La política de privacidad describe el proveedor, la finalidad, el acceso, los campos y una conservación máxima de 12 meses con eliminación manual. La guía de activación y recuperación está en [`integrations/google-apps-script/README.md`](integrations/google-apps-script/README.md).
 
 ### Contrato de analytics
 
@@ -131,10 +145,10 @@ No se usan testimonios ilustrativos de Lourdes, métricas no verificadas, captur
 
 La versión pública actual no depende de estos puntos. Son bloqueadores concretos de funcionalidades o mejoras futuras:
 
-1. para habilitar el envío dentro del formulario: elegir proveedor, crear y probar el webhook, definir antispam y monitoreo, y actualizar Privacidad con el flujo real;
+1. para habilitar el envío dentro del formulario: Alejandro debe atravesar manualmente la advertencia de aplicación no verificada de su propio Apps Script, aceptar los permisos de Sheets y envío de email, terminar el despliegue y copiar la URL `/exec`; después se configuran los secretos de Sites y se ejecuta la prueba real de punta a punta;
 2. para incorporar analytics: decidir proveedor, eventos, datos, retención y necesidad de consentimiento; después actualizar Privacidad antes de activarlo;
 3. para usar dominio propio: elegirlo, configurar DNS y cambiar `NEXT_PUBLIC_SITE_URL`, canonical, sitemap y robots;
 4. medir Core Web Vitals sobre producción y repetir la revisión después de cambios de contenido o medios importantes;
-5. ampliar la cobertura automática con pruebas visuales y E2E para navegación, idiomas, responsive y estados del formulario;
+5. las pruebas visuales responsive siguen siendo manuales; el contrato del formulario ya cubre automáticamente validación, bots, origen, límite de ráfaga, duplicados, respuestas inválidas, caída del proveedor y timeout;
 6. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
 7. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.

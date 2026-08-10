@@ -5,6 +5,8 @@ import { siteCopy } from "@/content/site";
 import { buildMetadata } from "@/lib/metadata";
 import { getContactConfig } from "@/lib/contact";
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() { return [{ locale: "es" }]; }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
