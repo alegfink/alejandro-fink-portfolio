@@ -25,6 +25,13 @@ function submission(index = 0) {
     submissionId: `d9428888-122b-4c1d-8a1a-ea7b8f1f3ab${index}`,
     startedAt: Date.now() - CONTACT_MIN_COMPLETION_MS,
     botField: "",
+    attribution: {
+      source: "linkedin",
+      medium: "organic-social",
+      campaign: "portfolio-lanzamiento-2026",
+      landingPath: "/en",
+      capturedAt: new Date().toISOString(),
+    },
   };
 }
 
@@ -96,6 +103,7 @@ describe("POST /api/contact", () => {
     const forwarded = JSON.parse(String(options.body));
     expect(forwarded.secret).toBe(secret);
     expect(forwarded.inquiry.email).toBe("ada@example.com");
+    expect(forwarded.inquiry.attribution).toMatchObject({ source: "linkedin", landingPath: "/en" });
     expect(forwarded).not.toHaveProperty("recipient");
   });
 

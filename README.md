@@ -7,8 +7,8 @@ Portfolio profesional v1 construido con Next.js App Router, TypeScript y conteni
 - Desarrollo y publicación en Sites: activos en `https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site`.
 - Dominio: se mantiene el subdominio público de Sites; un dominio propio queda como mejora futura.
 - Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
-- Analytics: contrato definido, proveedor desactivado y adopción planificada para una etapa posterior.
-- Contacto: `alegfink@gmail.com` funciona como canal público. El diagnóstico conversacional bilingüe, la hoja privada y el receptor de Google Apps Script están implementados; el recorrido completo puede probarse, pero el envío final permanece desactivado hasta completar una única autorización manual de Google y obtener la URL `/exec`.
+- Analytics: GA4 configurado con consentimiento explícito, atribución first-party del lead, funnel comercial y Core Web Vitals reales. Google Signals, User-ID y personalización publicitaria permanecen desactivados.
+- Contacto: `alegfink@gmail.com` funciona como canal público. El diagnóstico conversacional bilingüe, la hoja privada, la notificación por email y el receptor de Google Apps Script están autorizados y activos.
 
 ## Requisitos
 
@@ -72,7 +72,9 @@ Copiar `.env.example` a `.env.local`.
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | base para canonical, Open Graph y sitemap |
 | `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en Sites usa `true` |
-| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | reserva explícita; no instala ni ejecuta un proveedor |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | usar `google-analytics` en producción; sin una configuración válida el adaptador es inerte |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | vacío | identificador público `G-…` de la propiedad; nunca acepta IDs arbitrarios |
+| `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | habilita `debug_mode` únicamente durante una verificación controlada |
 | `CONTACT_PROVIDER` | `disabled` | usar `google-apps-script` sólo después de autorizar y probar la app web |
 | `CONTACT_WEBHOOK_URL` | vacío | URL HTTPS de la implementación de Apps Script terminada en `/exec` |
 | `CONTACT_WEBHOOK_SECRET` | vacío | secreto de 32 caracteres o más, idéntico en Sites y en las propiedades del script; nunca se versiona |
@@ -108,15 +110,11 @@ La política de privacidad describe el proveedor, la finalidad, el acceso, los c
 
 ### Contrato de analytics
 
-`lib/analytics.ts` define un mapa estable de eventos:
+`lib/analytics.ts` y `components/analytics-provider.tsx` implementan GA4 con Consent Mode: el script sólo carga después de aceptar y deja denegados almacenamiento publicitario, Google Signals y personalización. Las vistas App Router se registran manualmente para evitar duplicados.
 
-- cambio de idioma;
-- apertura de proyecto;
-- CTA de contacto;
-- intento, éxito o error de envío;
-- enlace externo.
+La taxonomía cubre adquisición, páginas, secciones visibles, profundidad, tiempo activo, proyectos, casos, CTAs, Gmail/mailto, los diez pasos del diagnóstico, abandono, errores y Core Web Vitals. URLs y referentes se sanean; nombres, emails, respuestas y texto del formulario nunca se envían a Analytics. La primera atribución consentida se guarda sólo durante la sesión y se adjunta a la consulta confirmada en Sheets.
 
-El adaptador actual es inerte. No registra eventos, campos, URLs sensibles ni datos personales. Implementar un proveedor requiere revisar consentimiento y actualizar Privacy.
+El plan operativo, las dimensiones, métricas, UTM, pruebas y blueprint para clientes se documentan en [`docs/strategy/analytics-measurement-plan.md`](docs/strategy/analytics-measurement-plan.md).
 
 ## Contenido e i18n
 
@@ -149,10 +147,8 @@ No se usan testimonios ilustrativos de Lourdes, métricas no verificadas, captur
 
 La versión pública actual no depende de estos puntos. Son bloqueadores concretos de funcionalidades o mejoras futuras:
 
-1. para habilitar el envío dentro del formulario: Alejandro debe atravesar manualmente la advertencia de aplicación no verificada de su propio Apps Script, aceptar los permisos de Sheets y envío de email, terminar el despliegue y copiar la URL `/exec`; después se configuran los secretos de Sites y se ejecuta la prueba real de punta a punta;
-2. para incorporar analytics: decidir proveedor, eventos, datos, retención y necesidad de consentimiento; después actualizar Privacidad antes de activarlo;
-3. para usar dominio propio: elegirlo, configurar DNS y cambiar `NEXT_PUBLIC_SITE_URL`, canonical, sitemap y robots;
-4. medir Core Web Vitals sobre producción y repetir la revisión después de cambios de contenido o medios importantes;
-5. las pruebas visuales responsive siguen siendo manuales; el contrato del formulario ya cubre automáticamente validación, bots, origen, límite de ráfaga, duplicados, respuestas inválidas, caída del proveedor y timeout;
-6. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
-7. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.
+1. para usar dominio propio: elegirlo, configurar DNS y cambiar `NEXT_PUBLIC_SITE_URL`, canonical, sitemap y robots;
+2. reunir volumen real antes de sacar conclusiones: el tablero de GA4 necesita tráfico consentido y los informes estándar pueden demorar hasta 24–48 horas;
+3. repetir la revisión manual visual, el envío real y la lectura de Core Web Vitals después de cambios importantes de contenido o medios;
+4. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
+5. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.

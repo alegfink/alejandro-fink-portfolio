@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { contactIntakeCopy, contactOptions } from "@/content/contact-intake";
 import { trackEvent } from "@/lib/analytics";
+import { getLeadAttribution } from "@/lib/attribution";
 import { validateContactPayload, type ContactInquiry, type ContactValidationErrors } from "@/lib/contact";
 import type { Locale } from "@/lib/i18n";
 
@@ -101,6 +102,9 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const startedAt = useRef(0);
   const submissionId = useRef<string | null>(null);
+  const hasStarted = useRef(false);
+  const submitted = useRef(false);
+  const lastStep = useRef(0);
   const stepHeading = useRef<HTMLHeadingElement>(null);
   const currentStep = stepIds[stepIndex];
   const privacyHref = locale === "es" ? "/es/privacidad/" : "/en/privacy/";
@@ -111,7 +115,25 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
 
   useEffect(() => {
     if (stepIndex > 0) stepHeading.current?.focus();
+    lastStep.current = stepIndex;
   }, [stepIndex]);
+
+  useEffect(() => {
+    const reportAbandon = () => {
+      if (!hasStarted.current || submitted.current) return;
+      trackEvent("contact_form_abandon", {
+        locale,
+        stepNumber: lastStep.current + 1,
+        elapsedSeconds: Math.max(0, Math.round((Date.now() - startedAt.current) / 1000)),
+      });
+      submitted.current = true;
+    };
+    window.addEventListener("pagehide", reportAbandon);
+    return () => {
+      reportAbandon();
+      window.removeEventListener("pagehide", reportAbandon);
+    };
+  }, [locale]);
 
   function update<K extends keyof FormState>(field: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -194,10 +216,19 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
 
   function next() {
     if (!validateStep(currentStep)) return;
+    if (!hasStarted.current) {
+      hasStarted.current = true;
+      trackEvent("contact_form_start", { locale });
+    }
+    trackEvent("contact_form_step", { locale, stepId: currentStep, stepNumber: stepIndex + 1, direction: "forward" });
+    if (stepIndex + 1 === stepIds.length - 1) {
+      trackEvent("contact_form_review", { locale, elapsedSeconds: Math.max(0, Math.round((Date.now() - startedAt.current) / 1000)) });
+    }
     moveTo(stepIndex + 1);
   }
 
   function previous() {
+    trackEvent("contact_form_step", { locale, stepId: currentStep, stepNumber: stepIndex + 1, direction: "back" });
     moveTo(stepIndex - 1);
   }
 
@@ -216,7 +247,7 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
         name: 7, email: 7, company: 7, message: 8,
       };
       if (first && fieldStep[first] !== undefined) moveTo(fieldStep[first]);
-      trackEvent("contact_submit_error", { locale, reason: "validation" });
+      trackEvent("contact_submit_error", { locale, errorReason: "validation" });
       return;
     }
 
@@ -224,20 +255,23 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
     submissionId.current ??= createSubmissionId();
     setErrors({});
     setStatus("sending");
-    trackEvent("contact_submit_attempt", { locale });
+    const elapsedSeconds = Math.max(0, Math.round((Date.now() - startedAt.current) / 1000));
+    trackEvent("contact_submit_attempt", { locale, elapsedSeconds });
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, submissionId: submissionId.current, startedAt: startedAt.current, botField }),
+        body: JSON.stringify({ ...result.data, submissionId: submissionId.current, startedAt: startedAt.current, botField, attribution: getLeadAttribution() }),
       });
       const responseBody = await response.json().catch(() => null) as { ok?: boolean } | null;
       if (!response.ok || responseBody?.ok !== true) throw new Error("provider");
+      submitted.current = true;
       setStatus("success");
-      trackEvent("contact_submit_success", { locale });
-    } catch {
+      trackEvent("contact_submit_success", { locale, elapsedSeconds });
+      trackEvent("generate_lead", { locale });
+    } catch (error) {
       setStatus("error");
-      trackEvent("contact_submit_error", { locale, reason: "provider" });
+      trackEvent("contact_submit_error", { locale, errorReason: error instanceof TypeError ? "network" : "provider" });
     }
   }
 
@@ -246,6 +280,9 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
     setErrors({});
     setStatus("idle");
     submissionId.current = null;
+    hasStarted.current = false;
+    submitted.current = false;
+    lastStep.current = 0;
     startedAt.current = Date.now();
     moveTo(0);
   }

@@ -7,6 +7,7 @@ const SPREADSHEET_ID = "1fl2mZywov2_JLjJhA07EXMfGxQ8_qpfVI1P667KU2QI";
 const SHEET_NAME = "Consultas";
 const RECIPIENT_EMAIL = "alegfink@gmail.com";
 const SECRET_PROPERTY = "WEBHOOK_SECRET";
+const ATTRIBUTION_HEADERS = ["Fuente", "Medio", "Campaña", "Término", "Contenido", "Dominio referente", "Primera ruta", "Atribución capturada"];
 
 const LABELS = {
   goals: {
@@ -107,6 +108,7 @@ function doPost(event) {
 
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
     if (!sheet) return jsonResponse_({ ok: false, code: "SHEET_NOT_FOUND" });
+    ensureAttributionHeaders_(sheet);
 
     const duplicateRow = findSubmissionRow_(sheet, inquiry.submissionId);
     if (duplicateRow) return jsonResponse_({ ok: true, duplicate: true, id: inquiry.submissionId });
@@ -140,6 +142,14 @@ function doPost(event) {
       "Nueva",
       "",
       receivedAt,
+      safeCellText_(inquiry.attribution.source),
+      safeCellText_(inquiry.attribution.medium),
+      safeCellText_(inquiry.attribution.campaign),
+      safeCellText_(inquiry.attribution.term),
+      safeCellText_(inquiry.attribution.content),
+      safeCellText_(inquiry.attribution.referrerDomain),
+      safeCellText_(inquiry.attribution.landingPath),
+      safeCellText_(inquiry.attribution.capturedAt),
     ]);
 
     const row = sheet.getLastRow();
@@ -201,6 +211,7 @@ function normalizeAndValidateInquiry_(input) {
     timeline: text_(input.timeline),
     decisionStage: text_(input.decisionStage),
     message: text_(input.message),
+    attribution: normalizeAttribution_(input.attribution),
   };
 
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(inquiry.submissionId)) return null;
@@ -264,12 +275,54 @@ function buildEmailBody_(inquiry, receivedAt) {
     "PLAZO: " + LABELS.timelines[inquiry.timeline],
     "ETAPA DE DECISIÓN: " + LABELS.decisionStages[inquiry.decisionStage],
     "",
+    "ATRIBUCIÓN CONSENTIDA:",
+    "Fuente / medio: " + ((inquiry.attribution.source || "directo / no informado") + (inquiry.attribution.medium ? " / " + inquiry.attribution.medium : "")),
+    "Campaña: " + (inquiry.attribution.campaign || "—"),
+    "Término / contenido: " + ((inquiry.attribution.term || "—") + " / " + (inquiry.attribution.content || "—")),
+    "Referente: " + (inquiry.attribution.referrerDomain || "—"),
+    "Primera ruta: " + (inquiry.attribution.landingPath || "—"),
+    "Capturada: " + (inquiry.attribution.capturedAt || "—"),
+    "",
     "CONTEXTO ADICIONAL:",
     inquiry.message || "—",
     "",
     "ID: " + inquiry.submissionId,
     "Responder este email dirige la respuesta a " + inquiry.email + ".",
   ].join("\n");
+}
+
+function ensureAttributionHeaders_(sheet) {
+  const startColumn = 28;
+  const current = sheet.getRange(1, startColumn, 1, ATTRIBUTION_HEADERS.length).getDisplayValues()[0];
+  if (current.join("|") !== ATTRIBUTION_HEADERS.join("|")) {
+    sheet.getRange(1, startColumn, 1, ATTRIBUTION_HEADERS.length).setValues([ATTRIBUTION_HEADERS]);
+  }
+}
+
+function normalizeAttribution_(input) {
+  const empty = { source: "", medium: "", campaign: "", term: "", content: "", referrerDomain: "", landingPath: "", capturedAt: "" };
+  if (!input || typeof input !== "object") return empty;
+  const landingPath = text_(input.landingPath).slice(0, 240);
+  const capturedAt = text_(input.capturedAt).slice(0, 40);
+  const referrerDomain = text_(input.referrerDomain).toLowerCase().slice(0, 120);
+  if (landingPath && !/^\/(es|en)(\/[a-z0-9-]+)*\/?$/i.test(landingPath)) return empty;
+  if (referrerDomain && !/^[a-z0-9.-]+$/.test(referrerDomain)) return empty;
+  return {
+    source: attributionText_(input.source, 100),
+    medium: attributionText_(input.medium, 100),
+    campaign: attributionText_(input.campaign, 100),
+    term: attributionText_(input.term, 100),
+    content: attributionText_(input.content, 100),
+    referrerDomain: referrerDomain,
+    landingPath: landingPath,
+    capturedAt: capturedAt,
+  };
+}
+
+function attributionText_(value, max) {
+  const normalized = text_(value).replace(/[\x00-\x1F\x7F]/g, "").slice(0, max);
+  if (normalized.indexOf("@") !== -1 || /\d{8,}/.test(normalized.replace(/\D/g, ""))) return "";
+  return normalized;
 }
 
 function labelsFor_(values, labels) {

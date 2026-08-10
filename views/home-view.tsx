@@ -68,7 +68,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="story-intro shell" data-reveal>
+      <section className="story-intro shell" data-reveal data-analytics-section="home-work-intro">
         <p className="eyebrow">{locale === "es" ? "Archivo de trabajo · 06 proyectos" : "Work archive · 06 projects"}</p>
         <div>
           <h2>{locale === "es" ? "Cada proyecto revela una forma distinta de convertir contexto en experiencia." : "Every project reveals a different way to turn context into experience."}</h2>
@@ -76,7 +76,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="project-story" id="proyectos" data-project-story style={{ "--project-count": projects.length } as React.CSSProperties} aria-label={locale === "es" ? "Recorrido por seis proyectos" : "Six-project journey"}>
+      <section className="project-story" id="proyectos" data-project-story data-analytics-section="home-projects" style={{ "--project-count": projects.length } as React.CSSProperties} aria-label={locale === "es" ? "Recorrido por seis proyectos" : "Six-project journey"}>
         <div className="project-story__sticky">
           <div className="project-story__chrome shell-wide">
             <div className="project-story__topline" aria-hidden="true">
@@ -94,6 +94,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                     key={project.id}
                     className={`project-slide project-slide--${project.id}`}
                     data-story-slide
+                    data-project-id={project.id}
                     data-state={index === 0 ? "active" : "after"}
                     aria-hidden={index === 0 ? "false" : "true"}
                     style={{ "--project-accent": project.accent, "--slide-index": index } as React.CSSProperties}
@@ -136,7 +137,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="capability-story" id="servicios" data-horizontal-story>
+      <section className="capability-story" id="servicios" data-horizontal-story data-analytics-section="home-services">
         <div className="capability-story__sticky">
           <div className="shell capability-story__heading">
             <p className="eyebrow">{copy.home.servicesEyebrow}</p>
@@ -156,7 +157,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="process-story shell" aria-labelledby="process-title">
+      <section className="process-story shell" data-analytics-section="home-process" aria-labelledby="process-title">
         <div className="process-story__heading" data-reveal>
           <p className="eyebrow">{copy.home.processEyebrow}</p>
           <h2 id="process-title">{copy.home.processTitle}</h2>
@@ -173,7 +174,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </ol>
       </section>
 
-      <section className="manifesto-story" data-scroll-manifesto>
+      <section className="manifesto-story" data-scroll-manifesto data-analytics-section="home-perspective">
         <div className="manifesto-story__sticky">
           <div className="manifesto-story__words" aria-hidden="true">
             <span>BUSINESS</span><span>EXPERIENCE</span><span>EXECUTION</span>
@@ -187,7 +188,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="closing-cta closing-cta--motion" data-reveal>
+      <section className="closing-cta closing-cta--motion" data-reveal data-analytics-section="home-contact">
         <div className="shell">
           <p className="eyebrow">{locale === "es" ? "Una conversación útil" : "A useful conversation"}</p>
           <h2>{copy.home.closingTitle}</h2>

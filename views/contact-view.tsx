@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n";
 import { publicContactEmail, siteCopy } from "@/content/site";
 import { ContactForm } from "@/components/contact-form";
+import { TrackedLink } from "@/components/tracked-link";
 
 export function ContactView({ locale, enabled }: { locale: Locale; enabled: boolean }) {
   const copy = siteCopy[locale];
@@ -28,18 +29,18 @@ export function ContactView({ locale, enabled }: { locale: Locale; enabled: bool
         <div className="contact-direct__action">
           <p>{copy.contact.directText}</p>
           <div className="contact-direct__channels">
-            <a className="button button--primary" href={gmailHref} target="_blank" rel="noopener noreferrer" aria-label={`${copy.contact.directAction}: ${publicContactEmail}`}>
+            <TrackedLink className="button button--primary" href={gmailHref} target="_blank" rel="noopener noreferrer" aria-label={`${copy.contact.directAction}: ${publicContactEmail}`} eventName="contact_email_click" eventPayload={{ locale, method: "gmail", placement: "contact" }}>
               <span>{copy.contact.directAction}</span>
               <strong>GMAIL ↗</strong>
-            </a>
-            <a className="contact-direct__fallback" href={emailHref} aria-label={`${copy.contact.directFallbackAction}: ${publicContactEmail}`}>
+            </TrackedLink>
+            <TrackedLink className="contact-direct__fallback" href={emailHref} aria-label={`${copy.contact.directFallbackAction}: ${publicContactEmail}`} eventName="contact_email_click" eventPayload={{ locale, method: "mailto", placement: "contact" }}>
               <span>{copy.contact.directFallbackAction}</span>
               <strong>{publicContactEmail}</strong>
-            </a>
+            </TrackedLink>
           </div>
         </div>
       </section>
-      <section className="contact-layout shell section">
+      <section className="contact-layout shell section" data-analytics-section="contact-diagnostic">
         <aside><p className="eyebrow">{copy.contact.fitTitle}</p><ul className="check-list">{copy.contact.fit.map((item) => <li key={item}>{item}</li>)}</ul><div className="contact-note"><span>{copy.contact.statusLabel}</span><strong>{enabled ? copy.contact.enabledStatus : copy.contact.disabledStatus}</strong></div></aside>
         <div className="contact-form-wrap">
           <p className="eyebrow">{copy.contact.formEyebrow}</p>

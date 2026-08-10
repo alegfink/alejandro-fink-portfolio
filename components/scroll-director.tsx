@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -11,6 +12,7 @@ export function ScrollDirector() {
     const story = document.querySelector<HTMLElement>("[data-project-story]");
     const storySlides = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-slide]")) : [];
     const storyMarkers = story ? Array.from(story.querySelectorAll<HTMLElement>("[data-story-marker]")) : [];
+    const viewedProjects = new Set<string>();
 
     const selectStorySlide = (activeIndex: number) => {
       storySlides.forEach((slide, index) => {
@@ -25,6 +27,11 @@ export function ScrollDirector() {
         marker.dataset.state = index === activeIndex ? "active" : "idle";
       });
       story?.style.setProperty("--active-project", String(activeIndex));
+      const projectId = storySlides[activeIndex]?.dataset.projectId;
+      const locale = document.documentElement.lang === "en" ? "en" : "es";
+      if (projectId && !viewedProjects.has(projectId) && trackEvent("project_story_view", { projectId, locale, position: activeIndex + 1 })) {
+        viewedProjects.add(projectId);
+      }
     };
 
     if (reducedMotion) {

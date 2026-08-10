@@ -28,6 +28,18 @@ export type ContactSubmission = ContactInquiry & {
   submissionId: string;
   startedAt: number;
   botField?: string;
+  attribution?: ContactAttribution;
+};
+
+export type ContactAttribution = {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+  referrerDomain?: string;
+  landingPath: string;
+  capturedAt: string;
 };
 
 export type ContactPayload = ContactInquiry;
@@ -52,6 +64,34 @@ const allowedDecisionStages = new Set<ContactInquiry["decisionStage"]>(["explori
 
 function stringValue(candidate: Record<string, unknown>, key: string) {
   return typeof candidate[key] === "string" ? candidate[key].trim() : "";
+}
+
+function attributionValue(candidate: Record<string, unknown>, key: string, max = 100) {
+  const value = stringValue(candidate, key).replace(/[\u0000-\u001F\u007F]/g, "").slice(0, max);
+  if (!value || value.includes("@") || /\d{8,}/.test(value.replace(/\D/g, ""))) return "";
+  return value;
+}
+
+function validateAttribution(value: unknown, now = Date.now()): ContactAttribution | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const candidate = value as Record<string, unknown>;
+  const landingPath = stringValue(candidate, "landingPath");
+  const capturedAt = stringValue(candidate, "capturedAt");
+  if (!/^\/(?:es|en)(?:\/[a-z0-9-]+)*\/?$/i.test(landingPath) || landingPath.length > 240) return undefined;
+  const timestamp = Date.parse(capturedAt);
+  if (!Number.isFinite(timestamp) || timestamp > now + 60_000 || timestamp < now - 30 * 24 * 60 * 60 * 1_000) return undefined;
+  const referrerDomain = attributionValue(candidate, "referrerDomain", 120).toLowerCase();
+  if (referrerDomain && !/^[a-z0-9.-]+$/.test(referrerDomain)) return undefined;
+  return {
+    landingPath,
+    capturedAt: new Date(timestamp).toISOString(),
+    ...(attributionValue(candidate, "source") ? { source: attributionValue(candidate, "source") } : {}),
+    ...(attributionValue(candidate, "medium") ? { medium: attributionValue(candidate, "medium") } : {}),
+    ...(attributionValue(candidate, "campaign") ? { campaign: attributionValue(candidate, "campaign") } : {}),
+    ...(attributionValue(candidate, "term") ? { term: attributionValue(candidate, "term") } : {}),
+    ...(attributionValue(candidate, "content") ? { content: attributionValue(candidate, "content") } : {}),
+    ...(referrerDomain ? { referrerDomain } : {}),
+  };
 }
 
 function arrayValue<T extends string>(value: unknown, allowed: Set<T>): T[] {
@@ -180,6 +220,7 @@ export function validateContactSubmission(input: unknown, now = Date.now()):
 
   const inquiry = validateContactPayload(candidate);
   if (!inquiry.valid || !inquiry.data) return { valid: false, code: "VALIDATION_ERROR", errors: inquiry.errors };
+  const attribution = validateAttribution(candidate.attribution, now);
 
   return {
     valid: true,
@@ -188,6 +229,7 @@ export function validateContactSubmission(input: unknown, now = Date.now()):
       submissionId: candidate.submissionId,
       startedAt: candidate.startedAt,
       ...(typeof candidate.botField === "string" ? { botField: candidate.botField } : {}),
+      ...(attribution ? { attribution } : {}),
     },
   };
 }

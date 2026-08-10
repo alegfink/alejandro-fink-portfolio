@@ -86,6 +86,28 @@ describe("contact contract", () => {
     expect(validateContactSubmission(validSubmission, 1_000 + CONTACT_MIN_COMPLETION_MS).valid).toBe(true);
   });
 
+  it("accepts recent consented attribution and omits stale attribution", () => {
+    const now = Date.UTC(2026, 7, 10, 15, 0, 0);
+    const attribution = {
+      source: "linkedin",
+      medium: "organic-social",
+      campaign: "portfolio-lanzamiento-2026",
+      content: "post-carrusel",
+      landingPath: "/en/work/torvena",
+      capturedAt: new Date(now - 1_000).toISOString(),
+    };
+    const current = validateContactSubmission({ ...validSubmission, startedAt: now - CONTACT_MIN_COMPLETION_MS, attribution }, now);
+    expect(current).toMatchObject({ valid: true, data: { attribution } });
+
+    const stale = validateContactSubmission({
+      ...validSubmission,
+      startedAt: now - CONTACT_MIN_COMPLETION_MS,
+      attribution: { ...attribution, capturedAt: new Date(now - 31 * 24 * 60 * 60 * 1_000).toISOString() },
+    }, now);
+    expect(stale).toMatchObject({ valid: true });
+    if (stale.valid) expect(stale.data.attribution).toBeUndefined();
+  });
+
   it("detects the honeypot and rejects submissions completed too quickly", () => {
     expect(validateContactSubmission({ ...validSubmission, botField: "spam" }, 20_000)).toMatchObject({ valid: false, code: "BOT_DETECTED" });
     expect(validateContactSubmission(validSubmission, 1_000 + CONTACT_MIN_COMPLETION_MS - 1)).toMatchObject({ valid: false, code: "FORM_TOO_FAST" });

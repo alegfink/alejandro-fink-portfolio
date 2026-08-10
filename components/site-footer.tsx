@@ -1,6 +1,8 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { routeNames, type Locale } from "@/lib/i18n";
 import { publicContactEmail, siteCopy } from "@/content/site";
+import { AnalyticsPreferencesButton } from "@/components/analytics-provider";
+import { TrackedLink } from "@/components/tracked-link";
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
@@ -11,7 +13,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div>
           <p className="brand brand--footer"><span className="brand__mark" aria-hidden="true">AF</span><span className="brand__name">Alejandro Fink</span></p>
           <p>{copy.footer.note}</p>
-          <a className="site-footer__email" href={`mailto:${publicContactEmail}`}>{publicContactEmail}</a>
+          <TrackedLink className="site-footer__email" href={`mailto:${publicContactEmail}`} eventName="contact_email_click" eventPayload={{ locale, method: "mailto", placement: "footer" }}>{publicContactEmail}</TrackedLink>
         </div>
         <nav aria-label={locale === "es" ? "Navegación de pie" : "Footer navigation"}>
           <a href={routes.work}>{copy.nav.work}</a>
@@ -22,6 +24,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div className="site-footer__locale">
           <span>{copy.footer.language}</span>
           <LanguageSwitcher locale={locale} compact />
+          <AnalyticsPreferencesButton locale={locale} />
         </div>
       </div>
       <div className="shell site-footer__base"><span>© {new Date().getFullYear()} Alejandro Fink</span><span>{copy.descriptor}</span></div>
