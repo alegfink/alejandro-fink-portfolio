@@ -39,6 +39,12 @@ describe("contact contract", () => {
   });
 
   it("accepts a minimal valid payload", () => {
-    expect(validateContactPayload({ name: "Ada", email: "ada@example.com", need: "product", message: "I need a useful product validation flow.", locale: "en" }).valid).toBe(true);
+    expect(validateContactPayload({ name: "Ada", email: "ada@example.com", need: "product", stage: "starting", message: "I need a useful product validation flow.", locale: "en" }).valid).toBe(true);
+  });
+
+  it("accepts an optional web reference and rejects unsafe protocols", () => {
+    const base = { name: "Ada", email: "ada@example.com", need: "evolution", stage: "existing-site", message: "I need to improve an existing product flow.", locale: "en" };
+    expect(validateContactPayload({ ...base, website: "https://example.com/reference" }).valid).toBe(true);
+    expect(validateContactPayload({ ...base, website: "javascript:alert(1)" }).valid).toBe(false);
   });
 });

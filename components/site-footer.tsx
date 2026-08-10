@@ -1,6 +1,6 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { routeNames, type Locale } from "@/lib/i18n";
-import { siteCopy } from "@/content/site";
+import { publicContactEmail, siteCopy } from "@/content/site";
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
@@ -11,6 +11,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div>
           <p className="brand brand--footer"><span className="brand__mark" aria-hidden="true">AF</span><span className="brand__name">Alejandro Fink</span></p>
           <p>{copy.footer.note}</p>
+          <a className="site-footer__email" href={`mailto:${publicContactEmail}`}>{publicContactEmail}</a>
         </div>
         <nav aria-label={locale === "es" ? "Navegación de pie" : "Footer navigation"}>
           <a href={routes.work}>{copy.nav.work}</a>

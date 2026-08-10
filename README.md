@@ -4,11 +4,11 @@ Portfolio profesional v1 construido con Next.js App Router, TypeScript y conteni
 
 ## Estado
 
-- Desarrollo local: completo.
-- Publicación: bloqueada hasta configurar identidad operativa, dominio y flujo real de datos.
+- Desarrollo y publicación en Sites: activos en `https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site`.
+- Dominio: se mantiene el subdominio público de Sites; un dominio propio queda como mejora futura.
 - Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
-- Analytics: contrato definido, proveedor desactivado.
-- Contacto: interfaz y validación implementadas, envío desactivado.
+- Analytics: contrato definido, proveedor desactivado y adopción planificada para una etapa posterior.
+- Contacto: `alegfink@gmail.com` funciona como canal público; el formulario y su validación están preparados para revisión, pero el envío dentro del sitio permanece desactivado.
 
 ## Requisitos
 
@@ -70,22 +70,23 @@ Copiar `.env.example` a `.env.local`.
 | Variable | Valor local | Uso |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | base para canonical, Open Graph y sitemap |
-| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | `robots.txt` bloquea indexación hasta el dominio final |
+| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en Sites usa `true` |
 | `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | reserva explícita; no instala ni ejecuta un proveedor |
 | `CONTACT_PROVIDER` | `disabled` | solo `webhook` permite evaluar la integración |
 | `CONTACT_WEBHOOK_URL` | vacío | debe ser HTTPS y pertenecer al proveedor real |
-| `CONTACT_RECIPIENT_EMAIL` | vacío | email real y verificado de recepción |
+| `CONTACT_RECIPIENT_EMAIL` | `alegfink@gmail.com` | email confirmado de recepción; no habilita el formulario por sí solo |
 
 ### Contrato de contacto
 
 Mientras la configuración siga incompleta:
 
-- los campos se muestran desactivados;
+- el email público funciona mediante un enlace `mailto:`;
+- los campos propuestos —nombre, email, empresa o proyecto, URL opcional, tipo de necesidad, situación actual y contexto— se muestran desactivados para revisión;
 - no se envían ni almacenan mensajes;
 - `POST /api/contact` responde `503 CONTACT_DISABLED` antes de leer el body;
 - no se muestra un éxito falso ni un email inventado.
 
-Al configurar un proveedor real, el endpoint valida origen, estructura, longitudes, email y tipo de necesidad antes de llamar al webhook HTTPS. La política de privacidad debe actualizarse con el proveedor, finalidad, responsable, retención y derechos antes de habilitarlo.
+Al configurar un proveedor real, el endpoint valida origen, estructura, longitudes, email, URL, situación y tipo de necesidad antes de llamar al webhook HTTPS. La política de privacidad debe actualizarse con el proveedor, finalidad, responsable, retención y derechos antes de habilitarlo.
 
 ### Contrato de analytics
 
@@ -116,23 +117,24 @@ La implementación apunta a WCAG 2.2 AA. Incluye HTML semántico, skip link, foc
 
 La referencia de rendimiento vigente usada es: LCP ≤ 2.5 s, INP ≤ 200 ms y CLS ≤ 0.1 al percentil 75 en mobile y desktop. Ver [Web Vitals](https://web.dev/articles/vitals) y [WCAG 2 Overview](https://www.w3.org/WAI/standards-guidelines/wcag/).
 
+Las imágenes de proyectos que están fuera del primer viewport cargan de forma diferida para no competir con el contenido inicial. La medición final de Core Web Vitals requiere ejecutar Lighthouse/PageSpeed sobre la publicación y, más adelante, observar datos reales de usuarios.
+
+Las respuestas incluyen CSP, HSTS, bloqueo de MIME sniffing, política de referer, restricción de permisos y protección frente a iframes. La CSP limita scripts, imágenes, fuentes, formularios y conexiones a los orígenes que el sitio necesita; HSTS obliga a reutilizar HTTPS después de la primera visita segura.
+
 ## Assets
 
 Las carpetas externas se trataron como solo lectura. Solo se copiaron derivados necesarios y capturas públicas sin credenciales o datos personales. El origen, permiso y límite de cada grupo de medios está en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
 
 No se usan testimonios ilustrativos de Lourdes, métricas no verificadas, capturas administrativas ni datos de formularios.
 
-## Gate de publicación
+## Pendientes de producción
 
-Bloqueadores concretos:
+La versión pública actual no depende de estos puntos. Son bloqueadores concretos de funcionalidades o mejoras futuras:
 
-1. dominio principal, DNS y valor definitivo de `NEXT_PUBLIC_SITE_URL`;
-2. email profesional y canal de recepción probado;
-3. proveedor real del formulario, webhook, antispam y monitoreo;
-4. responsable de datos y política de privacidad actualizada al flujo real;
-5. proveedor de analytics y consentimiento, si se decide incorporarlo;
-6. URL de LinkedIn y datos personales que finalmente se autoricen;
-7. revisión editorial final ES/EN;
-8. QA del entorno productivo, medición de Core Web Vitals y smoke test posterior al deploy.
-
-No habilitar `NEXT_PUBLIC_INDEXING_ENABLED=true` hasta completar el gate y revisar canonical, sitemap y robots sobre el dominio final.
+1. para habilitar el envío dentro del formulario: elegir proveedor, crear y probar el webhook, definir antispam y monitoreo, y actualizar Privacidad con el flujo real;
+2. para incorporar analytics: decidir proveedor, eventos, datos, retención y necesidad de consentimiento; después actualizar Privacidad antes de activarlo;
+3. para usar dominio propio: elegirlo, configurar DNS y cambiar `NEXT_PUBLIC_SITE_URL`, canonical, sitemap y robots;
+4. medir Core Web Vitals sobre producción y repetir la revisión después de cambios de contenido o medios importantes;
+5. ampliar la cobertura automática con pruebas visuales y E2E para navegación, idiomas, responsive y estados del formulario;
+6. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
+7. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.

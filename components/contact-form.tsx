@@ -6,7 +6,7 @@ import { siteCopy } from "@/content/site";
 import { trackEvent } from "@/lib/analytics";
 import { validateContactPayload, type ContactPayload, type ContactValidationErrors } from "@/lib/contact";
 
-const initialForm: Omit<ContactPayload, "locale"> = { name: "", company: "", email: "", need: "business-site", message: "" };
+const initialForm: Omit<ContactPayload, "locale"> = { name: "", company: "", email: "", website: "", need: "business-site", stage: "starting", message: "" };
 
 export function ContactForm({ locale, enabled }: { locale: Locale; enabled: boolean }) {
   const copy = siteCopy[locale].contact;
@@ -16,8 +16,8 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
 
   const errorLabel = (field: keyof ContactValidationErrors) => {
     const labels = locale === "es"
-      ? { name: "Ingresá al menos dos caracteres.", email: "Ingresá un email válido.", need: "Elegí una opción.", message: "Contanos al menos 20 caracteres.", locale: "Idioma inválido.", company: "El nombre es demasiado largo." }
-      : { name: "Enter at least two characters.", email: "Enter a valid email.", need: "Choose an option.", message: "Share at least 20 characters.", locale: "Invalid language.", company: "The name is too long." };
+      ? { name: "Ingresá al menos dos caracteres.", email: "Ingresá un email válido.", need: "Elegí una opción.", stage: "Elegí una situación.", message: "Contanos al menos 20 caracteres.", locale: "Idioma inválido.", company: "El nombre es demasiado largo.", website: "Ingresá una URL completa que empiece con http:// o https://." }
+      : { name: "Enter at least two characters.", email: "Enter a valid email.", need: "Choose an option.", stage: "Choose a current situation.", message: "Share at least 20 characters.", locale: "Invalid language.", company: "The name is too long.", website: "Enter a complete URL starting with http:// or https://." };
     return labels[field];
   };
 
@@ -70,24 +70,37 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
             {errors.email ? <small id="email-error" className="field-error">{errorLabel("email")}</small> : null}
           </label>
           <label>
+            <span>{copy.fields.website}</span>
+            <input type="url" value={form.website} onChange={(event) => setForm({ ...form, website: event.target.value })} autoComplete="url" placeholder={copy.placeholders.website} aria-invalid={Boolean(errors.website)} aria-describedby={errors.website ? "website-error" : undefined} />
+            {errors.website ? <small id="website-error" className="field-error">{errorLabel("website")}</small> : null}
+          </label>
+        </div>
+        <div className="form-grid">
+          <label>
             <span>{copy.fields.need}</span>
             <select value={form.need} onChange={(event) => setForm({ ...form, need: event.target.value as ContactPayload["need"] })}>
               {Object.entries(copy.needs).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
             </select>
           </label>
+          <label>
+            <span>{copy.fields.stage}</span>
+            <select value={form.stage} onChange={(event) => setForm({ ...form, stage: event.target.value as ContactPayload["stage"] })}>
+              {Object.entries(copy.stages).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+          </label>
         </div>
         <label>
           <span>{copy.fields.message}</span>
-          <textarea rows={7} value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
+          <textarea rows={7} value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} placeholder={copy.placeholders.message} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
           {errors.message ? <small id="message-error" className="field-error">{errorLabel("message")}</small> : null}
         </label>
-        <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
+        <label className="honeypot" aria-hidden="true">Leave blank<input name="contact_website_check" tabIndex={-1} autoComplete="off" /></label>
         <p className="form-privacy">{copy.privacy}</p>
         <button className="button button--primary" type="submit">{status === "sending" ? "…" : copy.fields.submit}</button>
       </fieldset>
       {!enabled ? (
         <div className="form-disabled" id="contact-disabled-note" role="note">
-          <span aria-hidden="true">CONFIG / OFF</span>
+          <span aria-hidden="true">PREVIEW / NO SEND</span>
           <strong>{copy.disabledTitle}</strong>
           <p>{copy.disabledText}</p>
           <small>{copy.disabledAction}</small>

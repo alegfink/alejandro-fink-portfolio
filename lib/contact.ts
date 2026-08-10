@@ -4,9 +4,11 @@ export type ContactPayload = {
   name: string;
   email: string;
   need: "business-site" | "ecommerce" | "product" | "evolution" | "collaboration";
+  stage: "starting" | "existing-site" | "operating" | "exploring";
   message: string;
   locale: ContactLocale;
   company?: string;
+  website?: string;
 };
 
 export type ContactValidationErrors = Partial<Record<keyof ContactPayload, string>>;
@@ -19,6 +21,22 @@ const allowedNeeds = new Set<ContactPayload["need"]>([
   "evolution",
   "collaboration",
 ]);
+const allowedStages = new Set<ContactPayload["stage"]>([
+  "starting",
+  "existing-site",
+  "operating",
+  "exploring",
+]);
+
+function isValidOptionalWebsite(value: string) {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return (url.protocol === "https:" || url.protocol === "http:") && value.length <= 500;
+  } catch {
+    return false;
+  }
+}
 
 export function validateContactPayload(input: unknown): {
   valid: boolean;
@@ -35,22 +53,26 @@ export function validateContactPayload(input: unknown): {
   const email = typeof candidate.email === "string" ? candidate.email.trim() : "";
   const message = typeof candidate.message === "string" ? candidate.message.trim() : "";
   const need = candidate.need as ContactPayload["need"];
+  const stage = candidate.stage as ContactPayload["stage"];
   const locale = candidate.locale as ContactLocale;
   const company = typeof candidate.company === "string" ? candidate.company.trim() : "";
+  const website = typeof candidate.website === "string" ? candidate.website.trim() : "";
 
   if (name.length < 2 || name.length > 80) errors.name = "Name must contain 2–80 characters";
   if (!emailPattern.test(email) || email.length > 160) errors.email = "A valid email is required";
   if (!allowedNeeds.has(need)) errors.need = "Choose a valid project type";
+  if (!allowedStages.has(stage)) errors.stage = "Choose a valid project stage";
   if (message.length < 20 || message.length > 3000) errors.message = "Message must contain 20–3000 characters";
   if (locale !== "es" && locale !== "en") errors.locale = "Invalid locale";
   if (company.length > 120) errors.company = "Company name is too long";
+  if (!isValidOptionalWebsite(website)) errors.website = "Website must be a valid HTTP(S) URL";
 
   if (Object.keys(errors).length > 0) return { valid: false, errors };
 
   return {
     valid: true,
     errors,
-    data: { name, email, need, message, locale, ...(company ? { company } : {}) },
+    data: { name, email, need, stage, message, locale, ...(company ? { company } : {}), ...(website ? { website } : {}) },
   };
 }
 

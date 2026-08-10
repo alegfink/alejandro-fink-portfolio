@@ -3,9 +3,12 @@
 import { usePathname } from "next/navigation";
 import { siteCopy } from "@/content/site";
 import { routeNames, type Locale } from "@/lib/i18n";
+import { GlobalNotFoundView } from "@/components/global-not-found-view";
 
 export function NotFoundView({ forceLocale }: { forceLocale?: Locale }) {
   const pathname = usePathname();
+  const hasLocale = pathname === "/es" || pathname.startsWith("/es/") || pathname === "/en" || pathname.startsWith("/en/");
+  if (!forceLocale && !hasLocale) return <GlobalNotFoundView />;
   const locale: Locale = forceLocale ?? (pathname.startsWith("/es") ? "es" : "en");
   const copy = siteCopy[locale];
   return (

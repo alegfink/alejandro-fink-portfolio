@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import "@fontsource-variable/instrument-sans";
 import "@fontsource-variable/newsreader";
 import "../globals.css";
@@ -26,7 +25,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function LocaleLayout({ children, params }: Readonly<{ children: React.ReactNode; params: Promise<{ locale: string }> }>) {
   const { locale } = await params;
-  if (!isLocale(locale)) notFound();
+  if (!isLocale(locale)) {
+    return <html lang="en" data-scroll-behavior="smooth"><body>{children}</body></html>;
+  }
   const copy = siteCopy[locale];
   return (
     <html lang={locale} data-scroll-behavior="smooth">

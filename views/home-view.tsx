@@ -102,8 +102,8 @@ export function HomeView({ locale }: { locale: Locale }) {
                       <div className="project-slide__browser">
                         <div className="project-slide__browserbar"><span /><span /><span /><i>{project.publicUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}</i></div>
                         <div className="project-slide__image">
-                          <Image className="project-slide__desktop" src={visual.desktop} alt={project.media[0].alt[locale]} fill priority={index === 0} sizes="(max-width: 760px) 100vw, 58vw" />
-                          <Image className="project-slide__mobile" src={visual.mobile} alt={project.media[0].alt[locale]} fill priority={index === 0} sizes="(max-width: 760px) 42vw, 1px" />
+                          <Image className="project-slide__desktop" src={visual.desktop} alt={project.media[0].alt[locale]} fill sizes="(max-width: 760px) 100vw, 58vw" />
+                          <Image className="project-slide__mobile" src={visual.mobile} alt={project.media[0].alt[locale]} fill sizes="(max-width: 760px) 42vw, 1px" />
                         </div>
                       </div>
                       <div className="project-slide__number" aria-hidden="true">{String(project.order).padStart(2, "0")}</div>
