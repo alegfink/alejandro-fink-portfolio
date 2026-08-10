@@ -4,6 +4,19 @@ import { ContactForm } from "@/components/contact-form";
 
 export function ContactView({ locale, enabled }: { locale: Locale; enabled: boolean }) {
   const copy = siteCopy[locale];
+  const emailQuery = new URLSearchParams({
+    subject: copy.contact.directSubject,
+    body: copy.contact.directBody,
+  });
+  const gmailQuery = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: publicContactEmail,
+    su: copy.contact.directSubject,
+    body: copy.contact.directBody,
+  });
+  const gmailHref = `https://mail.google.com/mail/?${gmailQuery.toString()}`;
+  const emailHref = `mailto:${publicContactEmail}?${emailQuery.toString()}`;
   return (
     <main id="main-content">
       <section className="page-hero shell"><p className="eyebrow">{copy.contact.eyebrow}</p><h1>{copy.contact.title}</h1><p>{copy.contact.intro}</p></section>
@@ -14,10 +27,16 @@ export function ContactView({ locale, enabled }: { locale: Locale; enabled: bool
         </div>
         <div className="contact-direct__action">
           <p>{copy.contact.directText}</p>
-          <a className="button button--primary" href={`mailto:${publicContactEmail}`} aria-label={`${copy.contact.directAction}: ${publicContactEmail}`}>
-            <span>{copy.contact.directAction}</span>
-            <strong>{publicContactEmail}</strong>
-          </a>
+          <div className="contact-direct__channels">
+            <a className="button button--primary" href={gmailHref} target="_blank" rel="noopener noreferrer" aria-label={`${copy.contact.directAction}: ${publicContactEmail}`}>
+              <span>{copy.contact.directAction}</span>
+              <strong>GMAIL ↗</strong>
+            </a>
+            <a className="contact-direct__fallback" href={emailHref} aria-label={`${copy.contact.directFallbackAction}: ${publicContactEmail}`}>
+              <span>{copy.contact.directFallbackAction}</span>
+              <strong>{publicContactEmail}</strong>
+            </a>
+          </div>
         </div>
       </section>
       <section className="contact-layout shell section">

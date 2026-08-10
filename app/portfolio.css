@@ -179,8 +179,14 @@
 .contact-direct h2 { max-width: 560px; font-family: var(--font-serif); font-size: clamp(40px, 5vw, 70px); font-weight: 470; }
 .contact-direct__action { display: grid; justify-items: start; gap: 28px; }
 .contact-direct__action > p { max-width: 590px; color: #bec6d3; font-size: 18px; }
+.contact-direct__channels { display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; }
 .contact-direct__action .button { max-width: 100%; flex-wrap: wrap; justify-content: flex-start; }
 .contact-direct__action .button strong { font-family: var(--font-mono); font-size: 12px; font-weight: 650; }
+.contact-direct__fallback { display: inline-flex; flex-direction: column; gap: 2px; padding: 7px 0; border-bottom: 1px solid #6f7888; color: white; }
+.contact-direct__fallback span { font-size: 14px; font-weight: 750; }
+.contact-direct__fallback strong { color: #aeb7c6; font-family: var(--font-mono); font-size: 10px; font-weight: 600; }
+.contact-direct__fallback:hover { border-color: var(--signal); color: var(--signal); }
+.contact-direct__fallback:focus-visible { border-radius: 3px; outline: 2px solid var(--signal); outline-offset: 5px; }
 .contact-layout { display: grid; grid-template-columns: minmax(230px, .52fr) minmax(0, 1.48fr); gap: clamp(50px, 8vw, 120px); align-items: start; }
 .contact-layout aside { position: sticky; top: 30px; }
 .contact-note { display: grid; gap: 5px; margin-top: 48px; padding: 18px; border: 1px solid var(--line); background: var(--surface); font-family: var(--font-mono); font-size: 10px; }
@@ -336,6 +342,9 @@
   .about-story, .about-principles { grid-template-columns: 1fr; }
   .about-graphic { min-height: 480px; }
   .contact-direct { grid-template-columns: 1fr; align-items: start; }
+  .contact-direct__channels { display: grid; width: 100%; }
+  .contact-direct__channels .button { width: 100%; }
+  .contact-direct__fallback { justify-self: start; }
   .form-grid { grid-template-columns: 1fr; }
   .contact-wizard { margin-inline: -10px; border-radius: var(--radius-md); box-shadow: 6px 6px 0 var(--ink); }
   .wizard-step { min-height: 560px; padding: 28px 20px; }
