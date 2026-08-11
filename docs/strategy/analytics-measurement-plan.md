@@ -133,7 +133,7 @@ Todas las etiquetas se escriben en minúsculas, sin espacios y con guiones.
 Ejemplo:
 
 ```text
-https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site/es?utm_source=linkedin&utm_medium=organic-social&utm_campaign=portfolio-lanzamiento-2026&utm_content=post-carrusel
+https://www.alejandrofink.com/es?utm_source=linkedin&utm_medium=organic-social&utm_campaign=portfolio-lanzamiento-2026&utm_content=post-carrusel
 ```
 
 Nunca incluir nombres, emails, teléfonos, IDs de CRM ni texto libre en UTM.

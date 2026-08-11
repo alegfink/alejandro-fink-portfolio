@@ -4,8 +4,8 @@ Portfolio profesional v1 construido con Next.js App Router, TypeScript y conteni
 
 ## Estado
 
-- Desarrollo y publicación en Sites: activos en `https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site`.
-- Dominio: se mantiene el subdominio público de Sites; un dominio propio queda como mejora futura.
+- Desarrollo y publicación en Sites: activos en `https://www.alejandrofink.com/`.
+- Dominio: `alejandrofink.com` está conectado como dominio propio y `www.alejandrofink.com` es el origen canónico público.
 - Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
 - Analytics: GA4 configurado con consentimiento explícito, atribución first-party del lead, funnel comercial y Core Web Vitals reales. Google Signals, User-ID y personalización publicitaria permanecen desactivados.
 - Contacto: `alegfink@gmail.com` funciona como canal público. El diagnóstico conversacional bilingüe, la hoja privada, la notificación por email y el receptor de Google Apps Script están autorizados y activos.
@@ -71,7 +71,7 @@ Copiar `.env.example` a `.env.local`.
 | Variable | Valor local | Uso |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | base para canonical, Open Graph y sitemap |
-| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en Sites usa `true` |
+| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en el dominio propio usa `true` |
 | `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | usar `google-analytics` en producción; sin una configuración válida el adaptador es inerte |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | vacío | identificador público `G-…` de la propiedad; nunca acepta IDs arbitrarios |
 | `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | habilita `debug_mode` únicamente durante una verificación controlada |
@@ -147,8 +147,7 @@ No se usan testimonios ilustrativos de Lourdes, métricas no verificadas, captur
 
 La versión pública actual no depende de estos puntos. Son bloqueadores concretos de funcionalidades o mejoras futuras:
 
-1. para usar dominio propio: elegirlo, configurar DNS y cambiar `NEXT_PUBLIC_SITE_URL`, canonical, sitemap y robots;
-2. reunir volumen real antes de sacar conclusiones: el tablero de GA4 necesita tráfico consentido y los informes estándar pueden demorar hasta 24–48 horas;
-3. repetir la revisión manual visual, el envío real y la lectura de Core Web Vitals después de cambios importantes de contenido o medios;
-4. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
-5. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.
+1. reunir volumen real antes de sacar conclusiones: el tablero de GA4 necesita tráfico consentido y los informes estándar pueden demorar hasta 24–48 horas;
+2. repetir la revisión manual visual, el envío real y la lectura de Core Web Vitals después de cambios importantes de contenido o medios;
+3. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
+4. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.
