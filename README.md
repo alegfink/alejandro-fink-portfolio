@@ -70,8 +70,6 @@ npm run check
 
 Production contact delivery and analytics remain inert unless valid environment configuration is supplied. Secrets are never committed.
 
-The checked-in `.openai/hosting.json` contains a non-operational placeholder. Replace its project ID only when deploying an authorized copy through Sites.
-
 ## AI-assisted development
 
 This project was built through an AI-assisted workflow. AI supported research, prototyping, implementation and iteration; Alejandro retained responsibility for scope, decisions, diff review, testing, publication and ongoing operation. The repository is evidence of the resulting system, not a claim that every line was written without assistance.
