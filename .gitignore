@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# Next.js
+/.next
+/.vinext
+/out
+/dist
+/.wrangler
+
+# local configuration
+.env*
+!.env.example
+!.env.production
+
+# test and tooling output
+/coverage
+*.tsbuildinfo
+/artifacts/reference-video/
+/artifacts/qa/motion-*.png
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.log
