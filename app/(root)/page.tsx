@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { RootRedirect } from "@/components/root-redirect";
 
 export const metadata: Metadata = {
-  title: "Alejandro Fink — Portfolio",
+  title: "Alejandro Fink | E-commerce & Digital Operations",
   description: "Elegí un idioma · Choose a language",
   robots: { index: false, follow: true },
 };

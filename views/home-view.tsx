@@ -19,8 +19,8 @@ export function HomeView({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
   const routes = routeNames[locale];
   const heroLines = locale === "es"
-    ? ["Diseño y desarrollo", "sitios web y productos", "digitales que resuelven", "problemas reales de negocio."]
-    : ["I design and build", "websites and digital products", "that solve real", "business problems."];
+    ? ["Opero y hago avanzar", "negocios digitales", "conectando producto, experiencia", "y operación."]
+    : ["I operate and move", "digital businesses forward", "by connecting product, experience", "and operations."];
 
   return (
     <main id="main-content" className="motion-home">
@@ -62,7 +62,7 @@ export function HomeView({ locale }: { locale: Locale }) {
           </div>
 
           <div className="motion-hero__ticker" aria-hidden="true">
-            <span>BUSINESS × UX × PRODUCT × CODE × BUSINESS × UX × PRODUCT × CODE ×</span>
+            <span>E-COMMERCE × PRODUCT × UX × OPERATIONS × E-COMMERCE × PRODUCT × UX × OPERATIONS ×</span>
           </div>
           <div className="motion-hero__progress" aria-hidden="true"><span>SCROLL</span><i /></div>
         </div>
@@ -166,7 +166,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                 <span>{service.number}</span>
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
-                <i aria-hidden="true">AF / BUILD</i>
+                <i aria-hidden="true">AF / OPERATE</i>
               </li>
             ))}
           </ol>
@@ -194,7 +194,7 @@ export function HomeView({ locale }: { locale: Locale }) {
       <section className="manifesto-story" data-scroll-manifesto data-analytics-section="home-perspective">
         <div className="manifesto-story__sticky">
           <div className="manifesto-story__words" aria-hidden="true">
-            <span>BUSINESS</span><span>EXPERIENCE</span><span>EXECUTION</span>
+            <span>E-COMMERCE</span><span>PRODUCT</span><span>OPERATIONS</span>
           </div>
           <div className="manifesto-story__card shell">
             <p className="eyebrow">{copy.home.perspectiveEyebrow}</p>

@@ -7,8 +7,8 @@ import { getSiteUrl } from "@/lib/urls";
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
-  title: "Alejandro Fink",
-  description: "Web development and digital products for real business needs.",
+  title: "Alejandro Fink | E-commerce & Digital Operations",
+  description: "Alejandro Fink’s portfolio: e-commerce, product, UX, Shopify, digital operations and implementation coordinated with AI or specialists.",
 };
 
 export default function RootRedirectLayout({ children }: Readonly<{ children: React.ReactNode }>) {
