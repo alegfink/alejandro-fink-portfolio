@@ -1,15 +1,15 @@
-# Alejandro Fink — Web Solutions Portfolio
+# Alejandro Fink — E-commerce & Digital Operations Portfolio
 
-[Live portfolio](https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site/) · [LinkedIn](https://www.linkedin.com/in/alejandro-fink/) · [Email](mailto:alegfink@gmail.com)
+[Live portfolio](https://www.alejandrofink.com/) · [LinkedIn](https://www.linkedin.com/in/alejandro-fink/) · [Email](mailto:alegfink@gmail.com)
 
 ![Portfolio preview](public/og.png)
 
-Bilingual portfolio and selected-work system for a Buenos Aires–based web solutions developer. It presents production work, MVPs and prototypes with explicit evidence boundaries instead of treating every project as equally validated.
+Bilingual portfolio and selected-work system for Alejandro Fink, an e-commerce and digital operations generalist based in Buenos Aires. It presents production work, MVPs and prototypes with explicit evidence boundaries while keeping technology as execution and validation context.
 
 ## What this repository demonstrates
 
 - A typed Spanish/English content model shared across routes and project pages.
-- Product-oriented case studies that connect business context, UX decisions and implementation.
+- Product-oriented case studies that connect business context, UX decisions, operations and implementation.
 - Responsive editorial UI built with React, TypeScript and a Next.js-compatible App Router.
 - Consent-first analytics with sanitized attribution and no form content sent to analytics.
 - A contact flow that remains disabled unless its server-side delivery configuration is complete.
@@ -19,13 +19,15 @@ Bilingual portfolio and selected-work system for a Buenos Aires–based web solu
 
 | Project | Status | Focus | Public link |
 |---|---|---|---|
-| Torvena | Owned e-commerce in production | Shopify Hydrogen, storefront UX, catalog, analytics and operations | [torvena.com.ar](https://torvena.com.ar/) |
-| Brisa do Mar | Operational business website | Multilingual discovery, pricing model and contextual WhatsApp inquiries | [View site](https://brisa-do-mar-arraial.alegfink.chatgpt.site/) |
+| Torvena | Owned e-commerce in production | Product selection, suppliers, Shopify, catalog, purchase experience, content, support, orders and fulfillment | [torvena.com.ar](https://torvena.com.ar/) |
+| Brisa do Mar | Operational business solution | Multilingual discovery, pricing model and contextual WhatsApp enquiries | [View site](https://brisa-do-mar-arraial.alegfink.chatgpt.site/) |
 | CUIDALO | Validation MVP, not a launched store | Offer architecture, cart intent and measurement | [View MVP](https://cuidalo-argentina.alegfink.chatgpt.site/) |
 
 The portfolio also documents functional prototypes and projects in development. Each case states its real maturity and avoids presenting prototypes as commercial operations.
 
 ## Stack and architecture
+
+Technology is documented here as implementation and validation evidence, not as Alejandro’s primary professional identity.
 
 - React 19, TypeScript and Next.js App Router conventions.
 - Vinext and Vite for the production build used by OpenAI Sites.
@@ -70,9 +72,9 @@ npm run check
 
 Production contact delivery and analytics remain inert unless valid environment configuration is supplied. Secrets are never committed.
 
-## AI-assisted development
+## AI-assisted implementation
 
-This project was built through an AI-assisted workflow. AI supported research, prototyping, implementation and iteration; Alejandro retained responsibility for scope, decisions, diff review, testing, publication and ongoing operation. The repository is evidence of the resulting system, not a claim that every line was written without assistance.
+AI supported research, prototyping, implementation and iteration. Alejandro defined scope and functional criteria, reviewed changes, tested outcomes and validated the published result, using specialist depth where needed. The repository is evidence of the resulting system, not a claim of autonomous software engineering or unaided authorship.
 
 ## Repository scope and rights
 
@@ -82,4 +84,6 @@ This public repository is a sanitized portfolio snapshot. Private operational do
 
 ### Español
 
-Portfolio bilingüe de soluciones web orientadas a negocio, producto y experiencia de usuario. Los casos distinguen explícitamente entre producción, MVP, prototipo y trabajo en desarrollo. Para conocer el recorrido completo, visitá el [portfolio en español](https://alejandro-fink-portfolio-2026.alegfink.chatgpt.site/es).
+Portfolio bilingüe de e-commerce, producto, UX, operaciones digitales y soluciones funcionales. Los casos distinguen explícitamente entre producción, MVP, prototipo y trabajo en desarrollo. Las tecnologías y los checks se conservan como evidencia de implementación y validación.
+
+[Portfolio en español](https://www.alejandrofink.com/es)
