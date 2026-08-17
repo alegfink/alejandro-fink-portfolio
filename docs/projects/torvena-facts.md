@@ -1,7 +1,7 @@
 # Torvena — ficha factual consolidada
 
 **Estado del documento:** base confirmada para redactar el caso.  
-**Última actualización:** 8 de agosto de 2026.
+**Última actualización:** 17 de agosto de 2026.
 
 Este archivo separa información aportada por Alejandro, evidencia observada en producción y datos verificados en los repositorios de Torvena.
 
@@ -172,12 +172,27 @@ El sistema complementa Shopify y Meta con analytics first-party, UTMs, exclusió
 
 La falta de reposición del primer proveedor se convirtió en una decisión de diversificación y expansión de marca.
 
+### 6. Incorporar un ciclo controlado de auditoría, QA y publicación
+
+Entre el 15 y el 17 de agosto de 2026, el storefront completó una auditoría técnica integral, correcciones con pruebas de regresión, varios ciclos de QA/re-QA, validación en Oxygen Preview, migraciones de Supabase, configuración de Google OAuth, despliegue gradual y smoke de Producción.
+
+Hechos documentados del cierre:
+
+- la candidata focalizada `4fb9c3d` aprobó 33/33 pruebas, lint, TypeScript, build, rutas y auditoría productiva sin vulnerabilidades;
+- Preview usó exclusivamente Supabase Staging `earxzitnldvxizicmrdz` y Producción mantuvo `hecnofqkdcaqtuwgwhsn`;
+- se aplicaron cinco migraciones pendientes en Producción después de backup y autorización explícita;
+- el carrito optimista se verificó bajo red lenta y request bloqueada, con coherencia visual, rollback y reintento;
+- Google OAuth, checkout y un redirect administrado se probaron en el entorno correspondiente;
+- el despliegue productivo terminó con smoke y una compra real controlada mediante transferencia bancaria.
+
+Alejandro definió prioridades y criterios de aceptación, configuró o revisó acciones manuales, autorizó cambios sensibles y validó los recorridos. Codex ejecutó análisis, cambios, automatizaciones y verificaciones técnicas bajo esa dirección. Esta evidencia respalda coordinación funcional y de release asistida por IA; no desarrollo, QA automation, DevOps, seguridad o bases de datos con autonomía profesional.
+
 ## Estado actual y límites
 
 - Storefront, catálogo, carrito, checkout, campañas y operación: activos.
 - La tienda pública, el carrito y el checkout están operativos. Lo que permanece pendiente es el acceso privado para que cada cliente inicie sesión y gestione su cuenta; esto no limita el recorrido público de compra.
 - El seguimiento first-party de pedidos pagados funciona en producción y forma parte de la operación habitual.
-- Google Analytics se incorporará como siguiente capa para consolidar tráfico, atribución y conversión. Los resultados cuantitativos se documentarán cuando exista un período y una fuente consistentes.
+- Google Analytics 4 está implementado en Torvena y Alejandro inició su revisión práctica. La experiencia es inicial: no se presenta como dominio avanzado ni como base suficiente para atribución o mejoras causales. Los resultados cuantitativos se documentarán cuando exista un período y una fuente consistentes.
 - El claim sobre resistencia de Luo requiere la demostración documentada en el sistema de marca; no debe utilizarse como evidencia del caso del portfolio.
 
 ## Evidencia disponible
@@ -203,14 +218,13 @@ Confirmado cualitativamente:
 - operación nacional;
 - experiencia acumulada en construcción y operación de e-commerce.
 
-Pendiente para publicación cuantitativa:
+Confirmado cuantitativamente con corte y definiciones documentados:
 
-- período exacto;
-- pedidos pagados;
-- ventas netas o totales;
-- devoluciones o cancelaciones que deban excluirse;
-- fuente o captura de Shopify;
-- decisión sobre qué números serán públicos.
+- al 9 de agosto de 2026, Shopify registraba 95 pedidos, 136 artículos netos vendidos, ARS 5.957.610 de ventas netas y ARS 6.462.010 de ventas totales; el inicio del acumulado es desconocido y las ventas no equivalen a ganancia;
+- entre el 11 de julio y el 9 de agosto de 2026, Shopify registró 22 pedidos, ARS 1.714.070 de ventas netas y ARS 1.759.170 de ventas totales;
+- el analytics first-party observó 2.565 sesiones consentidas desde el 21 de julio hasta la generación parcial del 10 de agosto de 2026, y el webhook incorporado el 29 de julio capturó 19 órdenes pagadas; estas coberturas no son comparables con todo el acumulado de Shopify.
+
+Continúan pendientes para claims más amplios el historial estable de GA4 y first-party, clientes Shopify, inversión y atribución de Meta, costos/margen y una reconciliación formal entre órdenes, pagos, devoluciones y ventas netas.
 
 ## Aprendizajes aportados por Alejandro
 
@@ -230,9 +244,9 @@ La afirmación “más opciones y una oferta más agresiva aumentan la conversi�
 
 Torvena debe demostrar que Alejandro no solo diseña una interfaz: define una oferta, construye el sistema de venta, conecta medición, gestiona adquisición y aprende de una operación real.
 
-## Pendientes mínimos
+## Pendientes actuales
 
-1. Obtener una captura o export de Shopify con período y métricas acordadas.
-2. Verificar que el webhook y el panel de analytics están activos en producción antes de describirlos como operación vigente.
-3. Elegir 6–10 pantallas o assets para narrar el caso.
-4. Decidir qué métrica, si alguna, se hará pública.
+1. Acumular historial comparable de GA4 y analytics first-party antes de sostener atribución, crecimiento o mejora causal.
+2. Obtener reportes compatibles de Meta y datos de costos/margen sólo si un claim futuro los vuelve necesarios.
+3. Mantener el acceso privado de clientes como funcionalidad pendiente hasta que esté disponible y verificado públicamente.
+4. Curar 6–10 pantallas o assets y decidir qué métricas fechadas, si alguna, se mostrarán en el portfolio público.
