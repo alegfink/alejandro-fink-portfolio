@@ -160,7 +160,12 @@ export function HomeView({ locale }: { locale: Locale }) {
             <p className="eyebrow">{copy.home.servicesEyebrow}</p>
             <h2>{copy.home.servicesTitle}</h2>
           </div>
-          <ol className="capability-rail" data-capability-rail>
+          <ol
+            className="capability-rail"
+            data-capability-rail
+            tabIndex={0}
+            aria-label={locale === "es" ? "Áreas de trabajo. Desplazá la página, arrastrá las tarjetas o usá las flechas para recorrerlas." : "Work areas. Scroll the page, drag the cards or use the arrow keys to explore them."}
+          >
             {copy.services.map((service, index) => (
               <li key={service.number} style={{ "--service-index": index } as React.CSSProperties}>
                 <span>{service.number}</span>
@@ -170,7 +175,7 @@ export function HomeView({ locale }: { locale: Locale }) {
               </li>
             ))}
           </ol>
-          <p className="capability-story__hint shell" aria-hidden="true">{locale === "es" ? "DESPLAZAR PARA CONECTAR CAPACIDADES" : "SCROLL TO CONNECT CAPABILITIES"}</p>
+          <p className="capability-story__hint shell" aria-hidden="true">{locale === "es" ? "DESPLAZÁ O ARRASTRÁ PARA RECORRER CAPACIDADES ↔" : "SCROLL OR DRAG TO EXPLORE CAPABILITIES ↔"}</p>
         </div>
       </section>
 

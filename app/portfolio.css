@@ -692,7 +692,7 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
 .motion-hero { height: 178svh; }
 .motion-hero__sticky { min-height: 640px; }
 .motion-hero__sticky, .project-story__sticky, .capability-story__sticky, .manifesto-story__sticky { contain: paint; max-width: 100vw; }
-.motion-hero__content { padding-block: clamp(92px, 11vh, 118px) 72px; }
+.motion-hero__content { padding-block: clamp(40px, 5vh, 56px) 72px; }
 .motion-hero__copy { width: min(86%, 1180px); }
 .motion-hero__copy h1 {
   max-width: 1180px;
@@ -708,7 +708,7 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
 .story-intro { padding-block: clamp(96px, 10vw, 148px); }
 .story-intro h2 { letter-spacing: -.045em; }
 
-.project-story { height: 470svh; min-height: 3900px; }
+.project-story { height: 260svh; min-height: 2250px; }
 .project-story__sticky { min-height: 640px; }
 .project-slide { transition-duration: 400ms; }
 .project-slide[data-state="active"] .project-slide__visual {
@@ -730,7 +730,11 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
 .capability-rail {
   margin-left: max(16px, calc((100vw - min(66vw, 860px)) / 2));
   transform: translate3d(var(--horizontal-shift, 0), 0, 0);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
 }
+.capability-rail[data-dragging="true"] { cursor: grabbing; }
 .capability-rail li { width: min(66vw, 860px); min-height: 43svh; }
 .capability-rail h3 { margin-top: clamp(46px, 7vh, 78px); letter-spacing: -.045em; }
 .capability-story__hint { bottom: 24px; font-size: 10.5px; font-weight: 700; }
@@ -774,7 +778,7 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
   h1, h2, h3 { overflow-wrap: break-word; word-break: normal; }
 
   .motion-hero { height: 160svh; }
-  .motion-hero__content { padding-block: 86px 44px; }
+  .motion-hero__content { padding-block: 34px 44px; }
   .motion-hero__copy { width: 100%; }
   .motion-hero__copy h1 { font-size: clamp(38px, 11vw, 47px); line-height: .93; letter-spacing: -.035em; word-spacing: .055em; }
   .motion-hero__line--long { font-size: .94em; }
@@ -790,7 +794,7 @@ html[data-motion="ready"] [data-reveal][data-reveal="visible"] { opacity: 1; tra
   .story-intro h2 { font-size: clamp(37px, 10.2vw, 48px); letter-spacing: -.028em; word-spacing: .09em; }
   .story-intro > div > p { margin-top: 22px; }
 
-  .project-story { height: 430svh; min-height: 3450px; }
+  .project-story { height: 260svh; min-height: 2050px; }
   .project-story__chrome { padding-block: 82px 18px; }
   .project-slide { grid-template-rows: minmax(220px, 41%) 1fr; gap: 16px; }
   .project-slide__meta { font-size: 9px; letter-spacing: .04em; }
