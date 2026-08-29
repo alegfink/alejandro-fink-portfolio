@@ -2,6 +2,7 @@
 
 import { NativeLink as Link } from "@/components/v2/native-link";
 import { useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, v2SharedCopy, type V2Page } from "@/lib/v2-i18n";
 import styles from "@/components/v2/v2-language-switcher.module.css";
@@ -21,6 +22,9 @@ export function V2LanguageSwitcher({ locale, page }: Readonly<{ locale: Locale; 
   }, [locale, page]);
 
   const remember = (nextLocale: Locale) => {
+    if (nextLocale !== locale) {
+      trackEvent("language_change", { from: locale, to: nextLocale, path: window.location.pathname });
+    }
     try {
       window.localStorage.setItem("af-language", nextLocale);
     } catch {

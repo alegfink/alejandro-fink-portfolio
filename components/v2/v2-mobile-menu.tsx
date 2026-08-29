@@ -3,6 +3,7 @@
 import { NativeLink as Link } from "@/components/v2/native-link";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { trackContactChannel, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, v2ContactProfiles, v2SharedCopy, whatsappContactUrl, type V2Page } from "@/lib/v2-i18n";
 import styles from "@/components/v2/v2-mobile-menu.module.css";
@@ -102,6 +103,9 @@ export function V2MobileMenu({ locale, page }: Readonly<{ locale: Locale; page: 
   }, [isOpen]);
 
   const rememberLocale = (nextLocale: Locale) => {
+    if (nextLocale !== locale) {
+      trackEvent("language_change", { from: locale, to: nextLocale, path: window.location.pathname });
+    }
     try {
       window.localStorage.setItem("af-language", nextLocale);
     } catch {
@@ -184,8 +188,8 @@ export function V2MobileMenu({ locale, page }: Readonly<{ locale: Locale; page: 
           </div>
 
           <div className={styles.panelSecondary}>
-            <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>LinkedIn</a>
-            <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>GitHub</a>
+            <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "linkedin", "mobile_menu"); setIsOpen(false); }}>LinkedIn</a>
+            <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "github", "mobile_menu"); setIsOpen(false); }}>GitHub</a>
             <Link
               href={getV2Path(locale, "privacy")}
               aria-current={page === "privacy" ? "page" : undefined}
@@ -196,7 +200,7 @@ export function V2MobileMenu({ locale, page }: Readonly<{ locale: Locale; page: 
           </div>
         </div>
 
-        <a className={styles.contact} href={whatsappContactUrl(locale)} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>
+        <a className={styles.contact} href={whatsappContactUrl(locale)} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "whatsapp", "mobile_menu"); setIsOpen(false); }}>
           <span>{copy.contact}</span><i aria-hidden="true">↗</i>
         </a>
       </div>

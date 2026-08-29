@@ -5,11 +5,14 @@ import { NativeLink as Link } from "@/components/v2/native-link";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { projects, type Project, type ProjectMedia } from "@/content/projects";
 import { HeroLab } from "@/components/v2/hero-lab";
+import { AmbientVideo } from "@/components/v2/ambient-video";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
+import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import styles from "@/components/v2/portfolio-home.module.css";
+import { trackContactChannel, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2ContactProfiles, v2PrivacyRoutes, v2SharedCopy, whatsappContactUrl } from "@/lib/v2-i18n";
 
@@ -124,62 +127,15 @@ function StoryReveal({ label, reveal, wide = false, locale = "es" }: Readonly<{ 
   );
 }
 
-function ProjectPreviewMedia({ media }: Readonly<{ media: ProjectMedia }>) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !media.videoSrc || shouldLoad) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) return;
-      setShouldLoad(true);
-      observer.disconnect();
-    }, { rootMargin: "700px 0px", threshold: 0.01 });
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, [media.videoSrc, shouldLoad]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !media.videoSrc || !shouldLoad) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reducedMotion.matches) {
-      video.pause();
-      return;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        void video.play().catch(() => undefined);
-      } else {
-        video.pause();
-      }
-    }, { threshold: 0.15 });
-
-    observer.observe(video);
-
-    return () => {
-      observer.disconnect();
-      video.pause();
-    };
-  }, [media.videoSrc, shouldLoad]);
-
+function ProjectPreviewMedia({ media, locale }: Readonly<{ media: ProjectMedia; locale: Locale }>) {
   if (media.videoSrc) {
     return (
-      <video
-        ref={videoRef}
+      <AmbientVideo
         className={styles.projectPreviewVideo}
-        src={shouldLoad ? media.videoSrc : undefined}
+        src={media.videoSrc}
         poster={media.src}
-        muted
-        loop
-        playsInline
-        preload={shouldLoad ? "metadata" : "none"}
-        aria-hidden="true"
+        decorative
+        playLabel={locale === "es" ? "Reproducir vista previa del proyecto" : "Play project preview"}
       />
     );
   }
@@ -214,7 +170,7 @@ function ProjectFolderPreview({ project, media, locale }: Readonly<{ project: Pr
         <div className={styles.projectSiteViewport}>
           {project.id === "lourdes-mirada"
             ? <LourdesHeroPreview locale={locale} />
-            : <ProjectPreviewMedia media={media} />}
+            : <ProjectPreviewMedia media={media} locale={locale} />}
         </div>
       </div>
     </div>
@@ -419,6 +375,26 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
     observer.observe(footer);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const seen = new Set<string>();
+    const previews = Array.from(document.querySelectorAll<HTMLElement>("[data-project-preview-id]"));
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const target = entry.target as HTMLElement;
+        const projectId = target.dataset.projectPreviewId;
+        const position = Number(target.dataset.projectPreviewPosition);
+        if (!projectId || seen.has(projectId) || !Number.isFinite(position)) continue;
+        seen.add(projectId);
+        trackEvent("project_story_view", { projectId, locale, position });
+        observer.unobserve(target);
+      }
+    }, { rootMargin: "0px 0px -18%", threshold: .42 });
+
+    previews.forEach((preview) => observer.observe(preview));
+    return () => observer.disconnect();
+  }, [locale]);
 
   useEffect(() => {
     const story = storyRef.current;
@@ -830,6 +806,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(contactEmail);
+      trackContactChannel(locale, "copy_email", "closing");
       setEmailCopied(true);
       if (emailCopyTimerRef.current !== null) window.clearTimeout(emailCopyTimerRef.current);
       emailCopyTimerRef.current = window.setTimeout(() => setEmailCopied(false), 1800);
@@ -865,16 +842,19 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         </nav>
 
         <div className={`${styles.headerMagnet} ${styles.contactMagnet}`} ref={(node) => { headerMagnetRefs.current[3] = node; }}>
-          <a
+          <V2TrackedContactLink
             className={`${styles.headerButton} ${styles.contact}`}
+            channel="gmail"
             href={gmailComposeUrl(locale)}
+            locale={locale}
+            placement="header"
             target="_blank"
             rel="noreferrer"
             aria-label={shared.contactLabel}
           >
             <HeaderWord label={shared.contact} />
             <span className={styles.headerArrow} aria-hidden="true">↗</span>
-          </a>
+          </V2TrackedContactLink>
         </div>
         <V2MobileMenu locale={locale} page="home" />
       </header>
@@ -892,6 +872,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
 
         <section
           className={styles.story}
+          data-analytics-section="home_story"
           id="recorrido"
           ref={storyRef}
           aria-labelledby="story-title"
@@ -943,7 +924,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           </div>
         </section>
 
-        <section className={styles.projects} id="proyectos" aria-label={copy.selectedProjects}>
+        <section className={styles.projects} id="proyectos" aria-label={copy.selectedProjects} data-analytics-section="home_projects">
           <div className={styles.projectCollections}>
             {projectCollections.map((collection, collectionIndex) => (
               <section
@@ -979,6 +960,8 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                           <article
                             className={styles.projectFolderPage}
                             data-folder-page
+                            data-project-preview-id={project.id}
+                            data-project-preview-position={collectionIndex * 3 + projectIndex + 1}
                             key={project.id}
                             style={projectStyle}
                             aria-label={content.title}
@@ -1006,6 +989,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
 
         <section
           className={styles.benefitsJourney}
+          data-analytics-section="home_approach"
           id="enfoque"
           aria-labelledby="benefits-title"
           ref={benefitsRef}
@@ -1113,7 +1097,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           </div>
         </section>
 
-        <section className={styles.closingCta} ref={closingCtaRef} aria-labelledby="closing-cta-title">
+        <section className={styles.closingCta} ref={closingCtaRef} aria-labelledby="closing-cta-title" data-analytics-section="home_contact">
           <div className={styles.closingCtaShell}>
             <header className={styles.closingCtaIntro}>
               <p className={styles.closingCtaEyebrow}>
@@ -1136,12 +1120,15 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
               </div>
 
               <div className={styles.closingCtaReveal}>
-                <a
+                <V2TrackedContactLink
                   className={styles.closingCtaEmail}
+                  channel="mailto"
                   href={`mailto:${contactEmail}?subject=${encodeURIComponent(shared.contactSubject)}`}
+                  locale={locale}
+                  placement="closing"
                 >
                   {contactEmail}
-                </a>
+                </V2TrackedContactLink>
                 <button className={styles.closingCtaCopy} type="button" onClick={handleCopyEmail}>
                   <span aria-live="polite">{emailCopied ? copy.copied : copy.copy}</span>
                   <span aria-hidden="true">{emailCopied ? "✓" : "+"}</span>
@@ -1152,7 +1139,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         </section>
       </main>
 
-      <footer className={styles.siteFooter} aria-labelledby="footer-title" ref={footerRef} data-animation-active="false">
+      <footer className={styles.siteFooter} aria-labelledby="footer-title" ref={footerRef} data-animation-active="false" data-analytics-section="home_footer">
         <div className={styles.footerGraphic} aria-hidden="true">
           <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
             <path d="M-80 760C260 740 170 250 510 282C840 313 790 690 1085 625C1370 562 1270 104 1680 156" />
@@ -1202,9 +1189,9 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           <p>{copy.designed}</p>
           <p>{copy.location}</p>
           <nav className={styles.footerContactLinks} aria-label={copy.contactNav}>
-            <a href={whatsappContactUrl(locale)} target="_blank" rel="noreferrer">WhatsApp</a>
-            <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer">GitHub</a>
+            <V2TrackedContactLink channel="whatsapp" href={whatsappContactUrl(locale)} locale={locale} placement="footer" target="_blank" rel="noreferrer">WhatsApp</V2TrackedContactLink>
+            <V2TrackedContactLink channel="linkedin" href={v2ContactProfiles.linkedin} locale={locale} placement="footer" target="_blank" rel="noreferrer">LinkedIn</V2TrackedContactLink>
+            <V2TrackedContactLink channel="github" href={v2ContactProfiles.github} locale={locale} placement="footer" target="_blank" rel="noreferrer">GitHub</V2TrackedContactLink>
           </nav>
           <div className={styles.footerUtilities}>
             <Link href={v2PrivacyRoutes[locale]}>{shared.privacy}</Link>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { domainFromUrl, sanitizeInternalPath, sanitizePageLocation, sanitizeReferrer } from "../lib/analytics";
+import { domainFromUrl, pageGroupFromPath, sanitizeInternalPath, sanitizePageLocation, sanitizeReferrer } from "../lib/analytics";
 
 describe("analytics privacy boundary", () => {
   it("keeps only the path and governed campaign parameters", () => {
@@ -20,5 +20,22 @@ describe("analytics privacy boundary", () => {
   it("normalizes internal paths and destination domains", () => {
     expect(sanitizeInternalPath("/en/work/torvena?draft=1")).toBe("/en/work/torvena");
     expect(domainFromUrl("https://www.example.com/path")).toBe("example.com");
+  });
+});
+
+describe("analytics route grouping", () => {
+  it.each([
+    ["/", "home"],
+    ["/en", "home"],
+    ["/proyectos", "work_index"],
+    ["/en/projects", "work_index"],
+    ["/es/proyectos/torvena", "case_study"],
+    ["/acerca-de", "about"],
+    ["/en/about", "about"],
+    ["/privacidad", "privacy"],
+    ["/admin/metricas", "admin"],
+    ["/v1", "archive"],
+  ])("groups %s as %s", (path, expected) => {
+    expect(pageGroupFromPath(path)).toBe(expected);
   });
 });

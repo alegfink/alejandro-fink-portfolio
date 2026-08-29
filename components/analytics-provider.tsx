@@ -9,6 +9,7 @@ import {
   getAnalyticsConsent,
   initializeAnalytics,
   isAnalyticsConfigured,
+  pageGroupFromPath,
   setAnalyticsConsent,
   trackEvent,
   trackPageView,
@@ -16,24 +17,15 @@ import {
 } from "@/lib/analytics";
 
 function localeFromPath(pathname: string): "es" | "en" {
-  return pathname.startsWith("/en") ? "en" : "es";
-}
-
-export function pageGroupFromPath(pathname: string) {
   const parts = pathname.split("/").filter(Boolean);
-  if (parts.length <= 1) return "home";
-  if (parts[1] === "proyectos" || parts[1] === "work") return parts.length > 2 ? "case_study" : "work_index";
-  if (parts[1] === "contacto" || parts[1] === "contact") return "contact";
-  if (parts[1] === "sobre-mi" || parts[1] === "about") return "about";
-  if (parts[1] === "privacidad" || parts[1] === "privacy") return "privacy";
-  return "other";
+  return parts[0] === "en" || (parts[0] === "v2" && parts[1] === "en") ? "en" : "es";
 }
 
 const consentCopy = {
   es: {
     eyebrow: "MEDICIÓN · TU DECISIÓN",
     title: "¿Nos permitís medir qué contenido resulta útil?",
-    text: "Google Analytics se activa sólo si aceptás. Mide procedencia, páginas, interacción y rendimiento; nunca nombres, emails ni respuestas del formulario.",
+    text: "Google Analytics se activa sólo si aceptás. Mide procedencia, páginas, interacción y rendimiento; nunca nombres, emails, teléfonos ni mensajes.",
     accept: "Aceptar analítica",
     reject: "Solo necesarias",
     privacy: "Ver privacidad",
@@ -42,7 +34,7 @@ const consentCopy = {
   en: {
     eyebrow: "MEASUREMENT · YOUR CHOICE",
     title: "May we measure which content proves useful?",
-    text: "Google Analytics loads only if you accept. It measures acquisition, pages, engagement and performance—never names, emails or form answers.",
+    text: "Google Analytics loads only if you accept. It measures acquisition, pages, engagement and performance—never names, emails, phone numbers or messages.",
     accept: "Accept analytics",
     reject: "Necessary only",
     privacy: "View privacy",
@@ -57,6 +49,7 @@ export function AnalyticsPreferencesButton({ locale, className = "" }: { locale:
 
 export function AnalyticsProvider() {
   const pathname = usePathname() || "/es";
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
   const locale = localeFromPath(pathname);
   const copy = consentCopy[locale];
   const configured = isAnalyticsConfigured();
@@ -69,6 +62,16 @@ export function AnalyticsProvider() {
 
   useEffect(() => {
     if (!configured) return;
+    if (isAdmin) {
+      window.localStorage.setItem("af-analytics-internal-v1", "true");
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = `af-analytics-internal-v1=true; Max-Age=31536000; Path=/; SameSite=Lax${secure}`;
+      window.queueMicrotask(() => {
+        setConsentState("denied");
+        setOpen(false);
+      });
+      return;
+    }
     if (applyInternalTrafficControl()) {
       window.queueMicrotask(() => {
         setConsentState("denied");
@@ -95,7 +98,7 @@ export function AnalyticsProvider() {
       window.removeEventListener(ANALYTICS_CONSENT_EVENT, onConsent);
       window.removeEventListener("af:analytics-open", onOpen);
     };
-  }, [configured]);
+  }, [configured, isAdmin]);
 
   useEffect(() => {
     engagement.current = { startedAt: Date.now(), maxScroll: 0, sent: false };
@@ -169,7 +172,7 @@ export function AnalyticsProvider() {
     return () => { active = false; };
   }, [consent, locale, pageGroup]);
 
-  if (!configured || !open) return null;
+  if (!configured || !open || isAdmin) return null;
   return (
     <aside className="analytics-consent" aria-labelledby="analytics-consent-title" role="dialog" aria-modal="false">
       <p className="analytics-consent__eyebrow">{copy.eyebrow}</p>
@@ -178,7 +181,7 @@ export function AnalyticsProvider() {
       <div className="analytics-consent__actions">
         <button className="button button--primary" type="button" onClick={() => setAnalyticsConsent("granted")}>{copy.accept}</button>
         <button className="button button--secondary" type="button" onClick={() => setAnalyticsConsent("denied")}>{copy.reject}</button>
-        <a href={locale === "es" ? "/es/privacidad" : "/en/privacy"}>{copy.privacy}</a>
+        <a href={locale === "es" ? "/privacidad" : "/en/privacy"}>{copy.privacy}</a>
       </div>
     </aside>
   );

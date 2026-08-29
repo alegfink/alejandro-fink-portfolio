@@ -1,13 +1,17 @@
 export type AnalyticsConsent = "granted" | "denied" | "unknown";
 
+export type ContactChannel = "gmail" | "mailto" | "whatsapp" | "linkedin" | "github" | "copy_email";
+export type ContactPlacement = "header" | "hero" | "case" | "footer" | "index" | "about" | "projects" | "closing" | "contact" | "contact_strip" | "mobile_menu" | "privacy";
+
 export type AnalyticsEventMap = {
   language_change: { from: "es" | "en"; to: "es" | "en"; path: string };
   project_open: { projectId: string; locale: "es" | "en"; placement: "home" | "index" | "case" };
   project_story_view: { projectId: string; locale: "es" | "en"; position: number };
   case_study_view: { projectId: string; locale: "es" | "en"; caseType: "full" | "compact" };
   section_view: { sectionId: string; locale: "es" | "en"; pageGroup: string };
-  contact_cta: { locale: "es" | "en"; placement: "header" | "hero" | "case" | "footer" | "index" | "about" };
-  contact_email_click: { locale: "es" | "en"; method: "gmail" | "mailto"; placement: "contact" | "footer" };
+  contact_cta: { locale: "es" | "en"; placement: ContactPlacement };
+  contact_channel_click: { locale: "es" | "en"; channel: ContactChannel; placement: ContactPlacement };
+  contact_email_click: { locale: "es" | "en"; method: "gmail" | "mailto"; placement: ContactPlacement };
   contact_form_start: { locale: "es" | "en" };
   contact_form_step: { locale: "es" | "en"; stepId: string; stepNumber: number; direction: "forward" | "back" };
   contact_form_review: { locale: "es" | "en"; elapsedSeconds: number };
@@ -37,6 +41,7 @@ declare global {
 export const ANALYTICS_CONSENT_KEY = "af-analytics-consent-v1";
 export const ANALYTICS_CONSENT_EVENT = "af:analytics-consent";
 export const ANALYTICS_INTERNAL_KEY = "af-analytics-internal-v1";
+export const ANALYTICS_INTERNAL_COOKIE = "af-analytics-internal-v1";
 const GOOGLE_TAG_ID = "af-google-analytics";
 const provider = process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER ?? "disabled";
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
@@ -86,15 +91,32 @@ function ensureConsentDefaults() {
 
 export function isInternalTrafficExcluded() {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(ANALYTICS_INTERNAL_KEY) === "true";
+  const excludedLocally = window.localStorage.getItem(ANALYTICS_INTERNAL_KEY) === "true";
+  const excludedByCookie = document.cookie
+    .split(";")
+    .some((cookie) => cookie.trim() === `${ANALYTICS_INTERNAL_COOKIE}=true`);
+  return excludedLocally || excludedByCookie;
+}
+
+function setInternalTrafficCookie(excluded: boolean) {
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = excluded
+    ? `${ANALYTICS_INTERNAL_COOKIE}=true; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+    : `${ANALYTICS_INTERNAL_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax${secure}`;
 }
 
 export function applyInternalTrafficControl() {
   if (typeof window === "undefined") return false;
   const url = new URL(window.location.href);
   const command = url.searchParams.get("af_analytics");
-  if (command === "exclude") window.localStorage.setItem(ANALYTICS_INTERNAL_KEY, "true");
-  if (command === "include") window.localStorage.removeItem(ANALYTICS_INTERNAL_KEY);
+  if (command === "exclude") {
+    window.localStorage.setItem(ANALYTICS_INTERNAL_KEY, "true");
+    setInternalTrafficCookie(true);
+  }
+  if (command === "include") {
+    window.localStorage.removeItem(ANALYTICS_INTERNAL_KEY);
+    setInternalTrafficCookie(false);
+  }
   if (command === "exclude" || command === "include") {
     url.searchParams.delete("af_analytics");
     window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
@@ -166,6 +188,21 @@ export function sanitizeInternalPath(value: string) {
   }
 }
 
+export function pageGroupFromPath(pathname: string) {
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts[0] === "v2") parts.shift();
+  if (parts[0] === "es" || parts[0] === "en") parts.shift();
+  const [section] = parts;
+  if (!section) return "home";
+  if (section === "proyectos" || section === "projects" || section === "work") return parts.length > 1 ? "case_study" : "work_index";
+  if (section === "contacto" || section === "contact") return "contact";
+  if (section === "acerca-de" || section === "sobre-mi" || section === "about") return "about";
+  if (section === "privacidad" || section === "privacy") return "privacy";
+  if (section === "admin") return "admin";
+  if (section === "v1") return "archive";
+  return "other";
+}
+
 export function sanitizePageLocation(value: string) {
   try {
     const url = new URL(value);
@@ -221,6 +258,15 @@ export function trackEvent<Name extends AnalyticsEventName>(name: Name, payload:
   if (typeof window === "undefined" || getAnalyticsConsent() !== "granted" || !initializeAnalytics()) return false;
   window.gtag?.("event", name, { ...eventParameters(payload), transport_type: "beacon" });
   return true;
+}
+
+export function trackContactChannel(locale: "es" | "en", channel: ContactChannel, placement: ContactPlacement) {
+  const tracked = trackEvent("contact_channel_click", { locale, channel, placement });
+  trackEvent("contact_cta", { locale, placement });
+  if (channel === "gmail" || channel === "mailto") {
+    trackEvent("contact_email_click", { locale, method: channel, placement });
+  }
+  return tracked;
 }
 
 export function trackPageView(pathname: string, pageGroup: string, locale: "es" | "en") {

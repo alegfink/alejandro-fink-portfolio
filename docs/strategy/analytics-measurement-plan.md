@@ -1,8 +1,9 @@
 # Plan de medición y analítica
 
-Fecha de baseline: 2026-08-10  
+Fecha de baseline: 2026-08-29
 Responsable: Alejandro Fink  
 Propiedad: `Alejandro Fink — Portfolio`  
+Property ID: `549251072`
 Measurement ID: `G-E0WZCBNV1W`
 
 ## Objetivo de negocio
@@ -11,8 +12,8 @@ La medición debe permitir responder cuatro preguntas, en ese orden:
 
 1. ¿Qué fuentes, campañas, dispositivos, países e idiomas atraen público relevante?
 2. ¿Qué páginas, proyectos, secciones y argumentos generan interés real?
-3. ¿En qué punto el interés se transforma en intención de contacto y en una consulta recibida?
-4. ¿Qué calidad comercial tienen esas consultas y qué aprendizajes pueden reutilizarse en proyectos de clientes?
+3. ¿En qué punto el interés se transforma en intención de contacto y qué canal se elige?
+4. ¿Qué aprendizajes pueden reutilizarse en la promoción del portfolio y en proyectos de clientes?
 
 No se busca recolectar datos por acumulación. Cada dato debe sostener una decisión de adquisición, contenido, experiencia, rendimiento o ventas.
 
@@ -29,11 +30,9 @@ GA4 mide adquisición, navegación, interacción, conversión y rendimiento sól
 - Retención de eventos y usuarios: 14 meses, sin reiniciar el período por nueva actividad.
 - Identificadores y contenido personal: prohibidos en nombres de evento, parámetros y URLs.
 
-### Capa 2 — atribución first-party del lead
+### Capa 2 — atribución de campañas
 
-Si la persona aceptó analítica, el sitio conserva durante la sesión la primera landing, UTM y referente externo. Esos campos viajan al receptor únicamente cuando la persona confirma el envío del diagnóstico. Sheets agrega ocho columnas de atribución y el email de aviso incluye el mismo contexto.
-
-Si la persona no acepta analítica, la consulta puede enviarse igual y la atribución queda vacía. Las respuestas del diagnóstico nunca se envían a GA4.
+Si la persona aceptó analítica, el sitio y GA4 pueden relacionar la primera landing, los parámetros UTM saneados y el referente externo con las páginas, proyectos y llamados a contacto que se utilizaron. Los mensajes se envían en Gmail, email, WhatsApp, LinkedIn o GitHub: su contenido nunca pasa por Analytics ni se almacena en el portfolio.
 
 ### Capa 3 — rendimiento real
 
@@ -51,15 +50,8 @@ La librería oficial `web-vitals` informa CLS, FCP, INP, LCP y TTFB con valoraci
 | Interés | `case_study_view` | ¿Qué evidencia completa o compacta se visitó? | `project_id`, tipo de caso |
 | Evidencia | `external_link` | ¿Se visitó el producto publicado? | dominio de destino, contexto |
 | Intención | `contact_cta` | ¿Qué mensaje o ubicación generó contacto? | `placement` |
+| Intención | `contact_channel_click` | ¿Qué canal eligió la persona? | canal, ubicación |
 | Intención | `contact_email_click` | ¿Se prefirió Gmail o mailto? | método, ubicación |
-| Funnel | `contact_form_start` | ¿Cuántas personas comienzan? | idioma |
-| Funnel | `contact_form_step` | ¿Dónde avanzan o retroceden? | paso, número, dirección |
-| Funnel | `contact_form_review` | ¿Cuántas llegan a revisión? | segundos transcurridos |
-| Funnel | `contact_form_abandon` | ¿Dónde se interrumpe el recorrido? | último paso, tiempo |
-| Conversión | `contact_submit_attempt` | ¿Cuántas intentan confirmar? | tiempo total |
-| Conversión | `contact_submit_success` | ¿Cuántas consultas fueron aceptadas? | tiempo total |
-| Conversión | `generate_lead` | Conversión estándar de GA4 al recibir una consulta | idioma |
-| Diagnóstico | `contact_submit_error` | ¿Falló validación, red o receptor? | motivo |
 | Lectura | `page_engagement` | ¿Cuánto tiempo activo y profundidad hubo? | segundos, máximo scroll |
 | Rendimiento | `web_vital` | ¿Qué experiencia real tuvo el dispositivo? | métrica, valor, rating, navegación |
 | Preferencia | `language_change` | ¿Se cambió de versión idiomática? | origen, destino, ruta |
@@ -74,11 +66,9 @@ Crear como dimensiones de alcance evento:
 - `site_language`
 - `project_id`
 - `placement`
+- `channel`
 - `section_id`
-- `step_id`
-- `direction`
 - `case_type`
-- `error_reason`
 - `destination_domain`
 - `metric`
 - `rating`
@@ -89,34 +79,32 @@ Crear como métricas personalizadas:
 - `percent`
 - `engaged_seconds`
 - `max_scroll_percent`
-- `step_number`
-- `elapsed_seconds`
 - `metric_value`
 
-Usar `generate_lead` como evento clave principal de GA4 y `contact_submit_success` como confirmación técnica auditable del receptor. `contact_email_click` puede observarse como microconversión, pero no debe mezclarse con consultas confirmadas.
+En la V2 pública, usar `contact_cta` como evento clave de intención y leer `contact_channel_click` para distinguir Gmail, email, WhatsApp, LinkedIn, GitHub o copia de correo. Reservar `generate_lead` para una consulta realmente recibida; no convertir un clic de contacto en un lead confirmado.
 
 ## Tableros y lectura operativa
 
 ### Semanal — salud y oportunidades
 
-- usuarios, sesiones y consultas confirmadas;
-- tasa `generate_lead / contact_form_start`, contrastada con `contact_submit_success`;
-- errores por tipo y pasos con mayor abandono;
-- fuentes, campañas y landings que originaron consultas;
-- páginas o proyectos más asociados con CTA y apertura de formulario;
+- usuarios, sesiones e intenciones de contacto;
+- fuentes, campañas y landings que originaron esas intenciones;
+- páginas o proyectos más asociados con llamados a contacto;
+- canales elegidos: Gmail, email, WhatsApp, LinkedIn, GitHub o copia de correo;
 - Core Web Vitals `poor`, especialmente en mobile.
+
+La entrada privada es `https://www.alejandrofink.com/admin/metricas`. Redirige a la propiedad correcta de Google Analytics, exige la cuenta de Google autorizada y marca ese navegador como tráfico interno. La dirección no se publica en navegación ni sitemap; la seguridad real depende del acceso de Google, no de ocultar la URL.
 
 ### Mensual — decisiones de negocio
 
 - participación y tendencia por source / medium / campaign;
 - conversión por landing, idioma, país y categoría de dispositivo;
-- recorrido proyecto → contacto → consulta;
-- consultas por objetivo, necesidad, inversión, plazo y etapa de decisión desde Sheets;
-- contraste manual entre volumen de GA4 y calidad comercial de Sheets;
+- recorrido proyecto → contacto y su evolución por campaña;
+- contraste manual entre intenciones medidas y consultas realmente recibidas;
 - contenido que merece promoción, reescritura o una versión más profunda;
-- fricción del diagnóstico y posibles preguntas que no aportan a la calificación.
+- canales y piezas que atraen conversaciones de mejor calidad.
 
-No se debe unir GA4 con Sheets mediante email, nombre ni un identificador personal. La lectura comercial se hace por campaña, fecha, landing y agregados, no por perfil individual.
+No se debe unir GA4 con mensajes mediante email, nombre ni un identificador personal. La lectura comercial se hace por campaña, fecha, landing y agregados, no por perfil individual.
 
 ## Convención UTM
 
@@ -133,7 +121,7 @@ Todas las etiquetas se escriben en minúsculas, sin espacios y con guiones.
 Ejemplo:
 
 ```text
-https://www.alejandrofink.com/es?utm_source=linkedin&utm_medium=organic-social&utm_campaign=portfolio-lanzamiento-2026&utm_content=post-carrusel
+https://www.alejandrofink.com/?utm_source=linkedin&utm_medium=organic-social&utm_campaign=portfolio-lanzamiento-2026&utm_content=post-carrusel
 ```
 
 Nunca incluir nombres, emails, teléfonos, IDs de CRM ni texto libre en UTM.
@@ -147,11 +135,10 @@ Las validaciones de una publicación deben incluir:
 1. rechazo de consentimiento: no cargar `gtag.js`, no crear `_ga` y permitir enviar el formulario;
 2. aceptación: registrar una única vista por ruta y conservar UTM saneadas;
 3. cambio ES/EN y navegación SPA: una vista correcta por URL;
-4. embudo completo: inicio, pasos, revisión, intento y éxito;
-5. error simulado de red y receptor: evento correcto, sin éxito falso;
-6. envío real con UTM: fila y email con atribución, sin exponer el secreto;
-7. mobile, teclado y reduced motion: banner y preferencias utilizables;
-8. tiempo real y DebugView: nombres y parámetros sin PII.
+4. proyectos, secciones y canales: eventos correctos y sin duplicados;
+5. enlaces con UTM: atribución correcta sin datos personales;
+6. mobile, teclado y reduced motion: banner y preferencias utilizables;
+7. tiempo real y DebugView: nombres y parámetros sin PII.
 
 ## Alternativas investigadas
 
