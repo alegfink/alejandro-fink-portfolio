@@ -580,6 +580,8 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
     if (!section) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const proof = section.querySelector<HTMLElement>("[data-benefits-proof]");
+    const proofHeading = proof?.querySelector<HTMLElement>("h3");
     const benefitItems = Array.from(section.querySelectorAll<HTMLElement>("[data-benefit-item]"));
     const kineticLetters = Array.from(section.querySelectorAll<HTMLElement>("[data-kinetic-letter]"));
     const scrubbedWords = Array.from(section.querySelectorAll<HTMLElement>("[data-benefit-word]"));
@@ -618,14 +620,13 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       const answerOut = smoothstep(isNarrow ? .35 : .4, isNarrow ? .39 : .43, progress);
       const photoJourney = smoothstep(isNarrow ? .57 : .66, isNarrow ? .88 : .92, progress);
       const proofIn = smoothstep(isNarrow ? .365 : .402, isNarrow ? .405 : .442, progress);
-      const proofTravel = smoothstep(isNarrow ? .57 : .66, isNarrow ? .88 : .92, progress);
+      const proofTravel = smoothstep(.66, .92, progress);
       const proofOut = smoothstep(isNarrow ? .855 : .875, isNarrow ? .965 : .985, progress);
       const photoY = isNarrow ? 7 - photoJourney * 18 : 2 - photoJourney * 5;
       const photoScale = isNarrow ? 1.22 - photoJourney * .12 : 1.08 - photoJourney * .045;
       const portraitHeight = window.innerWidth * (1672 / 941);
       const photoCropTravelVh = Math.max(0, ((portraitHeight - window.innerHeight) / window.innerHeight) * 62);
-      const proofTravelVh = isNarrow ? 70 : photoCropTravelVh + 5;
-      const proofScrollY = -proofTravel * proofTravelVh;
+      const proofY = (1 - proofIn) * 72 - proofOut * 44;
 
       section.style.setProperty("--benefits-progress", progress.toFixed(4));
       section.style.setProperty("--benefits-entry-progress", entryProgress.toFixed(4));
@@ -640,12 +641,13 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       section.style.setProperty("--benefits-answer-opacity", `${(answerIn * (1 - answerOut)).toFixed(4)}`);
       section.style.setProperty("--benefits-answer-y", `${((1 - answerIn) * 28 - answerOut * 26).toFixed(2)}px`);
       section.style.setProperty("--benefits-proof-opacity", `${(proofIn * (1 - proofOut)).toFixed(4)}`);
-      section.style.setProperty("--benefits-proof-y", `${((1 - proofIn) * 72 - proofOut * 44).toFixed(2)}px`);
-      section.style.setProperty("--benefits-proof-scroll-y", `${proofScrollY.toFixed(2)}vh`);
+      section.style.setProperty("--benefits-proof-y", `${proofY.toFixed(2)}px`);
 
       const benefitRevealStartY = window.innerHeight * .92;
       const benefitRevealCompleteY = window.innerHeight * .5;
       const benefitRevealDistance = Math.max(1, benefitRevealStartY - benefitRevealCompleteY);
+
+      const benefitEnterProgresses: number[] = [];
 
       benefitItems.forEach((item, itemIndex) => {
         const itemTop = item.getBoundingClientRect().top;
@@ -666,6 +668,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           ? scrollDrivenProgress
           : Math.max(rawViewportProgress * headlineGate, scrollDrivenProgress);
         const enter = smoothstep(0, .16, viewportProgress);
+        benefitEnterProgresses.push(enter);
         const opacity = enter * (1 - proofOut);
         const y = (1 - enter) * 18 - proofOut * 62;
         const blur = proofOut * 5;
@@ -674,6 +677,28 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         item.style.setProperty("--benefit-y", `${y.toFixed(2)}px`);
         item.style.setProperty("--benefit-blur", `${blur.toFixed(2)}px`);
       });
+
+      if (isNarrow && proof && proofHeading) {
+        const proofRect = proof.getBoundingClientRect();
+        let revealedBottom = proofHeading.getBoundingClientRect().bottom - proofRect.top;
+
+        benefitItems.forEach((item, itemIndex) => {
+          const itemBottom = item.getBoundingClientRect().bottom - proofRect.top;
+          const enter = benefitEnterProgresses[itemIndex] ?? 0;
+          revealedBottom += (itemBottom - revealedBottom) * enter;
+        });
+
+        const bottomLimit = window.innerHeight * .9;
+        const visibleContentBottom = proof.offsetTop + proofY + revealedBottom;
+        const requiredTravelPx = Math.max(0, visibleContentBottom - bottomLimit);
+        const maxTravelPx = window.innerHeight * .7;
+        const proofScrollY = -Math.min(requiredTravelPx, maxTravelPx) / window.innerHeight * 100;
+        section.style.setProperty("--benefits-proof-scroll-y", `${proofScrollY.toFixed(2)}vh`);
+      } else {
+        const proofTravelVh = photoCropTravelVh + 5;
+        const proofScrollY = -proofTravel * proofTravelVh;
+        section.style.setProperty("--benefits-proof-scroll-y", `${proofScrollY.toFixed(2)}vh`);
+      }
 
       scrubbedWords.forEach((word) => {
         const index = Number(word.dataset.wordIndex ?? 0);
@@ -1047,7 +1072,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
               </h2>
             </header>
 
-            <section className={styles.benefitsProof} aria-label={copy.strengths}>
+            <section className={styles.benefitsProof} aria-label={copy.strengths} data-benefits-proof>
               <p>
                 <ScrubbedWords text={copy.proofEyebrow} start={.405} end={.445} />
               </p>
