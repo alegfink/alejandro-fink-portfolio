@@ -33,7 +33,7 @@ export function ProjectCaseView({ project, locale }: { project: Project; locale:
 
       <section className="case-overview shell section" data-reveal data-analytics-section="case-overview" aria-label={locale === "es" ? "Resumen del caso" : "Case overview"}>
         <article><p className="eyebrow">{copy.common.problem}</p><h2>{locale === "es" ? "Contexto antes que interfaz." : "Context before interface."}</h2><p>{content.problem}</p></article>
-        <article><p className="eyebrow">{copy.common.solution}</p><h2>{locale === "es" ? "La respuesta construida." : "The response I built."}</h2><p>{content.solution}</p></article>
+        <article><p className="eyebrow">{copy.common.solution}</p><h2>{locale === "es" ? "La respuesta coordinada." : "The coordinated response."}</h2><p>{content.solution}</p></article>
         <aside className="case-facts">
           <div><span>{copy.common.state}</span><strong>{content.statusLabel}</strong></div>
           <div><span>{copy.common.role}</span><p>{content.role}</p></div>

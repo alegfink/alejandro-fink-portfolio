@@ -16,7 +16,7 @@ export function indexingEnabled(): boolean {
   return process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" && getSiteUrl().hostname !== "localhost";
 }
 
-export function buildMetadata({ locale, path, alternatePath, title, description, image, noIndex }: MetadataInput): Metadata {
+export function buildMetadata({ locale, path, alternatePath, title, description, image, noIndex = true }: MetadataInput): Metadata {
   const esPath = locale === "es" ? path : alternatePath;
   const enPath = locale === "en" ? path : alternatePath;
   const shouldIndex = indexingEnabled() && !noIndex;

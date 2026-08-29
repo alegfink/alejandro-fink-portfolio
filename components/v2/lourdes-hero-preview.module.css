@@ -1,0 +1,175 @@
+.root {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+  overflow: hidden;
+  background: #151714;
+  color: #fffaf2;
+  isolation: isolate;
+}
+
+.slides,
+.slide,
+.shade,
+.grain,
+.interface {
+  position: absolute;
+  inset: 0;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: saturate(.82) contrast(1.04);
+  transform: scale(1.045);
+  animation: lourdesHeroFade 28s cubic-bezier(.77, 0, .175, 1) var(--lourdes-slide-delay) infinite;
+  will-change: opacity, transform;
+}
+
+.shade {
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgb(7 10 8 / 62%) 0%, rgb(7 10 8 / 22%) 51%, rgb(7 10 8 / 31%) 100%),
+    linear-gradient(180deg, rgb(7 10 8 / 39%) 0%, transparent 25%, transparent 68%, rgb(7 10 8 / 58%) 100%);
+}
+
+.grain {
+  z-index: 2;
+  opacity: .16;
+  background-image:
+    repeating-radial-gradient(circle at 24% 37%, transparent 0 1px, rgb(255 244 232 / 9%) 1px 2px),
+    repeating-linear-gradient(93deg, transparent 0 3px, rgb(0 0 0 / 12%) 3px 4px);
+  background-size: 5px 5px, 7px 7px;
+  mix-blend-mode: soft-light;
+}
+
+.interface {
+  z-index: 3;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 2.4cqw 3.3cqw 2.7cqw;
+  text-shadow: 0 1px 1.5cqw rgb(0 0 0 / 46%);
+}
+
+.topbar,
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+}
+
+.brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.8cqw;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.08em;
+}
+
+.brand span { color: #ff6d7e; }
+
+.nav,
+.eyebrow,
+.actions,
+.footer {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 750;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.nav {
+  font-size: .72cqw;
+  white-space: nowrap;
+}
+
+.copy {
+  align-self: center;
+  width: 64%;
+  transform: translateY(2cqw);
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 2.2cqw;
+  font-size: .78cqw;
+}
+
+.copy strong,
+.copy em {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 7.2cqw;
+  font-weight: 600;
+  line-height: .8;
+  letter-spacing: -.065em;
+}
+
+.copy strong { max-width: 56cqw; }
+
+.copy em {
+  margin-top: 1.2cqw;
+  margin-left: 7.2cqw;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.copy p {
+  width: 36cqw;
+  margin: 2.7cqw 0 0 20.5cqw;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45cqw;
+  font-weight: 600;
+  line-height: 1.38;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  margin: 2.7cqw 0 0 20.5cqw;
+  font-size: .72cqw;
+}
+
+.actions span:first-child {
+  padding: 1.2cqw 1.75cqw;
+  border-radius: 99px;
+  background: #fffaf2;
+  color: #25221f;
+  text-shadow: none;
+}
+
+.footer {
+  font-size: .62cqw;
+  white-space: nowrap;
+}
+
+@keyframes lourdesHeroFade {
+  0%, 19% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25%, 94% {
+    opacity: 0;
+    transform: scale(1.045);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    opacity: 0;
+    transform: none;
+    animation: none;
+    will-change: auto;
+  }
+
+  .slide:first-child { opacity: 1; }
+}

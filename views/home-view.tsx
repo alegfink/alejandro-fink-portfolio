@@ -19,8 +19,8 @@ export function HomeView({ locale }: { locale: Locale }) {
   const copy = siteCopy[locale];
   const routes = routeNames[locale];
   const heroLines = locale === "es"
-    ? ["Diseño y desarrollo", "sitios web y productos", "digitales que resuelven", "problemas reales de negocio."]
-    : ["I design and build", "websites and digital products", "that solve real", "business problems."];
+    ? ["Opero y hago avanzar", "negocios digitales", "conectando producto, experiencia", "y operación."]
+    : ["I operate and move", "digital businesses forward", "by connecting product, experience", "and operations."];
 
   return (
     <main id="main-content" className="motion-home">
@@ -62,7 +62,7 @@ export function HomeView({ locale }: { locale: Locale }) {
           </div>
 
           <div className="motion-hero__ticker" aria-hidden="true">
-            <span>BUSINESS × UX × PRODUCT × CODE × BUSINESS × UX × PRODUCT × CODE ×</span>
+            <span>E-COMMERCE × PRODUCT × UX × OPERATIONS × E-COMMERCE × PRODUCT × UX × OPERATIONS ×</span>
           </div>
           <div className="motion-hero__progress" aria-hidden="true"><span>SCROLL</span><i /></div>
         </div>
@@ -160,17 +160,22 @@ export function HomeView({ locale }: { locale: Locale }) {
             <p className="eyebrow">{copy.home.servicesEyebrow}</p>
             <h2>{copy.home.servicesTitle}</h2>
           </div>
-          <ol className="capability-rail" data-capability-rail>
+          <ol
+            className="capability-rail"
+            data-capability-rail
+            tabIndex={0}
+            aria-label={locale === "es" ? "Áreas de trabajo. Desplazá la página, arrastrá las tarjetas o usá las flechas para recorrerlas." : "Work areas. Scroll the page, drag the cards or use the arrow keys to explore them."}
+          >
             {copy.services.map((service, index) => (
               <li key={service.number} style={{ "--service-index": index } as React.CSSProperties}>
                 <span>{service.number}</span>
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
-                <i aria-hidden="true">AF / BUILD</i>
+                <i aria-hidden="true">AF / OPERATE</i>
               </li>
             ))}
           </ol>
-          <p className="capability-story__hint shell" aria-hidden="true">{locale === "es" ? "DESPLAZAR PARA CONECTAR CAPACIDADES" : "SCROLL TO CONNECT CAPABILITIES"}</p>
+          <p className="capability-story__hint shell" aria-hidden="true">{locale === "es" ? "DESPLAZÁ O ARRASTRÁ PARA RECORRER CAPACIDADES ↔" : "SCROLL OR DRAG TO EXPLORE CAPABILITIES ↔"}</p>
         </div>
       </section>
 
@@ -194,7 +199,7 @@ export function HomeView({ locale }: { locale: Locale }) {
       <section className="manifesto-story" data-scroll-manifesto data-analytics-section="home-perspective">
         <div className="manifesto-story__sticky">
           <div className="manifesto-story__words" aria-hidden="true">
-            <span>BUSINESS</span><span>EXPERIENCE</span><span>EXECUTION</span>
+            <span>E-COMMERCE</span><span>PRODUCT</span><span>OPERATIONS</span>
           </div>
           <div className="manifesto-story__card shell">
             <p className="eyebrow">{copy.home.perspectiveEyebrow}</p>

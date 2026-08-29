@@ -28,6 +28,17 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      { source: "/v2", destination: "/", permanent: true },
+      { source: "/v2/proyectos", destination: "/proyectos", permanent: true },
+      { source: "/v2/acerca-de", destination: "/acerca-de", permanent: true },
+      { source: "/v2/en", destination: "/en", permanent: true },
+      { source: "/v2/en/projects", destination: "/en/projects", permanent: true },
+      { source: "/v2/en/about", destination: "/en/about", permanent: true },
+      { source: "/v2/heroes", destination: "/", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
