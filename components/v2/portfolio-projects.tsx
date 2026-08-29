@@ -9,7 +9,6 @@ import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
-import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
@@ -496,8 +495,6 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
           </div>
         </section>
       </main>
-
-      <V2ContactStrip locale={locale} />
 
       <footer className={styles.footer}>
         <Link href={getV2Path(locale, "home")} className={styles.footerHome}>

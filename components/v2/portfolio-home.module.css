@@ -2282,7 +2282,9 @@
 .footerName span:last-child { color: #ff6848; }
 
 .footerBottomline {
-  gap: 30px;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  gap: 18px clamp(20px, 3vw, 48px);
   padding-top: clamp(26px, 4vh, 44px);
   color: #a77c72;
 }
@@ -2300,6 +2302,21 @@
   gap: clamp(18px, 2vw, 34px);
   align-items: center;
 }
+
+.footerContactLinks {
+  justify-self: center;
+  display: flex;
+  gap: clamp(16px, 2vw, 28px);
+  align-items: center;
+}
+
+.footerContactLinks a {
+  color: #e7b8aa;
+  transition: color 160ms ease-out;
+}
+
+.footerContactLinks a:hover,
+.footerContactLinks a:focus-visible { color: #ff8064; }
 
 .footerUtilities a {
   min-width: 44px;
@@ -2595,6 +2612,14 @@
     font-size: 8px;
   }
   .footerBottomline p:first-child { grid-column: 1 / -1; }
+  .footerContactLinks {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: start;
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid rgb(255 240 233 / 13%);
+  }
   .footerUtilities { justify-self: end; }
   .footerGraphic svg { width: 150%; }
 }

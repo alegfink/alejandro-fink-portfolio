@@ -9,10 +9,9 @@ import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
-import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
 import styles from "@/components/v2/portfolio-home.module.css";
 import type { Locale } from "@/lib/i18n";
-import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
+import { getV2Path, gmailComposeUrl, v2ContactProfiles, v2PrivacyRoutes, v2SharedCopy, whatsappContactUrl } from "@/lib/v2-i18n";
 
 const projectById = new Map(projects.map((project) => [project.id, project]));
 
@@ -59,7 +58,7 @@ const homeCopy = {
     ctaEyebrow: "El próximo movimiento", ctaTitle: "Hagamos algo", ctaTitleAccent: "que la gente quiera recorrer",
     ctaLead: "Una experiencia clara, útil y conectada con lo que tu negocio necesita mover", talk: "Hablemos", copied: "Correo copiado", copy: "Copiar correo",
     footerEyebrow: "Una última coordenada", footerThanks: "Gracias por recorrer hasta acá", footerTitle: ["Fin del scroll", "Inicio de lo que sigue"],
-    footerNav: "Navegación de cierre", designed: "Diseñado y desarrollado por Alejandro Fink", location: "Buenos Aires · 2026",
+    footerNav: "Navegación de cierre", contactNav: "Otros canales de contacto", designed: "Diseñado y desarrollado por Alejandro Fink", location: "Buenos Aires · 2026",
   },
   en: {
     selectedProjects: "Selected projects", rail: "JOURNEY", strengths: "Strengths", approach: "APPROACH",
@@ -68,7 +67,7 @@ const homeCopy = {
     ctaEyebrow: "The next move", ctaTitle: "Let's make something", ctaTitleAccent: "people want to explore",
     ctaLead: "A clear, useful experience connected to what your business needs to move", talk: "Let's talk", copied: "Email copied", copy: "Copy email",
     footerEyebrow: "One last coordinate", footerThanks: "Thanks for making it this far", footerTitle: ["End of the scroll", "Start of what comes next"],
-    footerNav: "Closing navigation", designed: "Designed and developed by Alejandro Fink", location: "Buenos Aires · 2026",
+    footerNav: "Closing navigation", contactNav: "Other contact channels", designed: "Designed and developed by Alejandro Fink", location: "Buenos Aires · 2026",
   },
 } as const;
 
@@ -1153,8 +1152,6 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         </section>
       </main>
 
-      <V2ContactStrip locale={locale} tone="dark" />
-
       <footer className={styles.siteFooter} aria-labelledby="footer-title" ref={footerRef} data-animation-active="false">
         <div className={styles.footerGraphic} aria-hidden="true">
           <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
@@ -1204,6 +1201,11 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         <div className={styles.footerBottomline}>
           <p>{copy.designed}</p>
           <p>{copy.location}</p>
+          <nav className={styles.footerContactLinks} aria-label={copy.contactNav}>
+            <a href={whatsappContactUrl(locale)} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer">GitHub</a>
+          </nav>
           <div className={styles.footerUtilities}>
             <Link href={v2PrivacyRoutes[locale]}>{shared.privacy}</Link>
             <a href="#contenido">{shared.backTop} <span aria-hidden="true">↑</span></a>
