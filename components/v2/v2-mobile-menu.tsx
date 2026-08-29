@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { trackContactChannel, trackEvent } from "@/lib/analytics";

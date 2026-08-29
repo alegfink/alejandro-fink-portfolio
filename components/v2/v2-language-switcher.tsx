@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
@@ -10,18 +9,17 @@ import styles from "@/components/v2/v2-language-switcher.module.css";
 
 export function V2LanguageSwitcher({ locale, page }: Readonly<{ locale: Locale; page: V2Page }>) {
   const copy = v2SharedCopy[locale];
-  const router = useRouter();
 
   useEffect(() => {
     try {
       const rememberedLocale = window.localStorage.getItem("af-language");
       if ((rememberedLocale === "es" || rememberedLocale === "en") && rememberedLocale !== locale) {
-        router.replace(getV2Path(rememberedLocale, page));
+        window.location.replace(getV2Path(rememberedLocale, page));
       }
     } catch {
       // The selector still works when storage is unavailable.
     }
-  }, [locale, page, router]);
+  }, [locale, page]);
 
   const remember = (nextLocale: Locale) => {
     if (nextLocale !== locale) {
