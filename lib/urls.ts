@@ -1,11 +1,24 @@
 import { projectBase, type Locale } from "@/lib/i18n";
 
+const LOCAL_SITE_URL = "http://localhost:3000";
+const PRODUCTION_SITE_URL = "https://www.alejandrofink.com";
+const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
+
+function fallbackSiteUrl(): string {
+  return process.env.NODE_ENV === "production" ? PRODUCTION_SITE_URL : LOCAL_SITE_URL;
+}
+
 export function getSiteUrl(): URL {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const fallback = fallbackSiteUrl();
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || fallback;
   try {
-    return new URL(raw);
+    const configured = new URL(raw);
+    if (process.env.NODE_ENV === "production" && LOCAL_HOSTNAMES.has(configured.hostname)) {
+      return new URL(PRODUCTION_SITE_URL);
+    }
+    return configured;
   } catch {
-    return new URL("http://localhost:3000");
+    return new URL(fallback);
   }
 }
 
