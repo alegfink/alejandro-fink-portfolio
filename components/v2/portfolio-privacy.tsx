@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { AnalyticsPreferencesButton } from "@/components/analytics-provider";
 import type { Locale } from "@/lib/i18n";
 import { siteCopy } from "@/content/site";
 import { getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
+import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import styles from "@/components/v2/portfolio-privacy.module.css";
 
@@ -38,22 +40,22 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
           <Link className={styles.headerButton} href={getV2Path(locale, "about")}>{shared.about}</Link>
           <V2LanguageSwitcher locale={locale} page="privacy" />
         </nav>
-        <a className={`${styles.headerButton} ${styles.contact}`} href={gmailComposeUrl(locale)} target="_blank" rel="noreferrer" aria-label={shared.contactLabel}>
+        <V2TrackedContactLink className={`${styles.headerButton} ${styles.contact}`} channel="gmail" href={gmailComposeUrl(locale)} locale={locale} placement="header" target="_blank" rel="noreferrer" aria-label={shared.contactLabel}>
           <span>{shared.contact}</span><i aria-hidden="true">↗</i>
-        </a>
+        </V2TrackedContactLink>
         <V2MobileMenu locale={locale} page="privacy" />
       </header>
 
       <div className={styles.topDiffuser} aria-hidden="true" />
 
       <main id="privacy-content" className={styles.main}>
-        <section className={styles.hero}>
+        <section className={styles.hero} data-analytics-section="privacy_intro">
           <p>{locale === "es" ? "Información clara · sin letra chica" : "Clear information · no fine print"}</p>
           <h1>{locale === "es" ? "Privacidad sin letra chica." : "Privacy without fine print."}</h1>
           <div><span>{copy.updated}</span><p>{copy.title}</p></div>
         </section>
 
-        <section className={styles.policy} aria-label={copy.title}>
+        <section className={styles.policy} aria-label={copy.title} data-analytics-section="privacy_policy">
           {copy.sections.map((section, index) => (
             <article key={section.title}>
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -62,17 +64,20 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
           ))}
         </section>
 
-        <section className={styles.closing}>
+        <section className={styles.closing} data-analytics-section="privacy_contact">
           <p>{locale === "es" ? "Si algo no está claro" : "If anything is unclear"}</p>
           <h2>{locale === "es" ? "La privacidad también se diseña con contexto." : "Privacy is also designed with context."}</h2>
-          <a href={gmailComposeUrl(locale)} target="_blank" rel="noreferrer">{shared.contact}<span aria-hidden="true">↗</span></a>
+          <V2TrackedContactLink channel="gmail" href={gmailComposeUrl(locale)} locale={locale} placement="privacy" target="_blank" rel="noreferrer">{shared.contact}<span aria-hidden="true">↗</span></V2TrackedContactLink>
         </section>
       </main>
 
       <footer className={styles.footer}>
         <Link href={getV2Path(locale, "home")}><BrandMark /><span>{shared.backJourney}</span></Link>
         <p aria-label="Alejandro Fink"><span>Alejandro</span> <span>Fink</span></p>
-        <a href="#privacy-content">{shared.backTop} ↑</a>
+        <div>
+          <AnalyticsPreferencesButton locale={locale} />
+          <a href="#privacy-content">{shared.backTop} ↑</a>
+        </div>
       </footer>
     </div>
   );

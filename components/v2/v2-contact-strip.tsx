@@ -1,6 +1,9 @@
 import type { Locale } from "@/lib/i18n";
 import { v2ContactProfiles, whatsappContactUrl } from "@/lib/v2-i18n";
+import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import styles from "@/components/v2/v2-contact-strip.module.css";
+
+const channelIds = ["whatsapp", "linkedin", "github"] as const;
 
 const contactCopy = {
   es: {
@@ -37,11 +40,19 @@ export function V2ContactStrip({ locale, tone = "light" }: Readonly<{ locale: Lo
       </div>
       <nav className={styles.channels} aria-label={copy.label}>
         {copy.channels.map((channel, index) => (
-          <a href={links[index]} target="_blank" rel="noreferrer" key={channel.name}>
+          <V2TrackedContactLink
+            channel={channelIds[index]}
+            href={links[index]}
+            locale={locale}
+            placement="contact_strip"
+            target="_blank"
+            rel="noreferrer"
+            key={channel.name}
+          >
             <span>{String(index + 1).padStart(2, "0")}</span>
             <div><strong>{channel.name}</strong><small>{channel.detail}</small></div>
             <i aria-hidden="true">↗</i>
-          </a>
+          </V2TrackedContactLink>
         ))}
       </nav>
     </aside>
