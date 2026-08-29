@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "@/components/v2/portfolio-about.module.css";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";

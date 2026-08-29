@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import styles from "@/components/v2/hero-lab.module.css";
 import type { Locale } from "@/lib/i18n";

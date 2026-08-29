@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { projects, type Project, type ProjectMedia } from "@/content/projects";
 import { HeroLab } from "@/components/v2/hero-lab";
