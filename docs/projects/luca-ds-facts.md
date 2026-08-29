@@ -1,7 +1,7 @@
 # Luca DS Coaching — ficha factual consolidada
 
-**Estado del documento:** base confirmada para un caso compacto; se actualizará con el lanzamiento.  
-**Última actualización:** 8 de agosto de 2026.
+**Estado del documento:** base confirmada para un caso compacto y actualizada tras la publicación de la nueva landing.
+**Última actualización:** 28 de agosto de 2026.
 
 Este archivo reúne información aportada por Alejandro y evidencia de la implementación disponible en `C:\Users\Ale\Desktop\Luca-programa`.
 
@@ -11,15 +11,16 @@ Este archivo reúne información aportada por Alejandro y evidencia de la implem
 - **Responsable y figura del servicio:** Luca De Simone.
 - **URL pública actual:** https://luca-ds-coaching.alegfink.chatgpt.site/
 - **Relación:** Luca es amigo y socio de Alejandro en este proyecto.
-- **Estado:** proyecto compartido en desarrollo; la página todavía no está en producción comercial y su lanzamiento está previsto próximamente.
+- **Estado:** proyecto compartido en evolución; la nueva landing está publicada en producción. Todavía no existen métricas atribuibles suficientes para comunicar resultados.
 - **Autorización:** Alejandro cuenta con permiso para mostrar el nombre, Instagram, fotografías, caso de éxito, ofertas, pantallas y proceso en su portfolio.
-- **Fecha de implementación verificable:** 2 de agosto de 2026.
+- **Fecha de implementación inicial verificable:** 2 de agosto de 2026.
+- **Última publicación verificada:** 28 de agosto de 2026.
 
 ## Definición breve
 
 Luca DS es un proyecto de coaching de físico y mentalidad orientado a personas que entrenan hace tiempo pero siguen estancadas. La propuesta combina estructura de entrenamiento, seguimiento, hábitos y disciplina mediante una comunicación directa y sin promesas mágicas.
 
-Alejandro y Luca están construyendo el proyecto en conjunto. Luca aporta la figura, experiencia y servicio; Alejandro desarrolla la propuesta digital y comercial. La división operativa más detallada puede documentarse cuando el negocio entre en producción.
+Alejandro y Luca construyen y evolucionan el proyecto en conjunto. Luca aporta la figura, experiencia y servicio; Alejandro desarrolla la propuesta digital y comercial. La división operativa más detallada todavía puede documentarse a medida que avance la operación.
 
 ## Público y problema
 
@@ -83,15 +84,16 @@ El repositorio y la explicación del proyecto permiten atribuir a Alejandro:
 - dirección visual;
 - desarrollo frontend asistido por IA;
 - dirección y edición de composiciones visuales;
+- dirección e implementación del hero cinemático y la narrativa de scroll;
 - optimización responsive;
 - metadata y pieza social;
-- publicación del prototipo.
+- publicación y evolución de la landing en producción.
 
 Luca aporta su historia, experiencia, fotografías, servicio, caso de éxito, contenido de referencia y validación de la oferta.
 
 ## Experiencia implementada
 
-- Hero inmersivo con el mensaje “Tu físico no miente”.
+- Hero inmersivo en video con el mensaje “Tu físico no miente”.
 - Posicionamiento alrededor de entrenamiento, hábitos y mentalidad.
 - Sección de problema y “verdad incómoda”.
 - Método en cuatro pasos: diagnóstico, plan, control y mentalidad.
@@ -104,6 +106,7 @@ Luca aporta su historia, experiencia, fotografías, servicio, caso de éxito, co
 - CTAs reiterados hacia el Instagram oficial `@lucadsok`.
 - Tarjeta Open Graph propia.
 - Diseño responsive y soporte para reduced motion.
+- Preloader, transiciones y progresión narrativa vinculadas al scroll.
 
 ## Funcionalidad real
 

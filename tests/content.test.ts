@@ -16,7 +16,7 @@ describe("project content model", () => {
       "Solución web · Operativa",
       "MVP de validación · Sin lanzamiento comercial",
       "Propuesta estratégica · Prototipo funcional",
-      "Proyecto en desarrollo · Lanzamiento próximo",
+      "Landing pública · En producción",
       "Portfolio aprobado · Activación pendiente",
     ]);
   });

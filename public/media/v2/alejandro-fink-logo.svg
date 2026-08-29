@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="460" height="96" viewBox="0 0 460 96" role="img" aria-labelledby="title desc">
+  <title id="title">Alejandro Fink</title>
+  <desc id="desc">Logotipo de Alejandro Fink con monograma AF de tres trazos redondeados en coral y crema.</desc>
+  <g transform="translate(12 18) scale(1.5)">
+    <path d="M5 32L20.5 4" fill="none" stroke="#FF5D3B" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M33 21H42" fill="none" stroke="#FF5D3B" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.5 32L34.4 7C35.1 5.6 36.3 4.8 38 4.8H44" fill="none" stroke="#FFF1E8" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="104" y="62" fill="#FFF1E8" font-family="Instrument Sans, Arial, sans-serif" font-size="46" font-weight="700" letter-spacing="-1.5">Alejandro Fink</text>
+</svg>

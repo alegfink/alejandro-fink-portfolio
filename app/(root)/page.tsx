@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import { RootRedirect } from "@/components/root-redirect";
+import { PortfolioV2Home } from "@/components/v2/portfolio-home";
+import { buildMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Alejandro Fink | E-commerce & Digital Operations",
-  description: "Elegí un idioma · Choose a language",
-  robots: { index: false, follow: true },
-};
+export const metadata: Metadata = buildMetadata({
+  locale: "es",
+  path: "/",
+  alternatePath: "/en",
+  title: "Alejandro Fink — E-commerce & Digital Operations",
+  description: "Portfolio de Alejandro Fink: e-commerce, producto, UX y operaciones digitales conectados para convertir necesidades comerciales en soluciones funcionales.",
+  noIndex: false,
+});
 
 export default function RootPage() {
-  return <RootRedirect />;
+  return <PortfolioV2Home locale="es" />;
 }

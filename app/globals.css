@@ -25,12 +25,18 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; background: var(--paper); }
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
 
 body {
   margin: 0;
-  min-width: 320px;
-  overflow-x: hidden;
+  min-width: 0;
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -143,7 +149,7 @@ p { margin: 0; }
 .site-header--menu-open { transform: none; background: var(--paper); border-color: var(--line); backdrop-filter: none; }
 .site-header__inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 760; letter-spacing: -.01em; }
-.brand__mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 7px; background: var(--ink); color: white; font-family: var(--font-mono); font-size: 11px; letter-spacing: -.05em; }
+.brand__mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 7px; background: var(--ink) url("/media/v2/alejandro-fink-mark.svg") center / 26px auto no-repeat; color: transparent; font-size: 0; }
 .desktop-nav { display: flex; align-items: center; gap: clamp(16px, 2.3vw, 34px); font-size: 14px; font-weight: 650; }
 .desktop-nav > a:not(.nav-cta) { padding-block: 10px; }
 .desktop-nav > a:not(.nav-cta):hover { color: var(--cobalt); }
