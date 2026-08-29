@@ -49,6 +49,7 @@ export function AnalyticsPreferencesButton({ locale, className = "" }: { locale:
 
 export function AnalyticsProvider() {
   const pathname = usePathname() || "/es";
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
   const locale = localeFromPath(pathname);
   const copy = consentCopy[locale];
   const configured = isAnalyticsConfigured();
@@ -61,6 +62,16 @@ export function AnalyticsProvider() {
 
   useEffect(() => {
     if (!configured) return;
+    if (isAdmin) {
+      window.localStorage.setItem("af-analytics-internal-v1", "true");
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = `af-analytics-internal-v1=true; Max-Age=31536000; Path=/; SameSite=Lax${secure}`;
+      window.queueMicrotask(() => {
+        setConsentState("denied");
+        setOpen(false);
+      });
+      return;
+    }
     if (applyInternalTrafficControl()) {
       window.queueMicrotask(() => {
         setConsentState("denied");
@@ -87,7 +98,7 @@ export function AnalyticsProvider() {
       window.removeEventListener(ANALYTICS_CONSENT_EVENT, onConsent);
       window.removeEventListener("af:analytics-open", onOpen);
     };
-  }, [configured]);
+  }, [configured, isAdmin]);
 
   useEffect(() => {
     engagement.current = { startedAt: Date.now(), maxScroll: 0, sent: false };
@@ -161,7 +172,7 @@ export function AnalyticsProvider() {
     return () => { active = false; };
   }, [consent, locale, pageGroup]);
 
-  if (!configured || !open) return null;
+  if (!configured || !open || isAdmin) return null;
   return (
     <aside className="analytics-consent" aria-labelledby="analytics-consent-title" role="dialog" aria-modal="false">
       <p className="analytics-consent__eyebrow">{copy.eyebrow}</p>

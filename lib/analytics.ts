@@ -99,9 +99,10 @@ export function isInternalTrafficExcluded() {
 }
 
 function setInternalTrafficCookie(excluded: boolean) {
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = excluded
-    ? `${ANALYTICS_INTERNAL_COOKIE}=true; Max-Age=31536000; Path=/; SameSite=Lax; Secure`
-    : `${ANALYTICS_INTERNAL_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`;
+    ? `${ANALYTICS_INTERNAL_COOKIE}=true; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+    : `${ANALYTICS_INTERNAL_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax${secure}`;
 }
 
 export function applyInternalTrafficControl() {

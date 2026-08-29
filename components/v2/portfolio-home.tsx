@@ -5,6 +5,7 @@ import { NativeLink as Link } from "@/components/v2/native-link";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { projects, type Project, type ProjectMedia } from "@/content/projects";
 import { HeroLab } from "@/components/v2/hero-lab";
+import { AmbientVideo } from "@/components/v2/ambient-video";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
@@ -126,62 +127,15 @@ function StoryReveal({ label, reveal, wide = false, locale = "es" }: Readonly<{ 
   );
 }
 
-function ProjectPreviewMedia({ media }: Readonly<{ media: ProjectMedia }>) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !media.videoSrc || shouldLoad) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) return;
-      setShouldLoad(true);
-      observer.disconnect();
-    }, { rootMargin: "700px 0px", threshold: 0.01 });
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, [media.videoSrc, shouldLoad]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !media.videoSrc || !shouldLoad) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reducedMotion.matches) {
-      video.pause();
-      return;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        void video.play().catch(() => undefined);
-      } else {
-        video.pause();
-      }
-    }, { threshold: 0.15 });
-
-    observer.observe(video);
-
-    return () => {
-      observer.disconnect();
-      video.pause();
-    };
-  }, [media.videoSrc, shouldLoad]);
-
+function ProjectPreviewMedia({ media, locale }: Readonly<{ media: ProjectMedia; locale: Locale }>) {
   if (media.videoSrc) {
     return (
-      <video
-        ref={videoRef}
+      <AmbientVideo
         className={styles.projectPreviewVideo}
-        src={shouldLoad ? media.videoSrc : undefined}
+        src={media.videoSrc}
         poster={media.src}
-        muted
-        loop
-        playsInline
-        preload={shouldLoad ? "metadata" : "none"}
-        aria-hidden="true"
+        decorative
+        playLabel={locale === "es" ? "Reproducir vista previa del proyecto" : "Play project preview"}
       />
     );
   }
@@ -216,7 +170,7 @@ function ProjectFolderPreview({ project, media, locale }: Readonly<{ project: Pr
         <div className={styles.projectSiteViewport}>
           {project.id === "lourdes-mirada"
             ? <LourdesHeroPreview locale={locale} />
-            : <ProjectPreviewMedia media={media} />}
+            : <ProjectPreviewMedia media={media} locale={locale} />}
         </div>
       </div>
     </div>

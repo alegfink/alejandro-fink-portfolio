@@ -13,6 +13,7 @@ const easeOut = (value: number) => 1 - Math.pow(1 - value, 3);
 
 export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
+  const skipLoader = pathname === "/admin" || pathname.startsWith("/admin/");
   const locale = pathname === "/en" || pathname.startsWith("/en/") || pathname.startsWith("/v2/en") ? "en" : "es";
   const copy = v2SharedCopy[locale];
   const loaderRef = useRef<HTMLDivElement | null>(null);
@@ -21,6 +22,7 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
   const [phase, setPhase] = useState<LoaderPhase>("loading");
 
   useEffect(() => {
+    if (skipLoader) return;
     let frame = 0;
 
     const restoreHorizontalOrigin = () => {
@@ -47,9 +49,10 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
       window.removeEventListener("orientationchange", restoreHorizontalOrigin);
       window.visualViewport?.removeEventListener("resize", restoreHorizontalOrigin);
     };
-  }, []);
+  }, [skipLoader]);
 
   useEffect(() => {
+    if (skipLoader) return;
     const loader = loaderRef.current;
     const counter = counterRef.current;
     const progressLine = progressRef.current;
@@ -159,9 +162,10 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
       window.removeEventListener("load", handlePageReady);
       document.body.style.overflow = originalOverflow;
     };
-  }, []);
+  }, [skipLoader]);
 
   useEffect(() => {
+    if (skipLoader) return;
     if (phase === "loading" || phase === "complete") return;
     const frame = window.requestAnimationFrame(() => {
       const top = window.scrollY;
@@ -170,7 +174,9 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
       document.body.scrollLeft = 0;
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [phase]);
+  }, [phase, skipLoader]);
+
+  if (skipLoader) return <>{children}</>;
 
   const contentState = phase === "loading" || phase === "complete" ? "loading" : phase;
 

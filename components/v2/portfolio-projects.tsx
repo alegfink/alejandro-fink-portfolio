@@ -7,6 +7,7 @@ import { projects, type Project } from "@/content/projects";
 import styles from "@/components/v2/portfolio-projects.module.css";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
+import { AmbientVideo } from "@/components/v2/ambient-video";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
@@ -280,15 +281,11 @@ function ProjectMedia({ asset, project, locale }: Readonly<{ asset: ProjectAsset
         {project.id === "lourdes-mirada" && asset.src.endsWith("/live-desktop.png") ? (
           <LourdesHeroPreview locale={locale} />
         ) : asset.video ? (
-          <video
+          <AmbientVideo
             src={asset.src}
-            poster={asset.poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label={alt}
+            poster={asset.poster ?? ""}
+            ariaLabel={alt}
+            playLabel={locale === "es" ? `Reproducir video de ${project.content[locale].title}` : `Play ${project.content[locale].title} video`}
           />
         ) : (
           <Image
