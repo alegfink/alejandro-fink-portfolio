@@ -61,3 +61,4 @@ export function getLeadAttribution() {
   if (getAnalyticsConsent() !== "granted") return undefined;
   return captureAttribution(true);
 }
+

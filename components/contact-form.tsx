@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import { contactIntakeCopy, contactOptions } from "@/content/contact-intake";
 import { trackEvent } from "@/lib/analytics";
 import { getLeadAttribution } from "@/lib/attribution";
 import { validateContactPayload, type ContactInquiry, type ContactValidationErrors } from "@/lib/contact";
+import { CONTACT_DRAFT_STORAGE_KEY, readContactDraft, serializeContactDraft } from "@/lib/contact-draft";
 import type { Locale } from "@/lib/i18n";
 
 const stepIds = ["goal", "stage", "challenges", "audience", "brand", "needs", "readiness", "contact", "context", "review"] as const;
@@ -92,19 +93,59 @@ function joinLabels(options: readonly { value: string; label: string }[], values
   return values.map((value) => options.find((option) => option.value === value)?.label ?? value).join(" · ");
 }
 
-export function ContactForm({ locale, enabled }: { locale: Locale; enabled: boolean }) {
+const CONTACT_DRAFT_SERVER_SNAPSHOT = "__contact-draft-server-snapshot__";
+
+function subscribeToContactDraft() {
+  return () => undefined;
+}
+
+function getContactDraftSnapshot() {
+  try {
+    return window.sessionStorage.getItem(CONTACT_DRAFT_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function getServerContactDraftSnapshot() {
+  return CONTACT_DRAFT_SERVER_SNAPSHOT;
+}
+
+type ContactFormProps = { locale: Locale; enabled: boolean };
+
+export function ContactForm(props: ContactFormProps) {
+  const draftSnapshot = useSyncExternalStore(
+    subscribeToContactDraft,
+    getContactDraftSnapshot,
+    getServerContactDraftSnapshot,
+  );
+  const draftReady = draftSnapshot !== CONTACT_DRAFT_SERVER_SNAPSHOT;
+  const initialDraft = draftReady ? readContactDraft(draftSnapshot) : { status: "empty" } as const;
+  const hydrationKey = draftReady ? "client" : "server";
+
+  return <ContactFormContent key={hydrationKey} {...props} initialDraft={initialDraft} draftReady={draftReady} />;
+}
+
+function ContactFormContent({ locale, enabled, initialDraft, draftReady }: ContactFormProps & {
+  initialDraft: ReturnType<typeof readContactDraft>;
+  draftReady: boolean;
+}) {
   const copy = contactIntakeCopy[locale];
   const options = contactOptions[locale];
-  const [form, setForm] = useState<FormState>(initialForm);
-  const [stepIndex, setStepIndex] = useState(0);
+  const restoredDraft = initialDraft.status === "valid" ? initialDraft : null;
+  const [form, setForm] = useState<FormState>(() => ({ ...initialForm, ...restoredDraft?.fields }));
+  const [stepIndex, setStepIndex] = useState(restoredDraft?.resumeStep ?? 0);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [errors, setErrors] = useState<ContactValidationErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [draftNotice, setDraftNotice] = useState<"restored" | "discarded" | null>(() =>
+    initialDraft.status === "valid" ? "restored" : initialDraft.status === "invalid" ? "discarded" : null,
+  );
   const startedAt = useRef(0);
   const submissionId = useRef<string | null>(null);
-  const hasStarted = useRef(false);
+  const hasStarted = useRef(initialDraft.status === "valid");
   const submitted = useRef(false);
-  const lastStep = useRef(0);
+  const lastStep = useRef(restoredDraft?.resumeStep ?? 0);
   const stepHeading = useRef<HTMLHeadingElement>(null);
   const currentStep = stepIds[stepIndex];
   const privacyHref = locale === "es" ? "/es/privacidad/" : "/en/privacy/";
@@ -112,6 +153,27 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
   useEffect(() => {
     startedAt.current = Date.now();
   }, []);
+
+  useEffect(() => {
+    if (!draftReady) return;
+    const raw = serializeContactDraft({
+      ...(form.goal ? { goal: form.goal } : {}),
+      ...(form.stage ? { stage: form.stage } : {}),
+      ...(form.challenges.length ? { challenges: form.challenges } : {}),
+      ...(form.desiredAction ? { desiredAction: form.desiredAction } : {}),
+      ...(form.brandTraits.length ? { brandTraits: form.brandTraits } : {}),
+      ...(form.needs.length ? { needs: form.needs } : {}),
+      ...(form.investment ? { investment: form.investment } : {}),
+      ...(form.timeline ? { timeline: form.timeline } : {}),
+      ...(form.decisionStage ? { decisionStage: form.decisionStage } : {}),
+    });
+    try {
+      if (raw) window.sessionStorage.setItem(CONTACT_DRAFT_STORAGE_KEY, raw);
+      else window.sessionStorage.removeItem(CONTACT_DRAFT_STORAGE_KEY);
+    } catch {
+      // Draft recovery is progressive enhancement and must not block the form.
+    }
+  }, [draftReady, form.goal, form.stage, form.challenges, form.desiredAction, form.brandTraits, form.needs, form.investment, form.timeline, form.decisionStage]);
 
   useEffect(() => {
     if (stepIndex > 0) stepHeading.current?.focus();
@@ -266,6 +328,11 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
       const responseBody = await response.json().catch(() => null) as { ok?: boolean } | null;
       if (!response.ok || responseBody?.ok !== true) throw new Error("provider");
       submitted.current = true;
+      try {
+        window.sessionStorage.removeItem(CONTACT_DRAFT_STORAGE_KEY);
+      } catch {
+        // A successful submission is not affected when storage is unavailable.
+      }
       setStatus("success");
       trackEvent("contact_submit_success", { locale, elapsedSeconds });
       trackEvent("generate_lead", { locale });
@@ -276,9 +343,15 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
   }
 
   function reset() {
+    try {
+      window.sessionStorage.removeItem(CONTACT_DRAFT_STORAGE_KEY);
+    } catch {
+      // Reset still clears in-memory state when storage is unavailable.
+    }
     setForm(initialForm);
     setErrors({});
     setStatus("idle");
+    setDraftNotice(null);
     submissionId.current = null;
     hasStarted.current = false;
     submitted.current = false;
@@ -331,6 +404,17 @@ export function ContactForm({ locale, enabled }: { locale: Locale; enabled: bool
       </div>
 
       <p className="wizard-intro">{copy.intro}</p>
+      {draftNotice ? (
+        <p className="form-status" role={draftNotice === "discarded" ? "alert" : "status"}>
+          {draftNotice === "restored"
+            ? locale === "es"
+              ? "Recuperamos tus selecciones. Por privacidad, los textos y datos de contacto deben completarse nuevamente."
+              : "We recovered your selections. For privacy, text responses and contact details must be completed again."
+            : locale === "es"
+              ? "No pudimos recuperar el borrador anterior y lo descartamos para evitar usar datos incompatibles."
+              : "We could not recover the previous draft and discarded it to avoid using incompatible data."}
+        </p>
+      ) : null}
       <fieldset disabled={status === "sending"}>
         <legend className="sr-only">{stepCopy.title}</legend>
         <section className={`wizard-step wizard-step--${direction}`} key={currentStep} aria-labelledby={`wizard-${currentStep}-title`}>

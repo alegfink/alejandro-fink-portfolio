@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { projects, validateProjects } from "../content/projects";
+import { siteCopy } from "../content/site";
 import { switchLocalePath } from "../lib/i18n";
 import { CONTACT_MIN_COMPLETION_MS, validateContactPayload, validateContactSubmission } from "../lib/contact";
 
@@ -15,9 +16,30 @@ describe("project content model", () => {
       "Solución web · Operativa",
       "MVP de validación · Sin lanzamiento comercial",
       "Propuesta estratégica · Prototipo funcional",
-      "Proyecto en desarrollo · Lanzamiento próximo",
+      "Landing pública · En producción",
       "Portfolio aprobado · Activación pendiente",
     ]);
+  });
+});
+
+describe("canonical portfolio positioning", () => {
+  it("uses the approved identity in both languages", () => {
+    expect(siteCopy.es.descriptor).toBe("E-commerce y operaciones digitales | Producto, Growth, UX y ejecución asistida por IA");
+    expect(siteCopy.en.descriptor).toBe("E-commerce & Digital Operations | Product, Growth, UX & AI-Assisted Execution");
+    expect(siteCopy.es.home.metaTitle).toBe("Alejandro Fink | E-commerce y operaciones digitales");
+    expect(siteCopy.en.home.metaTitle).toBe("Alejandro Fink | E-commerce & Digital Operations");
+  });
+
+  it("keeps Torvena evidence while framing the role as operations", () => {
+    const torvena = projects.find((project) => project.id === "torvena");
+    expect(torvena?.content.es.role).toBe("Fundador y operador de e-commerce");
+    expect(torvena?.content.en.role).toBe("Founder and e-commerce operator");
+    expect(torvena?.technologies).toEqual(["Shopify Hydrogen", "TypeScript", "Storefront API", "Supabase"]);
+  });
+
+  it("does not use prohibited engineering identities in visible content", () => {
+    const visibleContent = JSON.stringify({ siteCopy, projects });
+    expect(visibleContent).not.toMatch(/Web Developer|Web Solutions Developer|Desarrollador web|Software Engineer|Frontend Engineer|React Engineer/i);
   });
 });
 
