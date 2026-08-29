@@ -14,6 +14,7 @@ import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import styles from "@/components/v2/portfolio-home.module.css";
 import { trackContactChannel, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
+import { getBenefitsIntroTiming, getBenefitsKineticOpacity } from "@/lib/scroll-motion";
 import { getV2Path, gmailComposeUrl, v2ContactProfiles, v2PrivacyRoutes, v2SharedCopy, whatsappContactUrl } from "@/lib/v2-i18n";
 
 const projectById = new Map(projects.map((project) => [project.id, project]));
@@ -75,17 +76,17 @@ const homeCopy = {
 } as const;
 
 const strengthRevealRanges = [
-  { titleStart: .5, titleEnd: .54, textStart: .55, textEnd: .61 },
-  { titleStart: .6, titleEnd: .64, textStart: .65, textEnd: .7 },
-  { titleStart: .69, titleEnd: .73, textStart: .74, textEnd: .78 },
-  { titleStart: .77, titleEnd: .81, textStart: .82, textEnd: .86 },
+  { titleStart: .28, titleEnd: .32, textStart: .33, textEnd: .38 },
+  { titleStart: .39, titleEnd: .43, textStart: .44, textEnd: .49 },
+  { titleStart: .5, titleEnd: .54, textStart: .55, textEnd: .6 },
+  { titleStart: .61, titleEnd: .65, textStart: .66, textEnd: .71 },
 ] as const;
 
 const mobileStrengthRevealRanges = [
-  { titleStart: .495, titleEnd: .525, textStart: .53, textEnd: .575 },
-  { titleStart: .58, titleEnd: .61, textStart: .615, textEnd: .66 },
-  { titleStart: .665, titleEnd: .695, textStart: .7, textEnd: .745 },
-  { titleStart: .75, titleEnd: .78, textStart: .785, textEnd: .83 },
+  { titleStart: .27, titleEnd: .3, textStart: .305, textEnd: .35 },
+  { titleStart: .365, titleEnd: .395, textStart: .4, textEnd: .445 },
+  { titleStart: .46, titleEnd: .49, textStart: .495, textEnd: .54 },
+  { titleStart: .555, titleEnd: .585, textStart: .59, textEnd: .635 },
 ] as const;
 
 const contactEmail = "alegfink@gmail.com";
@@ -198,21 +199,30 @@ function StaggeredProjectTitle({ text, id }: Readonly<{ text: string; id: string
   );
 }
 
-function KineticPhrase({ text }: Readonly<{ text: string }>) {
-  const letters = Array.from(text);
+function KineticPhrase({ text, exitOrder }: Readonly<{ text: string; exitOrder: 0 | 1 }>) {
+  const words = text.split(" ");
 
   return (
     <span aria-label={text}>
-      {letters.map((letter, index) => (
-        <i
-          aria-hidden="true"
-          data-kinetic-letter
-          data-kinetic-index={index}
-          data-kinetic-count={letters.length}
-          key={`${letter}-${index}`}
-        >
-          {letter === " " ? "\u00a0" : letter}
-        </i>
+      {words.map((word, wordIndex) => (
+        <Fragment key={`${word}-${wordIndex}`}>
+          <b aria-hidden="true" data-kinetic-word>
+            {Array.from(word).map((letter, letterIndex) => (
+              <i
+                data-kinetic-letter
+                data-kinetic-index={letterIndex}
+                data-kinetic-count={word.length}
+                data-kinetic-word-index={wordIndex}
+                data-kinetic-word-count={words.length}
+                data-kinetic-group={exitOrder}
+                key={`${letter}-${letterIndex}`}
+              >
+                {letter}
+              </i>
+            ))}
+          </b>
+          {wordIndex < words.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </span>
   );
@@ -593,10 +603,11 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       const wordTravel = smoothstep(.04, .88, entryProgress);
       const wordsIn = smoothstep(.02, .3, entryProgress);
       const isNarrow = window.innerWidth <= 700;
-      const answerIn = smoothstep(.025, .045, progress);
-      const answerOut = smoothstep(isNarrow ? .35 : .4, isNarrow ? .39 : .43, progress);
+      const introTiming = getBenefitsIntroTiming(isNarrow);
+      const answerIn = smoothstep(introTiming.answerEnter.start, introTiming.answerEnter.end, progress);
+      const answerOut = smoothstep(introTiming.answerExit.start, introTiming.answerExit.end, progress);
       const photoJourney = smoothstep(isNarrow ? .57 : .66, isNarrow ? .88 : .92, progress);
-      const proofIn = smoothstep(isNarrow ? .365 : .402, isNarrow ? .405 : .442, progress);
+      const proofIn = smoothstep(introTiming.proofEnter.start, introTiming.proofEnter.end, progress);
       const proofTravel = smoothstep(.66, .92, progress);
       const proofOut = smoothstep(isNarrow ? .855 : .875, isNarrow ? .965 : .985, progress);
       const photoY = isNarrow ? 7 - photoJourney * 18 : 2 - photoJourney * 5;
@@ -614,7 +625,10 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       section.style.setProperty("--benefits-subject-opacity", `${(wordsIn * (1 - smoothstep(.3, .4, progress))).toFixed(4)}`);
       section.style.setProperty("--benefits-words-opacity", wordsIn.toFixed(4));
       section.style.setProperty("--benefits-word-a-x", `${(68 - wordTravel * 66.5).toFixed(2)}vw`);
-      section.style.setProperty("--benefits-word-b-x", `${(-74 + wordTravel * 67).toFixed(2)}vw`);
+      section.style.setProperty(
+        "--benefits-word-b-x",
+        `${(-74 + wordTravel * 67).toFixed(2)}vw`,
+      );
       section.style.setProperty("--benefits-answer-opacity", `${(answerIn * (1 - answerOut)).toFixed(4)}`);
       section.style.setProperty("--benefits-answer-y", `${((1 - answerIn) * 28 - answerOut * 26).toFixed(2)}px`);
       section.style.setProperty("--benefits-proof-opacity", `${(proofIn * (1 - proofOut)).toFixed(4)}`);
@@ -634,7 +648,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         const revealDuration = Math.max(.0001, revealRange.textEnd - revealRange.titleStart);
         const scrollDrivenProgress = clamp((progress - revealRange.titleStart) / revealDuration);
         const headlineGate = itemIndex === 0
-          ? smoothstep(isNarrow ? .425 : .49, isNarrow ? .445 : .505, progress)
+          ? smoothstep(introTiming.firstItemGate.start, introTiming.firstItemGate.end, progress)
           : 1;
         // On narrow viewports the stacked cards can enter the physical viewport
         // before the proof headline has finished. Keep mobile on one shared,
@@ -721,9 +735,18 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       kineticLetters.forEach((letter) => {
         const index = Number(letter.dataset.kineticIndex ?? 0);
         const count = Math.max(1, Number(letter.dataset.kineticCount ?? 1));
-        const sequenceProgress = count === 1 ? 0 : index / (count - 1);
-        const fadeStart = .29 + sequenceProgress * .045;
-        const opacity = 1 - smoothstep(fadeStart, fadeStart + .045, progress);
+        const wordIndex = Number(letter.dataset.kineticWordIndex ?? 0);
+        const wordCount = Math.max(1, Number(letter.dataset.kineticWordCount ?? 1));
+        const phraseIndex = Number(letter.dataset.kineticGroup) === 1 ? 1 : 0;
+        const opacity = getBenefitsKineticOpacity(
+          progress,
+          phraseIndex,
+          wordIndex,
+          wordCount,
+          index,
+          count,
+          isNarrow,
+        );
         letter.style.setProperty("--kinetic-letter-opacity", opacity.toFixed(4));
       });
     };
@@ -1026,18 +1049,18 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
 
             <header className={styles.benefitsKinetic}>
               <h2 id="benefits-title">
-                <KineticPhrase text={copy.kinetic[0]} />
-                <KineticPhrase text={copy.kinetic[1]} />
+                <KineticPhrase text={copy.kinetic[0]} exitOrder={0} />
+                <KineticPhrase text={copy.kinetic[1]} exitOrder={1} />
               </h2>
             </header>
 
             <p className={styles.benefitsKineticAnswer}>
               <ScrubbedWords
                 text={copy.answer}
-                start={.04}
-                end={.14}
-                exitStart={.31}
-                exitEnd={.4}
+                start={.005}
+                end={.045}
+                exitStart={.155}
+                exitEnd={.2}
               />
             </p>
 
@@ -1053,17 +1076,17 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
 
             <header className={`${styles.benefitsKinetic} ${styles.benefitsKineticForeground}`} aria-hidden="true">
               <h2>
-                <KineticPhrase text={copy.kinetic[0]} />
-                <KineticPhrase text={copy.kinetic[1]} />
+                <KineticPhrase text={copy.kinetic[0]} exitOrder={0} />
+                <KineticPhrase text={copy.kinetic[1]} exitOrder={1} />
               </h2>
             </header>
 
             <section className={styles.benefitsProof} aria-label={copy.strengths} data-benefits-proof>
               <p>
-                <ScrubbedWords text={copy.proofEyebrow} start={.405} end={.445} />
+                <ScrubbedWords text={copy.proofEyebrow} start={.125} end={.16} />
               </p>
               <h3>
-                <ScrubbedWords text={copy.proofTitle} start={.425} end={.49} />
+                <ScrubbedWords text={copy.proofTitle} start={.14} end={.195} />
               </h3>
               <ol className={styles.benefitsList}>
                 {strengths.map((strength, index) => (

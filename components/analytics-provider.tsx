@@ -15,6 +15,11 @@ import {
   trackPageView,
   type AnalyticsConsent,
 } from "@/lib/analytics";
+import {
+  PORTFOLIO_LOADER_METRIC_EVENT,
+  isPortfolioLoaderMetric,
+  type PortfolioLoaderMetric,
+} from "@/lib/loader-performance";
 
 function localeFromPath(pathname: string): "es" | "en" {
   const parts = pathname.split("/").filter(Boolean);
@@ -56,6 +61,7 @@ export function AnalyticsProvider() {
   const [consent, setConsentState] = useState<AnalyticsConsent>("unknown");
   const [open, setOpen] = useState(false);
   const lastPage = useRef("");
+  const pendingLoaderMetric = useRef<PortfolioLoaderMetric | null>(null);
   const engagement = useRef({ startedAt: 0, maxScroll: 0, sent: false });
   const thresholdsSeen = useRef(new Set<number>());
   const pageGroup = useMemo(() => pageGroupFromPath(pathname), [pathname]);
@@ -101,11 +107,31 @@ export function AnalyticsProvider() {
   }, [configured, isAdmin]);
 
   useEffect(() => {
+    if (!configured || isAdmin) return;
+    const onLoaderMetric = (event: Event) => {
+      const metric = (event as CustomEvent<unknown>).detail;
+      if (!isPortfolioLoaderMetric(metric)) return;
+      if (getAnalyticsConsent() !== "granted") {
+        pendingLoaderMetric.current = metric;
+        return;
+      }
+      trackEvent("loader_performance", { ...metric, locale, pageGroup });
+    };
+    window.addEventListener(PORTFOLIO_LOADER_METRIC_EVENT, onLoaderMetric);
+    return () => window.removeEventListener(PORTFOLIO_LOADER_METRIC_EVENT, onLoaderMetric);
+  }, [configured, isAdmin, locale, pageGroup]);
+
+  useEffect(() => {
     engagement.current = { startedAt: Date.now(), maxScroll: 0, sent: false };
     thresholdsSeen.current = new Set();
     captureAttribution(consent === "granted");
-    if (consent !== "granted" || lastPage.current === pathname) return;
+    if (consent !== "granted") return;
     initializeAnalytics();
+    if (pendingLoaderMetric.current) {
+      trackEvent("loader_performance", { ...pendingLoaderMetric.current, locale, pageGroup });
+      pendingLoaderMetric.current = null;
+    }
+    if (lastPage.current === pathname) return;
     if (trackPageView(pathname, pageGroup, locale)) lastPage.current = pathname;
   }, [consent, locale, pageGroup, pathname]);
 

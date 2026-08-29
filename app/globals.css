@@ -10,8 +10,9 @@
   --cobalt-dark: #103dbd;
   --signal: #9ce8d7;
   --warning: #a43b2f;
-  --font-sans: "Instrument Sans Variable", "Aptos", "Segoe UI", sans-serif;
-  --font-serif: "Newsreader Variable", Georgia, serif;
+  --font-display: "Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  --font-sans: "Instrument Sans Variable", "Instrument Sans", system-ui, -apple-system, BlinkMacSystemFont, "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-serif: "Newsreader Variable", Newsreader, Georgia, "Times New Roman", serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --shell: min(1300px, calc(100vw - 64px));
   --shell-wide: min(1480px, calc(100vw - 32px));

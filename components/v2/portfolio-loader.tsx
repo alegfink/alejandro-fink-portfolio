@@ -4,6 +4,13 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import styles from "@/components/v2/portfolio-loader.module.css";
 import { pageEntranceEvent } from "@/components/v2/use-page-entrance";
+import {
+  PORTFOLIO_LOADER_METRIC_EVENT,
+  createPortfolioLoaderMetric,
+  getPortfolioLoaderExitReason,
+  type PortfolioLoaderExitReason,
+  type PortfolioLoaderHeroStatus,
+} from "@/lib/loader-performance";
 import { v2SharedCopy } from "@/lib/v2-i18n";
 
 type LoaderPhase = "loading" | "complete" | "exiting" | "hidden";
@@ -66,12 +73,16 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
       : { minimum: 700, finish: 280, hold: 140, exit: 620 };
     const originalOverflow = document.body.style.overflow;
     const startedAt = performance.now();
-    let pageReady = document.readyState === "complete";
-    let fontsReady = !document.fonts || document.fonts.status === "loaded";
+    let structureReady = false;
+    let heroReady = false;
+    let heroStatus: PortfolioLoaderHeroStatus = "pending";
+    let exitReason: PortfolioLoaderExitReason | null = null;
     let finishStartedAt: number | null = null;
     let finishStartedFrom = 0;
     let displayed = 0;
     let frame = 0;
+    let readinessFrame = 0;
+    let criticalHero: HTMLImageElement | null = null;
     const timers: number[] = [];
     const strokeLengths = new Map(strokes.map((stroke) => {
       const length = stroke.getTotalLength();
@@ -83,9 +94,41 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
 
     document.body.style.overflow = "hidden";
 
-    const handlePageReady = () => { pageReady = true; };
-    window.addEventListener("load", handlePageReady, { once: true });
-    document.fonts?.ready.then(() => { fontsReady = true; });
+    const removeHeroListeners = () => {
+      criticalHero?.removeEventListener("load", handleHeroLoad);
+      criticalHero?.removeEventListener("error", handleHeroError);
+    };
+
+    const settleHero = (status: PortfolioLoaderHeroStatus) => {
+      heroStatus = status;
+      heroReady = true;
+      removeHeroListeners();
+    };
+
+    function handleHeroLoad() { settleHero("loaded"); }
+    function handleHeroError() { settleHero("error"); }
+
+    readinessFrame = window.requestAnimationFrame(() => {
+      readinessFrame = window.requestAnimationFrame(() => {
+        structureReady = true;
+        criticalHero = document.querySelector<HTMLImageElement>("[data-loader-critical-hero]");
+
+        if (!criticalHero) {
+          settleHero("not-required");
+          return;
+        }
+        if (criticalHero.complete) {
+          settleHero(criticalHero.naturalWidth > 0 ? "loaded" : "error");
+          return;
+        }
+
+        criticalHero.addEventListener("load", handleHeroLoad, { once: true });
+        criticalHero.addEventListener("error", handleHeroError, { once: true });
+        if (criticalHero.complete) {
+          settleHero(criticalHero.naturalWidth > 0 ? "loaded" : "error");
+        }
+      });
+    });
 
     const paint = (value: number) => {
       const rounded = Math.min(100, Math.floor(value));
@@ -116,12 +159,16 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
 
     };
 
-    const finish = () => {
+    const finish = (reason: PortfolioLoaderExitReason) => {
       paint(100);
+      if (loader) loader.dataset.exitReason = reason;
       setPhase("complete");
       timers.push(window.setTimeout(() => {
         setPhase("exiting");
         window.dispatchEvent(new Event(pageEntranceEvent));
+        window.dispatchEvent(new CustomEvent(PORTFOLIO_LOADER_METRIC_EVENT, {
+          detail: createPortfolioLoaderMetric(performance.now() - startedAt, reason, heroStatus),
+        }));
         document.body.style.overflow = originalOverflow;
       }, timings.hold));
       timers.push(window.setTimeout(() => setPhase("hidden"), timings.hold + timings.exit));
@@ -130,9 +177,15 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
     const tick = (now: number) => {
       const elapsed = now - startedAt;
       const waitingValue = 92 * (1 - Math.exp(-elapsed / 650));
-      const canFinish = pageReady && fontsReady && elapsed >= timings.minimum;
+      const readyReason = getPortfolioLoaderExitReason({
+        elapsedMs: elapsed,
+        minimumMs: timings.minimum,
+        structureReady,
+        heroReady,
+      });
 
-      if (canFinish && finishStartedAt === null) {
+      if (readyReason && finishStartedAt === null) {
+        exitReason = readyReason;
         finishStartedAt = now;
         finishStartedFrom = Math.max(displayed, waitingValue);
       }
@@ -142,7 +195,7 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
         displayed = finishStartedFrom + (100 - finishStartedFrom) * easeOut(finishProgress);
         paint(displayed);
         if (finishProgress >= 1) {
-          finish();
+          finish(exitReason ?? "timeout");
           return;
         }
       } else {
@@ -158,8 +211,9 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
 
     return () => {
       window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(readinessFrame);
       timers.forEach((timer) => window.clearTimeout(timer));
-      window.removeEventListener("load", handlePageReady);
+      removeHeroListeners();
       document.body.style.overflow = originalOverflow;
     };
   }, [skipLoader]);

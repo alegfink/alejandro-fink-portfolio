@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  getBenefitsIntroTiming,
+  getBenefitsKineticOpacity,
   getHorizontalStoryScrollProgress,
   getProjectStoryIndex,
   getReadableHorizontalProgress,
@@ -22,5 +24,25 @@ describe("scroll motion", () => {
     expect(getHorizontalStoryScrollProgress(0, 4)).toBeCloseTo(0.06);
     expect(getHorizontalStoryScrollProgress(2, 4)).toBeCloseTo(0.6066667);
     expect(getHorizontalStoryScrollProgress(3, 4)).toBeCloseTo(0.88);
+  });
+
+  it.each([false, true])("exits the benefits headline from top to bottom (narrow: %s)", (isNarrow) => {
+    const timing = getBenefitsIntroTiming(isNarrow);
+    const pauseBetweenPhrases = (timing.upperPhraseExit.end + timing.lowerPhraseExit.start) / 2;
+
+    expect(timing.upperPhraseExit.end).toBeLessThanOrEqual(timing.lowerPhraseExit.start);
+    expect(timing.answerEnter.end).toBeLessThan(timing.upperPhraseExit.start);
+    expect(getBenefitsKineticOpacity(pauseBetweenPhrases, 0, 0, 2, 0, 1, isNarrow)).toBe(0);
+    expect(getBenefitsKineticOpacity(pauseBetweenPhrases, 1, 0, 2, 0, 1, isNarrow)).toBe(1);
+    expect(timing.proofEnter.start).toBeLessThanOrEqual(timing.lowerPhraseExit.end);
+  });
+
+  it.each([false, true])("removes each phrase word by word (narrow: %s)", (isNarrow) => {
+    const timing = getBenefitsIntroTiming(isNarrow);
+    const midpoint = (timing.upperPhraseExit.start + timing.upperPhraseExit.end) / 2;
+    const firstWord = getBenefitsKineticOpacity(midpoint, 0, 0, 2, 0, 1, isNarrow);
+    const secondWord = getBenefitsKineticOpacity(midpoint, 0, 1, 2, 0, 1, isNarrow);
+
+    expect(firstWord).toBeLessThan(secondWord);
   });
 });

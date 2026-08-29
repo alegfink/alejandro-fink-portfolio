@@ -339,7 +339,14 @@ export function HeroLab({ standalone = false, entryReady = true, locale = "es" }
           <div className={styles.cinematicGlow} aria-hidden="true" />
           <VariantCursor variant="pulse" />
           <div className={styles.cinematicPortrait} aria-hidden="true">
-            <Image src="/media/v2/cinematic-portrait.webp" alt="" fill priority sizes="100vw" />
+            <Image
+              src="/media/v2/cinematic-portrait.webp"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              data-loader-critical-hero={standalone ? "true" : undefined}
+            />
           </div>
           <div className={styles.cinematicMeta}>
             <span>{standalone ? publicCopy.meta[0] : "Alejandro Fink"}</span>
