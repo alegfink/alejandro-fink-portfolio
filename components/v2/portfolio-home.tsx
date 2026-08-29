@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { projects, type Project, type ProjectMedia } from "@/content/projects";
 import { HeroLab } from "@/components/v2/hero-lab";
+import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import styles from "@/components/v2/portfolio-home.module.css";
@@ -193,7 +194,7 @@ function ProjectPreviewMedia({ media }: Readonly<{ media: ProjectMedia }>) {
   );
 }
 
-function ProjectFolderPreview({ project, media }: Readonly<{ project: Project; media: ProjectMedia }>) {
+function ProjectFolderPreview({ project, media, locale }: Readonly<{ project: Project; media: ProjectMedia; locale: Locale }>) {
   const backdrop = projectPreviewBackdrops[project.id] ?? { src: media.src, position: "center" };
 
   return (
@@ -210,7 +211,9 @@ function ProjectFolderPreview({ project, media }: Readonly<{ project: Project; m
       <span className={styles.projectPreviewBackdropWash} aria-hidden="true" />
       <div className={styles.projectSiteWindow}>
         <div className={styles.projectSiteViewport}>
-          <ProjectPreviewMedia media={media} />
+          {project.id === "lourdes-mirada"
+            ? <LourdesHeroPreview locale={locale} />
+            : <ProjectPreviewMedia media={media} />}
         </div>
       </div>
     </div>
@@ -956,7 +959,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                             <div
                               className={styles.projectPreviewLink}
                             >
-                              <ProjectFolderPreview project={project} media={media} />
+                              <ProjectFolderPreview project={project} media={media} locale={locale} />
                             </div>
                           </article>
                         );

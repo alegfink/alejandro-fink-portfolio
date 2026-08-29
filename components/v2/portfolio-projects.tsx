@@ -6,6 +6,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { projects, type Project } from "@/content/projects";
 import styles from "@/components/v2/portfolio-projects.module.css";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
+import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
@@ -273,7 +274,9 @@ function ProjectMedia({ asset, project, locale }: Readonly<{ asset: ProjectAsset
   return (
     <figure className={`${styles.projectMedia} ${styles[`projectMedia${asset.layout}`]}`} data-project-reveal>
       <div className={styles.projectMediaSurface}>
-        {asset.video ? (
+        {project.id === "lourdes-mirada" && asset.src.endsWith("/live-desktop.png") ? (
+          <LourdesHeroPreview locale={locale} />
+        ) : asset.video ? (
           <video
             src={asset.src}
             poster={asset.poster}
