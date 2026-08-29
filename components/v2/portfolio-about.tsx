@@ -62,25 +62,25 @@ const currentWorkByLocale = { es: [
   {
     number: "01",
     eyebrow: "Negocio propio",
-    title: "Torvena como laboratorio real",
+    title: "Torvena, laboratorio real",
     copy: "Un e-commerce donde la estrategia, la experiencia y la operación dejan de ser conceptos separados.",
   },
   {
     number: "02",
     eyebrow: "Proyectos digitales",
-    title: "Soluciones que siguen evolucionando",
+    title: "De la idea al producto",
     copy: "Sitios, MVPs y prototipos con estados explícitos, decisiones visibles y espacio para seguir midiendo.",
   },
   {
     number: "03",
     eyebrow: "Método de trabajo",
-    title: "IA coordinada, no automática",
+    title: "IA con criterio humano",
     copy: "Descompongo objetivos, distribuyo tareas, integro aportes y valido el resultado bajo mi responsabilidad.",
   },
 ], en: [
-  { number: "01", eyebrow: "Owned business", title: "Torvena as a real laboratory", copy: "An e-commerce business where strategy, experience and operations stop being separate concepts." },
-  { number: "02", eyebrow: "Digital projects", title: "Solutions that keep evolving", copy: "Websites, MVPs and prototypes with explicit states, visible decisions and room for continued measurement." },
-  { number: "03", eyebrow: "Working method", title: "Coordinated AI, not automatic AI", copy: "I break down objectives, distribute tasks, integrate contributions and validate the outcome under my responsibility." },
+  { number: "01", eyebrow: "Owned business", title: "Torvena, a real laboratory", copy: "An e-commerce business where strategy, experience and operations stop being separate concepts." },
+  { number: "02", eyebrow: "Digital projects", title: "From idea to product", copy: "Websites, MVPs and prototypes with explicit states, visible decisions and room for continued measurement." },
+  { number: "03", eyebrow: "Working method", title: "AI with human judgment", copy: "I break down objectives, distribute tasks, integrate contributions and validate the outcome under my responsibility." },
 ] } as const;
 
 const aboutPageCopy = {

@@ -451,7 +451,20 @@
     padding: 110px 16px 90px;
   }
   .storyIntro h2,
-  .presentHeader h2 { font-size: clamp(68px, 21vw, 102px); }
+  .presentHeader h2,
+  .storyStep h3,
+  .presentGrid h3,
+  .principleCopy h2,
+  .ctaShell h2 {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+  .storyIntro h2 { font-size: clamp(68px, 21vw, 102px); }
+  .presentHeader h2 {
+    font-size: clamp(52px, 16.5vw, 72px);
+    line-height: .9;
+  }
   .storyIntro > p:last-child { margin-left: 0; font-size: 18px; }
   .storyLayout { display: block; }
   .storyMediaColumn { display: block; height: 100svh; }
@@ -464,9 +477,9 @@
     margin: 0;
     padding: 44svh 16px 12vh;
     justify-content: flex-end;
-    opacity: .07;
-    filter: blur(4px);
-    transform: translateY(4vh);
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
   .storyStepActive {
     opacity: 1;
@@ -474,13 +487,14 @@
     transform: translateY(0);
   }
   .storyStep h3 { font-size: clamp(62px, 18vw, 86px); }
+  .storyStep > * { text-shadow: 0 2px 20px rgb(0 0 0 / 70%); }
   .storyStepBody { font-size: 16px; }
   .storyStepEvidence { width: auto; }
   .storyMediaSticky > p { right: 16px; bottom: 22px; }
   .storyProgress { top: 100px; right: 16px; height: 22%; }
   .storyMediaOverlay {
     background:
-      linear-gradient(180deg, rgb(7 5 4 / 36%), transparent 18% 44%, rgb(7 5 4 / 88%) 86%),
+      linear-gradient(180deg, rgb(7 5 4 / 28%), rgb(7 5 4 / 8%) 24%, rgb(7 5 4 / 42%) 46%, rgb(7 5 4 / 92%) 82%, rgb(7 5 4 / 97%)),
       linear-gradient(90deg, rgb(7 5 4 / 44%), transparent 60%);
   }
 
@@ -489,7 +503,11 @@
   .presentHeader > p:last-child { margin-left: 0; font-size: 17px; }
   .presentGrid { grid-template-columns: 1fr; }
   .presentGrid li { min-height: 430px; padding: 28px; }
-  .presentGrid h3 { font-size: clamp(58px, 18vw, 82px); }
+  .presentGrid h3 {
+    font-size: clamp(46px, 14vw, 60px);
+    line-height: .88;
+    letter-spacing: -.025em;
+  }
 
   .principle { display: block; padding: 100px 16px 120px; }
   .principleLabel { display: block; }
