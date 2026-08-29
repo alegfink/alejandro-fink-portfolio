@@ -2365,14 +2365,12 @@
 @media (max-width: 700px) {
   .page { touch-action: pan-y; }
 
-  .header { top: 10px; gap: 8px; }
+  .header { top: 10px; grid-template-columns: auto 1fr; gap: 8px; }
   .brand { min-height: 42px; padding-inline: 9px; font-size: 0; }
   .brandMark { width: 27px; height: 20px; }
   .brand .headerWordViewport { display: none; }
-  .nav { gap: 2px; }
-  .nav .headerButton { min-height: 42px; padding-inline: 9px; font-size: 11px; }
-  .contact { min-height: 42px; padding: 5px; font-size: 0; }
-  .headerArrow { width: 30px; height: 30px; font-size: 14px; }
+  .nav,
+  .contactMagnet { display: none; }
   .story { height: 340svh; }
   .storyStage { min-height: 600px; }
   .storyWorld { height: 265svh; }

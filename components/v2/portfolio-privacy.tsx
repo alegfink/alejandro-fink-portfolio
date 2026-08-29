@@ -5,6 +5,7 @@ import type { Locale } from "@/lib/i18n";
 import { siteCopy } from "@/content/site";
 import { getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
+import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import styles from "@/components/v2/portfolio-privacy.module.css";
 
@@ -40,6 +41,7 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
         <a className={`${styles.headerButton} ${styles.contact}`} href={gmailComposeUrl(locale)} target="_blank" rel="noreferrer" aria-label={shared.contactLabel}>
           <span>{shared.contact}</span><i aria-hidden="true">↗</i>
         </a>
+        <V2MobileMenu locale={locale} page="privacy" />
       </header>
 
       <div className={styles.topDiffuser} aria-hidden="true" />

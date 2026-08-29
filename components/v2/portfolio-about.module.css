@@ -405,15 +405,13 @@
 }
 
 @media (max-width: 760px) {
-  .header { inset: 14px 10px auto; grid-template-columns: auto 1fr auto; gap: 5px; }
+  .header { inset: 14px 10px auto; grid-template-columns: auto 1fr; gap: 8px; }
   .headerButton { min-height: 44px; padding: 8px 10px; font-size: 10px; }
   .brand { padding: 7px; }
   .brand .headerWordViewport { display: none; }
   .brandMark { width: 30px; }
-  .headerNav { gap: 4px; }
-  .contact { padding: 6px; }
-  .contact .headerWordViewport { display: none; }
-  .contact > span:last-child { width: 30px; height: 30px; }
+  .headerNav,
+  .contact { display: none; }
   .topDiffuser { height: 54px; }
 
   .hero { min-height: 108svh; padding: 88px 16px 32px; }

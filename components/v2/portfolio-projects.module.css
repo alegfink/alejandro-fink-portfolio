@@ -552,15 +552,13 @@
 }
 
 @media (max-width: 760px) {
-  .header { inset: 14px 10px auto; grid-template-columns: auto 1fr auto; gap: 5px; }
+  .header { inset: 14px 10px auto; grid-template-columns: auto 1fr; gap: 8px; }
   .headerButton { min-height: 44px; padding: 8px 11px; font-size: 11px; }
   .brand { padding: 7px; }
   .brand .headerWordViewport { display: none; }
   .brandMark { width: 30px; }
-  .headerNav { gap: 4px; }
-  .contact { padding: 6px; }
-  .contact .headerWordViewport { display: none; }
-  .contact > span:last-child { width: 30px; height: 30px; }
+  .headerNav,
+  .contact { display: none; }
 
   .projectsHero { min-height: 100svh; display: flex; flex-direction: column; padding: 88px 16px 46px; }
   .heroCoordinates { display: block; }

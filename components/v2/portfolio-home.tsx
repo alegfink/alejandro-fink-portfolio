@@ -8,6 +8,7 @@ import { HeroLab } from "@/components/v2/hero-lab";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
+import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import styles from "@/components/v2/portfolio-home.module.css";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
@@ -875,6 +876,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
             <span className={styles.headerArrow} aria-hidden="true">↗</span>
           </a>
         </div>
+        <V2MobileMenu locale={locale} page="home" />
       </header>
 
       <div className={styles.topDiffuser} aria-hidden="true" />

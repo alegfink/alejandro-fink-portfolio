@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "@/components/v2/portfolio-about.module.css";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
+import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
@@ -222,6 +223,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           <HeaderWord>{shared.contact}</HeaderWord>
           <span aria-hidden="true">↗</span>
         </a>
+        <V2MobileMenu locale={locale} page="about" />
       </header>
 
       <div className={styles.topDiffuser} aria-hidden="true" />
