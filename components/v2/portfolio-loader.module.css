@@ -11,7 +11,7 @@
   overflow: hidden;
   isolation: isolate;
   color: var(--loader-cream);
-  font-family: "Instrument Sans Variable", "Instrument Sans", Arial, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .panel {
@@ -153,7 +153,7 @@
 .bottomMeta strong {
   min-width: 3ch;
   color: var(--loader-cream);
-  font-family: "Anton", Impact, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(74px, 10vw, 178px);
   font-weight: 400;
   line-height: .72;

@@ -254,6 +254,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
               fill
               priority
               sizes="100vw"
+              data-loader-critical-hero="true"
             />
             <span />
           </div>

@@ -23,6 +23,7 @@ export type AnalyticsEventMap = {
   external_link: { locale: "es" | "en"; destinationDomain: string; context: "project" };
   scroll_depth: { locale: "es" | "en"; percent: 25 | 50 | 75 | 90; pageGroup: string };
   page_engagement: { locale: "es" | "en"; engagedSeconds: number; maxScrollPercent: number; pageGroup: string };
+  loader_performance: { locale: "es" | "en"; durationMs: number; outcome: "ready" | "timeout"; heroStatus: "loaded" | "not-required" | "error" | "pending"; slow: boolean; pageGroup: string };
   web_vital: { locale: "es" | "en"; metric: "CLS" | "FCP" | "INP" | "LCP" | "TTFB"; metricValue: number; rating: "good" | "needs-improvement" | "poor"; pageGroup: string; navigationType: string };
 };
 

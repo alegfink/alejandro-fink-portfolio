@@ -1607,6 +1607,12 @@
   will-change: opacity;
 }
 
+.benefitsKinetic b {
+  display: inline-block;
+  font: inherit;
+  font-weight: inherit;
+}
+
 .benefitsKinetic span:first-child {
   top: 28%;
   left: 0;
@@ -2490,11 +2496,20 @@
       linear-gradient(90deg, rgb(7 4 3 / 64%) 0%, transparent 82%);
   }
   .benefitsKinetic span:first-child {
-    top: 29%;
-    font-size: clamp(38px, 10.2vw, 52px);
+    top: 25%;
+    left: 12px;
+    font-size: clamp(44px, 12.4vw, 54px);
+    line-height: .98;
+  }
+  .benefitsKinetic span:first-child b { display: block; }
+  .benefitsKinetic span:first-child b + b {
+    margin-left: clamp(52px, 16vw, 76px);
   }
   .benefitsKinetic span:last-child {
-    top: 49%;
+    top: calc(25% + clamp(92px, 26vw, 116px));
+    right: 12px;
+    left: auto;
+    text-align: right;
     font-size: clamp(48px, 13.4vw, 68px);
   }
   .benefitsKineticAnswer {
@@ -2678,8 +2693,8 @@
   }
 
   .benefitsJourney { height: 570svh; }
-  .benefitsKinetic span:first-child { top: 27%; }
-  .benefitsKinetic span:last-child { top: 47%; }
+  .benefitsKinetic span:first-child { top: 25%; }
+  .benefitsKinetic span:last-child { top: calc(25% + clamp(92px, 26vw, 116px)); }
   .benefitsKineticAnswer { bottom: 9vh; }
   .benefitsProof {
     top: 112px;
@@ -2758,7 +2773,7 @@
     text-wrap: pretty;
   }
 
-  .benefitsKinetic span:first-child { font-size: 36px; }
+  .benefitsKinetic span:first-child { font-size: 40px; }
   .benefitsKinetic span:last-child { font-size: 44px; }
   .benefitsProof {
     left: 14px;
