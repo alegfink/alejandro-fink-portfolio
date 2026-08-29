@@ -4,7 +4,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Locale } from "@/lib/i18n";
-import { getV2Path, gmailComposeUrl, v2SharedCopy, type V2Page } from "@/lib/v2-i18n";
+import { getV2Path, v2ContactProfiles, v2SharedCopy, whatsappContactUrl, type V2Page } from "@/lib/v2-i18n";
 import styles from "@/components/v2/v2-mobile-menu.module.css";
 
 const menuCopy = {
@@ -14,7 +14,7 @@ const menuCopy = {
     eyebrow: "Navegación",
     title: "¿Hacia dónde seguimos?",
     language: "Idioma",
-    contact: "Hablemos de lo que sigue",
+    contact: "Escribime por WhatsApp",
   },
   en: {
     menu: "Menu",
@@ -22,7 +22,7 @@ const menuCopy = {
     eyebrow: "Navigation",
     title: "Where do we go next?",
     language: "Language",
-    contact: "Let’s talk about what comes next",
+    contact: "Message me on WhatsApp",
   },
 } as const;
 
@@ -183,17 +183,20 @@ export function V2MobileMenu({ locale, page }: Readonly<{ locale: Locale; page: 
             </div>
           </div>
 
-          <Link
-            className={styles.privacy}
-            href={getV2Path(locale, "privacy")}
-            aria-current={page === "privacy" ? "page" : undefined}
-            onClick={() => setIsOpen(false)}
-          >
-            {shared.privacy}
-          </Link>
+          <div className={styles.panelSecondary}>
+            <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>LinkedIn</a>
+            <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>GitHub</a>
+            <Link
+              href={getV2Path(locale, "privacy")}
+              aria-current={page === "privacy" ? "page" : undefined}
+              onClick={() => setIsOpen(false)}
+            >
+              {shared.privacy}
+            </Link>
+          </div>
         </div>
 
-        <a className={styles.contact} href={gmailComposeUrl(locale)} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>
+        <a className={styles.contact} href={whatsappContactUrl(locale)} target="_blank" rel="noreferrer" onClick={() => setIsOpen(false)}>
           <span>{copy.contact}</span><i aria-hidden="true">↗</i>
         </a>
       </div>

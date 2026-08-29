@@ -33,7 +33,7 @@
 .panelBrand:focus-visible,
 .panelNav a:focus-visible,
 .language a:focus-visible,
-.privacy:focus-visible,
+.panelSecondary a:focus-visible,
 .contact:focus-visible {
   outline: 2px solid #ff704d;
   outline-offset: 3px;
@@ -220,11 +220,12 @@
 
 .language { display: flex; gap: 12px; align-items: center; }
 .language > span,
-.privacy { color: #bd9183; font: 700 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; }
+.panelSecondary a { color: #bd9183; font: 700 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .language > div { display: flex; padding: 3px; border: 1px solid rgb(255 235 227 / 18%); border-radius: 999px; background: rgb(255 255 255 / 5%); }
 .language a { min-width: 38px; min-height: 34px; display: grid; place-items: center; border-radius: 999px; color: #dcb5a7; font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .language a[data-active="true"] { background: #f4e7e0; color: #1d100c; }
-.privacy { min-height: 44px; display: inline-flex; align-items: center; color: #e6b7a6; }
+.panelSecondary { display: flex; gap: 13px; align-items: center; }
+.panelSecondary a { min-height: 44px; display: inline-flex; align-items: center; color: #e6b7a6; }
 
 .contact {
   min-height: 62px;
@@ -253,6 +254,10 @@
   .trigger { min-width: 86px; padding-left: 12px; }
   .sheet { inset: 6px; min-height: calc(100svh - 12px); border-radius: 24px; }
   .panelBrand span { display: none; }
+  .language > span { display: none; }
+  .panelUtility { gap: 10px; }
+  .panelSecondary { gap: 9px; }
+  .panelSecondary a { font-size: 8px; }
 }
 
 @media (max-height: 650px) and (max-width: 760px) {

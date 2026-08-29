@@ -6,6 +6,7 @@ import { siteCopy } from "@/content/site";
 import { getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
+import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import styles from "@/components/v2/portfolio-privacy.module.css";
 
@@ -68,6 +69,8 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
           <a href={gmailComposeUrl(locale)} target="_blank" rel="noreferrer">{shared.contact}<span aria-hidden="true">↗</span></a>
         </section>
       </main>
+
+      <V2ContactStrip locale={locale} />
 
       <footer className={styles.footer}>
         <Link href={getV2Path(locale, "home")}><BrandMark /><span>{shared.backJourney}</span></Link>

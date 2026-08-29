@@ -9,6 +9,7 @@ import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
+import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
 import styles from "@/components/v2/portfolio-home.module.css";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
@@ -1151,6 +1152,8 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           </div>
         </section>
       </main>
+
+      <V2ContactStrip locale={locale} tone="dark" />
 
       <footer className={styles.siteFooter} aria-labelledby="footer-title" ref={footerRef} data-animation-active="false">
         <div className={styles.footerGraphic} aria-hidden="true">

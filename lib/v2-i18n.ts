@@ -74,3 +74,15 @@ export function gmailComposeUrl(locale: Locale): string {
   const body = locale === "es" ? "Hola Alejandro,\n\n" : "Hi Alejandro,\n\n";
   return `https://mail.google.com/mail/?view=cm&fs=1&to=alegfink%40gmail.com&su=${encodeURIComponent(copy.contactSubject)}&body=${encodeURIComponent(body)}`;
 }
+
+export const v2ContactProfiles = {
+  linkedin: "https://www.linkedin.com/in/alejandro-fink/",
+  github: "https://github.com/alegfink",
+} as const;
+
+export function whatsappContactUrl(locale: Locale): string {
+  const message = locale === "es"
+    ? "Hola Alejandro, vi tu portfolio y me gustaría conversar sobre un proyecto."
+    : "Hi Alejandro, I saw your portfolio and I’d like to talk about a project.";
+  return `https://wa.me/5491162494740?text=${encodeURIComponent(message)}`;
+}
