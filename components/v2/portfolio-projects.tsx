@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { projects, type Project } from "@/content/projects";
 import styles from "@/components/v2/portfolio-projects.module.css";

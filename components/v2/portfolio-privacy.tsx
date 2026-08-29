@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { NativeLink as Link } from "@/components/v2/native-link";
 import type { Locale } from "@/lib/i18n";
 import { siteCopy } from "@/content/site";
 import { getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
