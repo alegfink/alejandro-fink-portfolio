@@ -9,6 +9,8 @@ import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
+import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
+import { domainFromUrl, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
@@ -318,6 +320,7 @@ function ProjectCase({ project, index, locale }: Readonly<{ project: Project; in
       className={styles.projectCase}
       id={project.id}
       data-project-case={project.id}
+      data-analytics-section={`project_${project.id}`}
       style={{ "--project-tone": projectToneById[project.id] ?? project.accent } as CSSProperties}
     >
       <div className={styles.projectCaseBackdrop} aria-hidden="true">
@@ -354,7 +357,14 @@ function ProjectCase({ project, index, locale }: Readonly<{ project: Project; in
             </div>
           </dl>
 
-          <a className={styles.liveButton} href={project.publicUrl} target="_blank" rel="noreferrer" data-project-reveal>
+          <a
+            className={styles.liveButton}
+            href={project.publicUrl}
+            target="_blank"
+            rel="noreferrer"
+            data-project-reveal
+            onClick={() => trackEvent("external_link", { locale, destinationDomain: domainFromUrl(project.publicUrl), context: "project" })}
+          >
             <span className={styles.liveButtonIcon} aria-hidden="true">↗</span>
             <span className={styles.liveButtonWords}>
               <i>{copy.visit}</i>
@@ -384,12 +394,21 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
 
     if (window.innerWidth <= 760 && projectIndex) projectIndex.scrollLeft = 0;
 
+    const seenProjects = new Set<string>();
     const activeObserver = new IntersectionObserver((entries) => {
       const visible = entries
         .filter((entry) => entry.isIntersecting)
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       const id = visible?.target.getAttribute("data-project-case");
-      if (id) setActiveProject(id);
+      if (id) {
+        setActiveProject(id);
+        if (!seenProjects.has(id)) {
+          seenProjects.add(id);
+          const position = cases.findIndex((projectCase) => projectCase.dataset.projectCase === id) + 1;
+          trackEvent("project_story_view", { projectId: id, locale, position });
+          trackEvent("case_study_view", { projectId: id, locale, caseType: "full" });
+        }
+      }
     }, { rootMargin: "-30% 0px -52%", threshold: [0, .15, .4] });
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -407,7 +426,7 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
       activeObserver.disconnect();
       revealObserver.disconnect();
     };
-  }, []);
+  }, [locale]);
 
   return (
     <div className={styles.page} data-page-ready={String(pageReady)} lang={locale}>
@@ -429,23 +448,26 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
           <V2LanguageSwitcher locale={locale} page="projects" />
         </nav>
 
-        <a
+        <V2TrackedContactLink
           className={`${styles.headerButton} ${styles.contact}`}
+          channel="gmail"
           href={gmailComposeUrl(locale)}
+          locale={locale}
+          placement="header"
           target="_blank"
           rel="noreferrer"
           aria-label={shared.contactLabel}
         >
           <HeaderWord>{shared.contact}</HeaderWord>
           <span aria-hidden="true">↗</span>
-        </a>
+        </V2TrackedContactLink>
         <V2MobileMenu locale={locale} page="projects" />
       </header>
 
       <div className={styles.topDiffuser} aria-hidden="true" />
 
       <main>
-        <section className={styles.projectsHero} id="top">
+        <section className={styles.projectsHero} id="top" data-analytics-section="projects_hero">
           <div className={styles.heroCoordinates}>
             <p><span>{copy.coordinates[0]}</span><span>{copy.coordinates[1]}</span></p>
             <p>{copy.coordinates[2]}</p>
@@ -469,6 +491,7 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
               <a
                 href={`#${project.id}`}
                 className={activeProject === project.id ? styles.projectIndexActive : ""}
+                onClick={() => trackEvent("project_open", { projectId: project.id, locale, placement: "index" })}
                 key={project.id}
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
@@ -479,19 +502,19 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
           </nav>
         </section>
 
-        <section className={styles.projectsArchive} id="archivo" aria-label={copy.archive}>
+        <section className={styles.projectsArchive} id="archivo" aria-label={copy.archive} data-analytics-section="projects_archive">
           {archiveProjects.map((project, index) => <ProjectCase project={project} index={index} locale={locale} key={project.id} />)}
         </section>
 
-        <section className={styles.projectsClosing}>
+        <section className={styles.projectsClosing} data-analytics-section="projects_contact">
           <p>{copy.closingLabel}</p>
           <h2>{copy.closingTitle}</h2>
           <div>
             <p>{copy.closing}</p>
-            <a href={`mailto:alegfink@gmail.com?subject=${encodeURIComponent(shared.contactSubject)}`}>
+            <V2TrackedContactLink channel="mailto" href={`mailto:alegfink@gmail.com?subject=${encodeURIComponent(shared.contactSubject)}`} locale={locale} placement="projects">
               <span>{copy.talk}</span>
               <i aria-hidden="true">↗</i>
-            </a>
+            </V2TrackedContactLink>
           </div>
         </section>
       </main>

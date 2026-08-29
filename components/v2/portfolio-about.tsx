@@ -8,6 +8,7 @@ import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
+import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import type { Locale } from "@/lib/i18n";
 import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
@@ -214,16 +215,19 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           <V2LanguageSwitcher locale={locale} page="about" />
         </nav>
 
-        <a
+        <V2TrackedContactLink
           className={`${styles.headerButton} ${styles.contact}`}
+          channel="gmail"
           href={gmailComposeUrl(locale)}
+          locale={locale}
+          placement="header"
           target="_blank"
           rel="noreferrer"
           aria-label={shared.contactLabel}
         >
           <HeaderWord>{shared.contact}</HeaderWord>
           <span aria-hidden="true">↗</span>
-        </a>
+        </V2TrackedContactLink>
         <V2MobileMenu locale={locale} page="about" />
       </header>
 
@@ -232,6 +236,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
       <main>
         <section
           className={styles.hero}
+          data-analytics-section="about_hero"
           ref={heroRef}
           style={{ "--about-hero-progress": "0" } as CSSProperties}
           aria-labelledby="about-title"
@@ -267,6 +272,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
 
         <section
           className={styles.story}
+          data-analytics-section="about_story"
           id="historia"
           ref={storyRef}
           style={{ "--about-story-progress": "0" } as CSSProperties}
@@ -309,7 +315,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           </div>
         </section>
 
-        <section className={styles.present} aria-labelledby="present-title">
+        <section className={styles.present} aria-labelledby="present-title" data-analytics-section="about_present">
           <header className={styles.presentHeader} data-about-reveal>
             <p><span>02</span> {copy.presentEyebrow}</p>
             <h2 id="present-title">{copy.presentTitle}</h2>
@@ -328,7 +334,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           </ol>
         </section>
 
-        <section className={styles.principle} aria-labelledby="principle-title">
+        <section className={styles.principle} aria-labelledby="principle-title" data-analytics-section="about_principle">
           <div className={styles.principleLabel} data-about-reveal>
             <p><span>03</span> {copy.principleEyebrow}</p>
             <p>{copy.principleAside}</p>
@@ -343,18 +349,18 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           </div>
         </section>
 
-        <section className={styles.cta} aria-labelledby="about-cta-title">
+        <section className={styles.cta} aria-labelledby="about-cta-title" data-analytics-section="about_contact">
           <div className={styles.ctaShell} data-about-reveal>
             <p><span>04</span> {copy.ctaEyebrow}</p>
             <h2 id="about-cta-title">{copy.ctaTitle}</h2>
-            <a href={`mailto:alegfink@gmail.com?subject=${encodeURIComponent(shared.contactSubject)}`}>
+            <V2TrackedContactLink channel="mailto" href={`mailto:alegfink@gmail.com?subject=${encodeURIComponent(shared.contactSubject)}`} locale={locale} placement="about">
               <span className={styles.ctaArrow} aria-hidden="true">↗</span>
               <span className={styles.ctaWords}>
                 <strong>{copy.talk}</strong>
                 <strong>alegfink@gmail.com</strong>
               </span>
               <i>{copy.availability}</i>
-            </a>
+            </V2TrackedContactLink>
           </div>
         </section>
       </main>
