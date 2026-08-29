@@ -77,10 +77,10 @@ const strengthRevealRanges = [
 ] as const;
 
 const mobileStrengthRevealRanges = [
-  { titleStart: .43, titleEnd: .47, textStart: .475, textEnd: .53 },
-  { titleStart: .53, titleEnd: .57, textStart: .575, textEnd: .63 },
-  { titleStart: .63, titleEnd: .67, textStart: .675, textEnd: .73 },
-  { titleStart: .73, titleEnd: .77, textStart: .775, textEnd: .83 },
+  { titleStart: .495, titleEnd: .525, textStart: .53, textEnd: .575 },
+  { titleStart: .58, titleEnd: .61, textStart: .615, textEnd: .66 },
+  { titleStart: .665, titleEnd: .695, textStart: .7, textEnd: .745 },
+  { titleStart: .75, titleEnd: .78, textStart: .785, textEnd: .83 },
 ] as const;
 
 const contactEmail = "alegfink@gmail.com";
@@ -654,7 +654,14 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         const headlineGate = itemIndex === 0
           ? smoothstep(isNarrow ? .425 : .49, isNarrow ? .445 : .505, progress)
           : 1;
-        const viewportProgress = Math.max(rawViewportProgress * headlineGate, scrollDrivenProgress);
+        // On narrow viewports the stacked cards can enter the physical viewport
+        // before the proof headline has finished. Keep mobile on one shared,
+        // top-to-bottom timeline so a later card can never overtake the title or
+        // a preceding card. Desktop keeps the viewport assist for its wider,
+        // less vertically constrained composition.
+        const viewportProgress = isNarrow
+          ? scrollDrivenProgress
+          : Math.max(rawViewportProgress * headlineGate, scrollDrivenProgress);
         const enter = smoothstep(0, .16, viewportProgress);
         const opacity = enter * (1 - proofOut);
         const y = (1 - enter) * 18 - proofOut * 62;
