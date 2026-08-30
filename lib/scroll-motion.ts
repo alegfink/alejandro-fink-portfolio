@@ -45,6 +45,15 @@ export function getBenefitsKineticOpacity(
   const timing = getBenefitsIntroTiming(isNarrow);
   const window = phraseIndex === 0 ? timing.upperPhraseExit : timing.lowerPhraseExit;
   const phraseProgress = clampProgress((progress - window.start) / Math.max(.0001, window.end - window.start));
+
+  // A whole phrase is the smallest readable unit on touch-sized viewports.
+  // Keeping every glyph on the same progress prevents fast momentum scrolling
+  // from leaving a partially legible word or a single orphaned letter behind.
+  if (isNarrow) {
+    const eased = phraseProgress * phraseProgress * (3 - 2 * phraseProgress);
+    return 1 - eased;
+  }
+
   const safeWordCount = Math.max(1, wordCount);
   const safeWordIndex = Math.min(safeWordCount - 1, Math.max(0, wordIndex));
   const wordOverlap = .12;

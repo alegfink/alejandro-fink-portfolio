@@ -37,12 +37,23 @@ describe("scroll motion", () => {
     expect(timing.proofEnter.start).toBeLessThanOrEqual(timing.lowerPhraseExit.end);
   });
 
-  it.each([false, true])("removes each phrase word by word (narrow: %s)", (isNarrow) => {
-    const timing = getBenefitsIntroTiming(isNarrow);
+  it("removes each phrase word by word on wide viewports", () => {
+    const timing = getBenefitsIntroTiming(false);
     const midpoint = (timing.upperPhraseExit.start + timing.upperPhraseExit.end) / 2;
-    const firstWord = getBenefitsKineticOpacity(midpoint, 0, 0, 2, 0, 1, isNarrow);
-    const secondWord = getBenefitsKineticOpacity(midpoint, 0, 1, 2, 0, 1, isNarrow);
+    const firstWord = getBenefitsKineticOpacity(midpoint, 0, 0, 2, 0, 1, false);
+    const secondWord = getBenefitsKineticOpacity(midpoint, 0, 1, 2, 0, 1, false);
 
     expect(firstWord).toBeLessThan(secondWord);
+  });
+
+  it("keeps every glyph in a mobile phrase on the same reversible progress", () => {
+    const timing = getBenefitsIntroTiming(true);
+    const midpoint = (timing.upperPhraseExit.start + timing.upperPhraseExit.end) / 2;
+    const firstLetter = getBenefitsKineticOpacity(midpoint, 0, 0, 2, 0, 10, true);
+    const lastLetter = getBenefitsKineticOpacity(midpoint, 0, 1, 2, 9, 10, true);
+    const reversedToMidpoint = getBenefitsKineticOpacity(midpoint, 0, 0, 2, 0, 10, true);
+
+    expect(firstLetter).toBeCloseTo(lastLetter);
+    expect(reversedToMidpoint).toBeCloseTo(firstLetter);
   });
 });

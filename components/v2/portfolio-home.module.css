@@ -458,8 +458,13 @@
   text-transform: inherit;
   vertical-align: .04em;
   box-shadow: inset 0 0 28px rgb(255 88 50 / 8%), 0 0 0 rgb(255 88 50 / 0%);
-  cursor: help;
-  transition: background-color 260ms ease, border-color 260ms ease, box-shadow 320ms ease, color 260ms ease;
+  cursor: pointer;
+  transition:
+    background-color 220ms cubic-bezier(.23, 1, .32, 1),
+    border-color 220ms cubic-bezier(.23, 1, .32, 1),
+    box-shadow 220ms cubic-bezier(.23, 1, .32, 1),
+    color 220ms cubic-bezier(.23, 1, .32, 1),
+    transform 160ms cubic-bezier(.23, 1, .32, 1);
 }
 
 .storyRevealViewport {
@@ -473,7 +478,9 @@
 .storyRevealWord {
   display: block;
   white-space: nowrap;
-  transition: transform 460ms cubic-bezier(.22, 1, .36, 1), opacity 240ms ease;
+  transition:
+    transform 240ms cubic-bezier(.23, 1, .32, 1),
+    opacity 200ms cubic-bezier(.23, 1, .32, 1);
 }
 
 .storyRevealCurrent { transform: translateY(0); }
@@ -485,7 +492,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Anton", Impact, sans-serif;
+  font-family: var(--font-display);
   font-size: .43em;
   font-weight: 400;
   line-height: .88;
@@ -511,20 +518,35 @@
 .storyRevealWide .storyRevealViewport { width: 100%; min-width: 0; }
 .storyRevealWide .storyRevealCurrent { text-align: center; }
 
-.storyReveal:hover,
-.storyReveal:focus-visible {
+.storyReveal[data-expanded="true"] {
   border-color: var(--story-reveal-ink);
   background: var(--story-reveal-ink);
   color: var(--story-reveal-fill);
-  outline: none;
   box-shadow: inset 0 0 38px rgb(255 247 242 / 16%), 0 0 32px rgb(255 103 70 / 20%);
 }
 
-.storyReveal:hover .storyRevealCurrent,
-.storyReveal:focus-visible .storyRevealCurrent { opacity: 0; transform: translateY(-120%); }
+.storyReveal[data-expanded="true"] .storyRevealCurrent { opacity: 0; transform: translateY(-120%); }
 
-.storyReveal:hover .storyRevealAnswer,
-.storyReveal:focus-visible .storyRevealAnswer { opacity: 1; transform: translateY(0) scaleX(var(--story-answer-scale-x)); }
+.storyReveal[data-expanded="true"] .storyRevealAnswer { opacity: 1; transform: translateY(0) scaleX(var(--story-answer-scale-x)); }
+
+.storyReveal:active { transform: scale(.985); }
+
+.storyReveal:focus-visible {
+  outline: 2px solid var(--story-reveal-ink);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .storyReveal:hover {
+    border-color: var(--story-reveal-ink);
+    background: var(--story-reveal-ink);
+    color: var(--story-reveal-fill);
+    box-shadow: inset 0 0 38px rgb(255 247 242 / 16%), 0 0 32px rgb(255 103 70 / 20%);
+  }
+
+  .storyReveal:hover .storyRevealCurrent { opacity: 0; transform: translateY(-120%); }
+  .storyReveal:hover .storyRevealAnswer { opacity: 1; transform: translateY(0) scaleX(var(--story-answer-scale-x)); }
+}
 
 .storyRail {
   position: absolute;
@@ -2425,12 +2447,34 @@
   .storyChapter > p { margin-bottom: 16px; font-size: 11px; }
   .storyChapter h2 { font-size: clamp(41px, 12.2vw, 58px); line-height: .93; }
   .storyReveal { border-radius: .42em; }
-  .storyRevealWide { width: 100%; font-size: .77em; }
-  .storyRevealWide .storyRevealViewport { width: 100%; min-width: 0; }
-  .storyRevealAnswer { letter-spacing: -.02em; }
-  .storyRevealAnswerShort { --story-answer-scale-x: .84; font-size: .55em; }
-  .storyRevealAnswerMedium { --story-answer-scale-x: .73; font-size: .48em; }
-  .storyRevealAnswerLong { --story-answer-scale-x: .65; font-size: .43em; }
+  .storyRevealWide {
+    box-sizing: border-box;
+    width: 100%;
+    padding: .08em .2em .12em;
+    font-size: .77em;
+  }
+  .storyRevealWide .storyRevealViewport {
+    width: 100%;
+    min-width: 0;
+    height: 1.8em;
+  }
+  .storyRevealWide .storyRevealCurrent {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .storyRevealAnswer {
+    padding-inline: .04em;
+    line-height: .88;
+    letter-spacing: -.018em;
+    text-align: center;
+    text-wrap: balance;
+    white-space: normal;
+  }
+  .storyRevealAnswerShort { --story-answer-scale-x: .98; font-size: .72em; }
+  .storyRevealAnswerMedium { --story-answer-scale-x: .98; font-size: .64em; }
+  .storyRevealAnswerLong { --story-answer-scale-x: .98; font-size: .58em; }
   .storyRail {
     right: 13px;
     grid-template-rows: auto minmax(150px, 34vh) auto;
@@ -2749,6 +2793,9 @@
   .storyRevealViewport,
   .storyRevealWord { max-width: 100%; }
   .storyRevealWide { box-sizing: border-box; }
+  .storyRevealAnswerShort { font-size: .76em; }
+  .storyRevealAnswerMedium { font-size: .68em; }
+  .storyRevealAnswerLong { font-size: .62em; }
 
   .projectFolderCopy {
     top: 78px;
