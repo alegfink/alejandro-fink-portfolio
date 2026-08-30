@@ -111,19 +111,29 @@ function BrandMark() {
 }
 
 function StoryReveal({ label, reveal, wide = false, locale = "es" }: Readonly<{ label: string; reveal: string; wide?: boolean; locale?: Locale }>) {
+  const [expanded, setExpanded] = useState(false);
   const answerDensity = reveal.length >= 46
     ? styles.storyRevealAnswerLong
     : reveal.length >= 40
       ? styles.storyRevealAnswerMedium
       : styles.storyRevealAnswerShort;
+  const accessibleText = expanded
+    ? `${reveal}. ${locale === "es" ? "Volver al texto anterior" : "Return to the previous text"}`
+    : `${label}. ${locale === "es" ? "Mostrar detalle" : "Show detail"}`;
 
   return (
-    <button className={`${styles.storyReveal} ${wide ? styles.storyRevealWide : ""}`} type="button">
+    <button
+      aria-expanded={expanded}
+      className={`${styles.storyReveal} ${wide ? styles.storyRevealWide : ""}`}
+      data-expanded={expanded}
+      onClick={() => setExpanded((current) => !current)}
+      type="button"
+    >
       <span className={styles.storyRevealViewport} aria-hidden="true">
         <span className={`${styles.storyRevealWord} ${styles.storyRevealCurrent}`}>{label}</span>
         <span className={`${styles.storyRevealWord} ${styles.storyRevealAnswer} ${answerDensity}`}>{reveal}</span>
       </span>
-      <span className={styles.srOnly}>{label}. {locale === "es" ? "Descubrí" : "Discover"}: {reveal}</span>
+      <span className={styles.srOnly}>{accessibleText}</span>
     </button>
   );
 }
@@ -713,6 +723,16 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           return;
         }
 
+        // The short statement is one reading unit on mobile. Its container
+        // already follows the scroll timeline, so revealing individual words
+        // here only creates illegible intermediate states during fast reverse
+        // scrolling or when the browser chrome changes the visual viewport.
+        if (isNarrow && word.closest("[data-benefits-answer]")) {
+          word.style.setProperty("--benefit-word-progress", "1");
+          word.style.setProperty("--benefit-word-exit", "0");
+          return;
+        }
+
         const trackProgress = word.dataset.wordTrack === "entry" ? entryProgress : progress;
         const start = Number(word.dataset.wordStart ?? 0);
         const end = Number(word.dataset.wordEnd ?? 1);
@@ -756,13 +776,37 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       benefitsFrameRef.current = window.requestAnimationFrame(updateBenefits);
     };
 
+    const syncBenefitsNow = () => {
+      if (benefitsFrameRef.current !== null) {
+        window.cancelAnimationFrame(benefitsFrameRef.current);
+        benefitsFrameRef.current = null;
+      }
+      updateBenefits();
+    };
+
+    const syncBenefitsWhenVisible = () => {
+      if (document.visibilityState === "visible") requestBenefitsUpdate();
+    };
+
+    const visualViewport = window.visualViewport;
+
     updateBenefits();
     window.addEventListener("scroll", requestBenefitsUpdate, { passive: true });
+    window.addEventListener("scrollend", syncBenefitsNow, { passive: true });
     window.addEventListener("resize", requestBenefitsUpdate);
+    window.addEventListener("pageshow", requestBenefitsUpdate);
+    document.addEventListener("visibilitychange", syncBenefitsWhenVisible);
+    visualViewport?.addEventListener("resize", requestBenefitsUpdate);
+    visualViewport?.addEventListener("scroll", requestBenefitsUpdate);
 
     return () => {
       window.removeEventListener("scroll", requestBenefitsUpdate);
+      window.removeEventListener("scrollend", syncBenefitsNow);
       window.removeEventListener("resize", requestBenefitsUpdate);
+      window.removeEventListener("pageshow", requestBenefitsUpdate);
+      document.removeEventListener("visibilitychange", syncBenefitsWhenVisible);
+      visualViewport?.removeEventListener("resize", requestBenefitsUpdate);
+      visualViewport?.removeEventListener("scroll", requestBenefitsUpdate);
       if (benefitsFrameRef.current !== null) window.cancelAnimationFrame(benefitsFrameRef.current);
     };
   }, []);
@@ -1054,7 +1098,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
               </h2>
             </header>
 
-            <p className={styles.benefitsKineticAnswer}>
+            <p className={styles.benefitsKineticAnswer} data-benefits-answer>
               <ScrubbedWords
                 text={copy.answer}
                 start={.005}
