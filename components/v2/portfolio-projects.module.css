@@ -387,6 +387,9 @@
 
 .liveButton {
   width: fit-content;
+  max-width: 100%;
+  min-height: 56px;
+  box-sizing: border-box;
   display: inline-flex;
   gap: 10px;
   align-items: center;
@@ -400,12 +403,27 @@
 
 .liveButton:hover,
 .liveButton:focus-visible { background: var(--cream); color: var(--ink); transform: translateX(5px); }
-.liveButtonIcon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: var(--project-tone); color: #fff; font-size: 19px; }
-.liveButtonWords { position: relative; display: block; height: 1em; overflow: hidden; font-size: 13px; font-weight: 720; }
-.liveButtonWords i { display: block; font-style: normal; transition: transform 360ms cubic-bezier(.22, 1, .36, 1); }
-.liveButtonWords i:last-child { position: absolute; inset: 0; transform: translateY(130%); white-space: nowrap; }
-.liveButton:hover .liveButtonWords i:first-child { transform: translateY(-130%); }
-.liveButton:hover .liveButtonWords i:last-child { transform: translateY(0); }
+.liveButtonIcon { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: var(--project-tone); color: #fff; font-size: 19px; }
+.liveButtonWords {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  padding-block: 2px;
+  font-size: 13px;
+  font-weight: 720;
+  line-height: 1.25;
+}
+.liveButtonWords i { grid-area: 1 / 1; display: block; font-style: normal; line-height: inherit; white-space: nowrap; }
+.liveButtonWords i:last-child { display: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .liveButtonWords i { transition: transform 360ms cubic-bezier(.22, 1, .36, 1); }
+  .liveButtonWords i:last-child { display: block; transform: translateY(150%); }
+  .liveButton:hover .liveButtonWords i:first-child,
+  .liveButton:focus-visible .liveButtonWords i:first-child { transform: translateY(-150%); }
+  .liveButton:hover .liveButtonWords i:last-child,
+  .liveButton:focus-visible .liveButtonWords i:last-child { transform: translateY(0); }
+}
 
 .projectGallery {
   display: grid;
