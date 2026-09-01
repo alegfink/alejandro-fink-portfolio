@@ -30,6 +30,6 @@ export async function waitForPortfolioReady(page: Page): Promise<void> {
 }
 
 export async function closeConsentIfVisible(page: Page): Promise<void> {
-  const reject = page.getByRole("button", { name: /Solo necesarias|Necessary only/ });
+  const reject = page.getByRole("button", { name: /Prefiero que no|No, thanks/ });
   if (await reject.isVisible().catch(() => false)) await reject.click();
 }

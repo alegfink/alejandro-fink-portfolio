@@ -106,6 +106,33 @@ test("reduced motion keeps the complete page available without ambient playback"
   expect(await page.locator("video").evaluateAll((videos) => videos.every((video) => (video as HTMLVideoElement).paused))).toBe(true);
 });
 
+test("analytics consent uses clear localized choices and persists rejection", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium-desktop", "One browser is enough for the consent contract");
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await waitForPortfolioReady(page);
+  const spanishDialog = page.getByRole("dialog", { name: "¿Me ayudás a no diseñar a ciegas?" });
+  await expect(spanishDialog).toBeVisible();
+  await expect(page.getByRole("button", { name: "Dale, podés medir" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Prefiero que no" })).toBeVisible();
+  await expect(page.locator("#af-google-analytics")).toHaveCount(0);
+  await page.getByRole("button", { name: "Prefiero que no" }).click();
+  await expect(spanishDialog).toHaveCount(0);
+  expect(await page.evaluate(() => window.localStorage.getItem("af-analytics-consent-v1"))).toBe("denied");
+
+  await page.evaluate(() => window.localStorage.removeItem("af-analytics-consent-v1"));
+  await page.goto("/en", { waitUntil: "domcontentloaded" });
+  await waitForPortfolioReady(page);
+  const englishDialog = page.getByRole("dialog", { name: "Can you help me design with less guesswork?" });
+  await expect(englishDialog).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sure, measure away" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "No, thanks" })).toBeVisible();
+  await expect(page.locator("#af-google-analytics")).toHaveCount(0);
+  await page.getByRole("button", { name: "No, thanks" }).click();
+  await expect(englishDialog).toHaveCount(0);
+  expect(await page.evaluate(() => window.localStorage.getItem("af-analytics-consent-v1"))).toBe("denied");
+});
+
 test("captures current visual evidence after consent choice", async ({ page }, testInfo) => {
   test.slow();
   test.skip(!["chromium-desktop", "chromium-mobile", "webkit-desktop"].includes(testInfo.project.name), "Representative evidence projects only");
