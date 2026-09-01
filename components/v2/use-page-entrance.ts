@@ -18,7 +18,8 @@ export function usePageEntrance() {
     };
 
     const loader = document.querySelector<HTMLElement>("[data-portfolio-loader]");
-    if (!loader || loader.dataset.phase === "exiting") {
+    const sessionLoaderSkipped = document.documentElement.dataset.portfolioLoaderSeen === "true";
+    if (sessionLoaderSkipped || !loader || loader.dataset.phase === "exiting") {
       reveal();
     } else {
       window.addEventListener(LOADER_EXIT_EVENT, reveal, { once: true });

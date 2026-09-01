@@ -16,5 +16,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootRedirectLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="es"><body><AnalyticsProvider /><PortfolioV2Loader>{children}</PortfolioV2Loader></body></html>;
+  return <html lang="es" suppressHydrationWarning><body><AnalyticsProvider /><PortfolioV2Loader>{children}</PortfolioV2Loader></body></html>;
 }

@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { NativeLink } from "@/components/v2/native-link";
-import { v2Routes } from "@/lib/v2-i18n";
+import { emailContactUrl, v2Routes } from "@/lib/v2-i18n";
+import nextConfig from "@/next.config";
 
 const portfolioNavigationFiles = [
   "hero-lab.tsx",
@@ -39,5 +40,23 @@ describe("portfolio native navigation", () => {
       about: "/en/about",
       privacy: "/en/privacy",
     });
+  });
+
+  it("uses a client-agnostic email link for the primary contact action", () => {
+    expect(emailContactUrl("es")).toContain("mailto:alegfink@gmail.com");
+    expect(emailContactUrl("es")).toContain("Consulta%20desde%20el%20portfolio");
+    expect(emailContactUrl("en")).toContain("Inquiry%20from%20the%20portfolio");
+  });
+
+  it("redirects legacy public routes to the single canonical experience", async () => {
+    const redirects = await nextConfig.redirects?.();
+
+    expect(redirects).toEqual(expect.arrayContaining([
+      { source: "/es", destination: "/", permanent: true },
+      { source: "/es/proyectos", destination: "/proyectos", permanent: true },
+      { source: "/es/sobre-mi", destination: "/acerca-de", permanent: true },
+      { source: "/en/work", destination: "/en/projects", permanent: true },
+      { source: "/en/contact", destination: "/en/about", permanent: true },
+    ]));
   });
 });

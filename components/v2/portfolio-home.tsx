@@ -15,7 +15,7 @@ import styles from "@/components/v2/portfolio-home.module.css";
 import { trackContactChannel, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
 import { getBenefitsIntroTiming, getBenefitsKineticOpacity } from "@/lib/scroll-motion";
-import { getV2Path, gmailComposeUrl, v2ContactProfiles, v2PrivacyRoutes, v2SharedCopy, whatsappContactUrl } from "@/lib/v2-i18n";
+import { emailContactUrl, getV2Path, v2ContactProfiles, v2PrivacyRoutes, v2SharedCopy, whatsappContactUrl } from "@/lib/v2-i18n";
 
 const projectById = new Map(projects.map((project) => [project.id, project]));
 
@@ -25,7 +25,7 @@ const projectCollectionConfig = {
     { number: "02", label: "Experiencia & relato", title: "Páginas que hacen que quieras seguir recorriendo", description: "Dirección visual, ritmo y narrativa para construir una primera impresión que se sostiene más allá del hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada"] },
   ],
   en: [
-    { number: "01", label: "E-commerce & conversion", title: "Pages that turn interest into a next action", description: "Store, catalog and decision connected so the experience does not end as an isolated piece.", projectIds: ["torvena", "brisa-do-mar", "cuidalo"] },
+    { number: "01", label: "E-commerce & conversion", title: "Pages that turn interest into a next action", description: "Store, catalog and decision-making work together, so the experience becomes more than an isolated page.", projectIds: ["torvena", "brisa-do-mar", "cuidalo"] },
     { number: "02", label: "Experience & story", title: "Pages that make you want to keep exploring", description: "Art direction, rhythm and narrative that sustain a first impression beyond the hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada"] },
   ],
 } as const;
@@ -47,10 +47,10 @@ const strengthsByLocale = {
     { number: "04", title: "Implementación que se sostiene", text: "No me quedo en la recomendación: acompaño la implementación y dejo un sistema que el equipo pueda seguir usando." },
   ],
   en: [
-    { number: "01", title: "Order before screens", text: "I turn a diffuse need into priorities, a journey and a concrete next action." },
+    { number: "01", title: "Order before screens", text: "I turn an unclear need into priorities, a clear journey and a concrete next step." },
     { number: "02", title: "One decision, multiple consequences", text: "I connect experience with catalog, support, suppliers and operations to avoid isolated solutions." },
     { number: "03", title: "Technology with purpose", text: "I bring in AI and new tools when they accelerate, clarify or make the work verifiable." },
-    { number: "04", title: "Implementation that lasts", text: "I go beyond the recommendation: I support implementation and leave a system the team can keep using." },
+    { number: "04", title: "Implementation built to last", text: "I go beyond recommendations: I help implement the solution and leave a system the team can keep using." },
   ],
 } as const;
 
@@ -69,7 +69,7 @@ const homeCopy = {
     kinetic: ["ISOLATED DECISIONS", "COST TIME"], answer: "I connect the parts so the work can move forward",
     proofEyebrow: "When an idea needs to become something real", proofTitle: "Context + judgment + execution",
     ctaEyebrow: "The next move", ctaTitle: "Let's make something", ctaTitleAccent: "people want to explore",
-    ctaLead: "A clear, useful experience connected to what your business needs to move", talk: "Let's talk", copied: "Email copied", copy: "Copy email",
+    ctaLead: "A clear, useful experience connected to what your business needs to move forward", talk: "Let's talk", copied: "Email copied", copy: "Copy email",
     footerEyebrow: "One last coordinate", footerThanks: "Thanks for making it this far", footerTitle: ["End of the scroll", "Start of what comes next"],
     footerNav: "Closing navigation", contactNav: "Other contact channels", designed: "Designed and developed by Alejandro Fink", location: "Buenos Aires · 2026",
   },
@@ -213,7 +213,8 @@ function KineticPhrase({ text, exitOrder }: Readonly<{ text: string; exitOrder: 
   const words = text.split(" ");
 
   return (
-    <span aria-label={text}>
+    <span>
+      <span className={styles.srOnly}>{text}</span>
       {words.map((word, wordIndex) => (
         <Fragment key={`${word}-${wordIndex}`}>
           <b aria-hidden="true" data-kinetic-word>
@@ -911,12 +912,10 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         <div className={`${styles.headerMagnet} ${styles.contactMagnet}`} ref={(node) => { headerMagnetRefs.current[3] = node; }}>
           <V2TrackedContactLink
             className={`${styles.headerButton} ${styles.contact}`}
-            channel="gmail"
-            href={gmailComposeUrl(locale)}
+            channel="mailto"
+            href={emailContactUrl(locale)}
             locale={locale}
             placement="header"
-            target="_blank"
-            rel="noreferrer"
             aria-label={shared.contactLabel}
           >
             <HeaderWord label={shared.contact} />

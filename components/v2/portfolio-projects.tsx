@@ -13,7 +13,7 @@ import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import { domainFromUrl, trackEvent } from "@/lib/analytics";
 import type { Locale } from "@/lib/i18n";
-import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
+import { emailContactUrl, getV2Path, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
 type ProjectAsset = {
   src: string;
@@ -217,16 +217,16 @@ const projectsPageCopy = {
     coordinates: ["Archivo de proyectos", "Buenos Aires · AR", "Una selección abierta que sigue creciendo"],
     heroLabel: "Negocio · experiencia · operación", heroTitle: ["Trabajo", "en contexto"],
     introLead: "No alcanza con mostrar una pantalla linda", intro: "Acá cada proyecto se presenta con el problema que había que ordenar, las decisiones que tomé y el rol que ocupé para llevarlo a algo concreto.",
-    index: "Índice de proyectos", archive: "Archivo de proyectos", closingLabel: "El archivo sigue abierto", closingTitle: "Lo próximo todavía se está construyendo",
+    index: "Índice de proyectos", indexHint: "Deslizá para ver más →", archive: "Archivo de proyectos", closingLabel: "El archivo sigue abierto", closingTitle: "Lo próximo todavía se está construyendo",
     closing: "Estoy trabajando en nuevos proyectos y recursos. Esta página va a crecer con ellos, sin inflar procesos ni resultados que todavía no existen.", talk: "Hablemos",
   },
   en: {
     visualResources: "Visual resources for", challenge: "Challenge", services: "Services", role: "My role", visit: "Visit the site", live: "View live project",
     coordinates: ["Project archive", "Buenos Aires · AR", "An open selection that keeps growing"],
     heroLabel: "Business · experience · operations", heroTitle: ["Work", "in context"],
-    introLead: "A polished screen is not enough", intro: "Each project is presented through the problem that needed structure, the decisions I made and the role I took to turn it into something concrete.",
-    index: "Project index", archive: "Project archive", closingLabel: "The archive stays open", closingTitle: "What comes next is still being built",
-    closing: "I am working on new projects and resources. This page will grow with them, without inflating processes or results that do not exist yet.", talk: "Let's talk",
+    introLead: "A polished screen is not enough", intro: "Each project is presented through the problem that needed structure, the decisions I made and the role I played in turning it into something concrete.",
+    index: "Project index", indexHint: "Swipe to see more →", archive: "Project archive", closingLabel: "The archive stays open", closingTitle: "What comes next is still being built",
+    closing: "I am working on new projects and resources. This page will grow with them, without overstating the work or claiming results that do not exist yet.", talk: "Let's talk",
   },
 } as const;
 
@@ -447,12 +447,10 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
 
         <V2TrackedContactLink
           className={`${styles.headerButton} ${styles.contact}`}
-          channel="gmail"
-          href={gmailComposeUrl(locale)}
+          channel="mailto"
+          href={emailContactUrl(locale)}
           locale={locale}
           placement="header"
-          target="_blank"
-          rel="noreferrer"
           aria-label={shared.contactLabel}
         >
           <HeaderWord>{shared.contact}</HeaderWord>
@@ -497,6 +495,7 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
               </a>
             ))}
           </nav>
+          <p className={styles.projectIndexHint} aria-hidden="true">{copy.indexHint}</p>
         </section>
 
         <section className={styles.projectsArchive} id="archivo" aria-label={copy.archive} data-analytics-section="projects_archive">

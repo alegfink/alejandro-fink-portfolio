@@ -239,6 +239,7 @@
 .projectIndex span { color: var(--rust); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
 .projectIndex strong { font-size: 14px; font-weight: 650; }
 .projectIndex i { font-size: 16px; font-style: normal; }
+.projectIndexHint { display: none; }
 
 .header,
 .heroCoordinates,
@@ -605,6 +606,17 @@
   .projectIndex a:focus-visible,
   .projectIndex .projectIndexActive { padding-left: 12px; background: rgb(255 99 66 / 13%); }
   .projectIndex i { display: none; }
+  .projectIndexHint {
+    display: block;
+    align-self: flex-start;
+    margin: 8px 0 0;
+    color: #c79a8c;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
 
   .projectCase { min-height: 0; padding: 86px 16px 110px; }
   .projectCaseLayout { display: flex; flex-direction: column; gap: 54px; }

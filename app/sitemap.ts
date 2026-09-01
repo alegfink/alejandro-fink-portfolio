@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return pairs.flatMap((pair) => (["es", "en"] as const).map((locale) => ({
     url: absoluteUrl(pair[locale]),
-    lastModified: new Date("2026-08-28"),
+    lastModified: new Date("2026-08-31"),
     changeFrequency: "monthly" as const,
     priority: pair.priority,
     alternates: { languages: { es: absoluteUrl(pair.es), en: absoluteUrl(pair.en), "x-default": absoluteUrl(pair.es) } },

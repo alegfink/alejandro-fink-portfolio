@@ -4,7 +4,7 @@ import { NativeLink as Link } from "@/components/v2/native-link";
 import { AnalyticsPreferencesButton } from "@/components/analytics-provider";
 import type { Locale } from "@/lib/i18n";
 import { siteCopy } from "@/content/site";
-import { getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
+import { emailContactUrl, getV2Path, gmailComposeUrl, v2SharedCopy } from "@/lib/v2-i18n";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
@@ -40,7 +40,7 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
           <Link className={styles.headerButton} href={getV2Path(locale, "about")}>{shared.about}</Link>
           <V2LanguageSwitcher locale={locale} page="privacy" />
         </nav>
-        <V2TrackedContactLink className={`${styles.headerButton} ${styles.contact}`} channel="gmail" href={gmailComposeUrl(locale)} locale={locale} placement="header" target="_blank" rel="noreferrer" aria-label={shared.contactLabel}>
+        <V2TrackedContactLink className={`${styles.headerButton} ${styles.contact}`} channel="mailto" href={emailContactUrl(locale)} locale={locale} placement="header" aria-label={shared.contactLabel}>
           <span>{shared.contact}</span><i aria-hidden="true">↗</i>
         </V2TrackedContactLink>
         <V2MobileMenu locale={locale} page="privacy" />

@@ -29,8 +29,8 @@ function localeFromPath(pathname: string): "es" | "en" {
 const consentCopy = {
   es: {
     eyebrow: "MEDICIÓN · TU DECISIÓN",
-    title: "¿Nos permitís medir qué contenido resulta útil?",
-    text: "Google Analytics se activa sólo si aceptás. Mide procedencia, páginas, interacción y rendimiento; nunca nombres, emails, teléfonos ni mensajes.",
+    title: "¿Podemos medir qué resulta útil?",
+    text: "Google Analytics se activa sólo si aceptás. Mide uso y rendimiento; nunca nombres, emails, teléfonos ni mensajes.",
     accept: "Aceptar analítica",
     reject: "Solo necesarias",
     privacy: "Ver privacidad",
@@ -38,8 +38,8 @@ const consentCopy = {
   },
   en: {
     eyebrow: "MEASUREMENT · YOUR CHOICE",
-    title: "May we measure which content proves useful?",
-    text: "Google Analytics loads only if you accept. It measures acquisition, pages, engagement and performance—never names, emails, phone numbers or messages.",
+    title: "May we measure what proves useful?",
+    text: "Google Analytics loads only if you accept. It measures use and performance—never names, emails, phone numbers or messages.",
     accept: "Accept analytics",
     reject: "Necessary only",
     privacy: "View privacy",

@@ -97,8 +97,8 @@ function CinematicTitle({ variant, neonActive = false, locale = "es" }: Readonly
         {variant === "pulse" ? (
           <span
             className={`${styles.experienceWord} ${experienceClass} ${neonActive ? styles.neonFlicker : ""}`}
-            aria-label={copy.experience}
           >
+            <span className="sr-only">{copy.experience}</span>
             {[...copy.experience].map((letter, index) => (
               <span className={styles.neonLetter} aria-hidden="true" key={`${letter}-${index}`}>{letter}</span>
             ))}
