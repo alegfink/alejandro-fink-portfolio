@@ -11,9 +11,15 @@ import {
   type PortfolioLoaderExitReason,
   type PortfolioLoaderHeroStatus,
 } from "@/lib/loader-performance";
+import {
+  PORTFOLIO_LOADER_BOOTSTRAP_SCRIPT,
+  hasSeenPortfolioLoader,
+  markPortfolioLoaderSeen,
+} from "@/lib/loader-session";
 import { v2SharedCopy } from "@/lib/v2-i18n";
 
 type LoaderPhase = "loading" | "complete" | "exiting" | "hidden";
+type LoaderMode = "entry" | "session-skip";
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const easeOut = (value: number) => 1 - Math.pow(1 - value, 3);
@@ -27,6 +33,7 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
   const counterRef = useRef<HTMLElement | null>(null);
   const progressRef = useRef<HTMLSpanElement | null>(null);
   const [phase, setPhase] = useState<LoaderPhase>("loading");
+  const [mode, setMode] = useState<LoaderMode>("entry");
 
   useEffect(() => {
     if (skipLoader) return;
@@ -60,6 +67,23 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
 
   useEffect(() => {
     if (skipLoader) return;
+    let sessionStorage: Storage | null = null;
+    try {
+      sessionStorage = window.sessionStorage;
+    } catch {
+      sessionStorage = null;
+    }
+
+    if (hasSeenPortfolioLoader(sessionStorage)) {
+      const revealFrame = window.requestAnimationFrame(() => {
+        setMode("session-skip");
+        setPhase("hidden");
+        window.dispatchEvent(new Event(pageEntranceEvent));
+      });
+      return () => window.cancelAnimationFrame(revealFrame);
+    }
+
+    markPortfolioLoaderSeen(sessionStorage);
     const loader = loaderRef.current;
     const counter = counterRef.current;
     const progressLine = progressRef.current;
@@ -236,8 +260,9 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
 
   return (
     <>
+      <script dangerouslySetInnerHTML={{ __html: PORTFOLIO_LOADER_BOOTSTRAP_SCRIPT }} />
       {phase !== "hidden" ? (
-        <div className={styles.loader} data-phase={phase} data-portfolio-loader ref={loaderRef}>
+        <div className={styles.loader} data-phase={phase} data-loader-mode={mode} data-portfolio-loader ref={loaderRef}>
           <div className={`${styles.panel} ${styles.panelLeft}`} aria-hidden="true" />
           <div className={`${styles.panel} ${styles.panelRight}`} aria-hidden="true" />
           <div className={styles.axis} aria-hidden="true"><span /><span /></div>
@@ -272,7 +297,7 @@ export function PortfolioV2Loader({ children }: Readonly<{ children: ReactNode }
         </div>
       ) : null}
 
-      <div className={styles.content} data-loader-state={contentState}>
+      <div className={styles.content} data-loader-mode={mode} data-loader-state={contentState}>
         {children}
       </div>
 

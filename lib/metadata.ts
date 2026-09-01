@@ -13,7 +13,19 @@ type MetadataInput = {
 };
 
 export function indexingEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" && getSiteUrl().hostname !== "localhost";
+  if (process.env.NEXT_PUBLIC_INDEXING_ENABLED !== "true") return false;
+
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  let hostname = getSiteUrl().hostname;
+  if (configuredUrl) {
+    try {
+      hostname = new URL(configuredUrl).hostname;
+    } catch {
+      return false;
+    }
+  }
+
+  return hostname === "alejandrofink.com" || hostname === "www.alejandrofink.com";
 }
 
 export function buildMetadata({ locale, path, alternatePath, title, description, image, noIndex = true }: MetadataInput): Metadata {
@@ -27,7 +39,7 @@ export function buildMetadata({ locale, path, alternatePath, title, description,
     description,
     alternates: {
       canonical: path,
-      languages: { es: esPath, en: enPath, "x-default": enPath },
+      languages: { es: esPath, en: enPath, "x-default": esPath },
     },
     openGraph: {
       type: "website",

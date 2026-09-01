@@ -10,7 +10,7 @@ import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
 import { V2ContactStrip } from "@/components/v2/v2-contact-strip";
 import { V2TrackedContactLink } from "@/components/v2/v2-tracked-contact-link";
 import type { Locale } from "@/lib/i18n";
-import { getV2Path, gmailComposeUrl, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
+import { emailContactUrl, getV2Path, v2PrivacyRoutes, v2SharedCopy } from "@/lib/v2-i18n";
 
 const chaptersByLocale = { es: [
   {
@@ -43,7 +43,7 @@ const chaptersByLocale = { es: [
   },
 ], en: [
   { period: "2016—2018", label: "Systems", title: "I learned to translate", body: "As a functional analyst and QA, I worked across SAP, web services, documentation and distributed teams. I learned that defining the problem well matters as much as executing the solution.", evidence: "Accenture · functional analysis & QA" },
-  { period: "2019—2022", label: "Data", title: "I understood the cost of disorder", body: "In SAP master data, a small decision could propagate through an entire system. I learned to seek consistency, document decisions and think through consequences before moving forward.", evidence: "Soychu · SAP master data lead" },
+  { period: "2019—2022", label: "Data", title: "I understood the cost of inconsistency", body: "In SAP master data, a small decision could propagate through an entire system. I learned to seek consistency, document decisions and think through consequences before moving forward.", evidence: "Soychu · SAP master data lead" },
   { period: "2022—2025", label: "New languages", title: "I added technical and commercial judgment", body: "Full-stack training gave me the language to understand logic and requirements. Consultative sales added another question: not only whether something works, but whether it helps someone decide.", evidence: "Henry 2022 · commercial experience 2025" },
   { period: "2026—today", label: "Real operations", title: "I put decisions to the test", body: "With Torvena, I stopped looking at e-commerce in separate parts. Brand, product, catalog, Shopify, campaigns, support, suppliers and logistics coexist in one operation, and every decision has real consequences.", evidence: "Torvena · owned e-commerce business in production" },
 ] } as const;
@@ -99,7 +99,7 @@ const aboutPageCopy = {
     meta: ["About · Alejandro Fink", "Buenos Aires · Argentina"], hero: ["My journey", "was not linear", "neither is my perspective"],
     intro: "I moved through systems, data, sales, product and operations. Today I use that journey to connect what is usually handled separately.",
     storyEyebrow: "The thread connecting it all", storyTitle: <>I did not change worlds<br />I kept adding layers</>, storyLead: "Each stage added a different way of looking at the same problem: how to move a decision forward without losing context.", layer: "LAYER",
-    presentEyebrow: "The present", presentTitle: <>What I am<br />building now</>, presentLead: "It is not a closed list. It is a practice combining an owned business, projects for others and an evolving way of working.",
+    presentEyebrow: "The present", presentTitle: <>What I am<br />building now</>, presentLead: "This is not a fixed list. It is a practice combining an owned business, projects for others and an evolving way of working.",
     principleEyebrow: "An honest way of working", principleAside: <>No inflated titles<br />no invented results</>, principleTitle: "I do not need to know everything",
     principleLead: "I need to understand what must be solved, how to verify it and when deeper technical expertise is needed.",
     principleBody: ["I work with AI and specialists to research, implement and diagnose. My responsibility is to define the expected outcome, integrate the parts and validate that the solution works in the real world.", "I do not start with a list of technologies. I start with the problem, the audience, the constraints and the next decision the business needs to enable."],
@@ -217,12 +217,10 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
 
         <V2TrackedContactLink
           className={`${styles.headerButton} ${styles.contact}`}
-          channel="gmail"
-          href={gmailComposeUrl(locale)}
+          channel="mailto"
+          href={emailContactUrl(locale)}
           locale={locale}
           placement="header"
-          target="_blank"
-          rel="noreferrer"
           aria-label={shared.contactLabel}
         >
           <HeaderWord>{shared.contact}</HeaderWord>

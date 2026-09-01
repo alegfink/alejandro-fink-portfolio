@@ -18,7 +18,7 @@ const contactCopy = {
   },
   en: {
     eyebrow: "Other channels",
-    title: "We can also connect over here.",
+    title: "You can also reach me here.",
     label: "Alternative contact channels",
     channels: [
       { name: "WhatsApp", detail: "Direct message" },

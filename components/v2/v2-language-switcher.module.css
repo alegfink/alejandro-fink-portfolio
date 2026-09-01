@@ -37,8 +37,9 @@
 }
 
 .switcher .active {
-  background: #fff7f2;
+  background-color: #fff7f2;
   color: #261713;
+  transition: none;
 }
 
 @media (max-width: 700px) {

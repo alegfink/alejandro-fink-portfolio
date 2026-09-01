@@ -36,7 +36,7 @@ export const v2SharedCopy = {
     projects: "Proyectos",
     about: "Acerca de",
     contact: "Disponible para colaborar · Hablemos",
-    contactLabel: "Abrir Gmail para hablar con Alejandro",
+    contactLabel: "Escribirle un email a Alejandro",
     contactSubject: "Consulta desde el portfolio",
     privacy: "Privacidad",
     backTop: "Volver arriba",
@@ -56,7 +56,7 @@ export const v2SharedCopy = {
     projects: "Work",
     about: "About",
     contact: "Available to collaborate · Let's talk",
-    contactLabel: "Open Gmail to contact Alejandro",
+    contactLabel: "Email Alejandro",
     contactSubject: "Inquiry from the portfolio",
     privacy: "Privacy",
     backTop: "Back to top",
@@ -73,6 +73,12 @@ export function gmailComposeUrl(locale: Locale): string {
   const copy = v2SharedCopy[locale];
   const body = locale === "es" ? "Hola Alejandro,\n\n" : "Hi Alejandro,\n\n";
   return `https://mail.google.com/mail/?view=cm&fs=1&to=alegfink%40gmail.com&su=${encodeURIComponent(copy.contactSubject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function emailContactUrl(locale: Locale): string {
+  const copy = v2SharedCopy[locale];
+  const body = locale === "es" ? "Hola Alejandro,\n\n" : "Hi Alejandro,\n\n";
+  return `mailto:alegfink@gmail.com?subject=${encodeURIComponent(copy.contactSubject)}&body=${encodeURIComponent(body)}`;
 }
 
 export const v2ContactProfiles = {

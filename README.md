@@ -1,14 +1,27 @@
 # Alejandro Fink — portfolio bilingüe
 
-Portfolio profesional v1 construido con Next.js App Router, TypeScript y contenido local tipado. La experiencia se publica en español e inglés, usa una arquitectura static-first y aplica la dirección visual **Editorial Product** con metadata y estados de **Precision Interface**.
+Portfolio profesional de Alejandro Fink construido con Next.js App Router, React, TypeScript y Vinext para OpenAI Sites/Cloudflare. La experiencia canónica combina e-commerce, producto, UX, desarrollo y operación digital sin separar la dirección artística de la utilidad comercial.
 
 ## Estado
 
-- Desarrollo y publicación en Sites: activos en `https://www.alejandrofink.com/`.
-- Dominio: `alejandrofink.com` está conectado como dominio propio y `www.alejandrofink.com` es el origen canónico público.
-- Contenido factual: basado exclusivamente en `docs/` y, para los medios, en fuentes autorizadas registradas en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
-- Analytics: GA4 configurado con consentimiento explícito, atribución first-party del lead, funnel comercial y Core Web Vitals reales. Google Signals, User-ID y personalización publicitaria permanecen desactivados.
-- Contacto: `alegfink@gmail.com` funciona como canal público. El diagnóstico conversacional bilingüe, la hoja privada, la notificación por email y el receptor de Google Apps Script están autorizados y activos.
+- Sitio público: `https://www.alejandrofink.com/`.
+- Origen canónico: `www.alejandrofink.com`.
+- Idiomas: español en la raíz e inglés bajo `/en`.
+- Experiencia vigente: V2 editorial; V1 permanece como archivo en `/v1` y no compite como ruta principal.
+- Indexación: cerrada por defecto y habilitable únicamente en el hostname oficial mediante `NEXT_PUBLIC_INDEXING_ENABLED=true`.
+- Analytics: GA4 sólo después de consentimiento explícito; publicidad, Google Signals y User-ID desactivados.
+- Contacto: email estándar en desktop y WhatsApp directo en el menú móvil, con LinkedIn, GitHub y copiar email como alternativas.
+
+## Rutas canónicas
+
+| Español | Inglés |
+| --- | --- |
+| `/` | `/en` |
+| `/proyectos` | `/en/projects` |
+| `/acerca-de` | `/en/about` |
+| `/privacidad` | `/en/privacy` |
+
+Las rutas históricas equivalentes redirigen hacia esta superficie. `/v1` se conserva como archivo manual y no forma parte del sitemap.
 
 ## Requisitos
 
@@ -23,131 +36,109 @@ cp .env.example .env.local
 npm run dev
 ```
 
-En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usar `npm.cmd` en los mismos comandos.
-
-El sitio local queda disponible en `http://localhost:3000`. La raíz detecta el idioma del navegador; una elección manual `ES / EN` se guarda en `localStorage` y en una cookie funcional, y conserva la página equivalente.
+En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usar `npm.cmd` con los mismos argumentos.
 
 ## Scripts
 
 | Comando | Función |
-|---|---|
-| `npm run dev` | servidor local de desarrollo |
-| `npm run lint` | reglas Next.js Core Web Vitals y TypeScript |
-| `npm run typecheck` | chequeo estricto sin emitir archivos |
-| `npm test` | tests del contenido, rutas equivalentes y contrato de contacto |
-| `npm run build` | build optimizado y prerender estático |
-| `npm run start` | servidor del build de producción |
-| `npm run check` | lint, typecheck, tests y build en secuencia |
+| --- | --- |
+| `npm run dev` | servidor Vinext de desarrollo |
+| `npm run build` | build optimizado de producción |
+| `npm run start` | servidor del build local |
+| `npm run lint` | ESLint para fuente; excluye builds y evidencia generada |
+| `npm run typecheck` | TypeScript estricto sin emitir archivos |
+| `npm test` | suite Vitest de contenido y contratos |
+| `npm run test:e2e` | matriz Playwright configurada |
+| `npm run test:e2e:a11y` | Axe y skip link sobre rutas representativas |
+| `npm run check` | lint, typecheck, tests y build |
 
-## Estructura
+Para probar una instancia ya iniciada:
+
+```powershell
+$env:PLAYWRIGHT_BASE_URL="http://127.0.0.1:3001"
+npm run test:e2e -- --project=chromium-desktop
+```
+
+## Arquitectura vigente
 
 ```text
 app/
-├── (root)/                 # selector/detección inicial de idioma
-├── [locale]/               # layouts raíz con lang correcto
-│   ├── proyectos/ | work/  # índices y casos ES/EN
-│   ├── sobre-mi/ | about/
-│   ├── contacto/ | contact/
-│   └── privacidad/ | privacy/
-├── api/contact/            # contrato de entrega, desactivado por defecto
-├── globals.css             # tokens, tipografía y primitives
-├── portfolio.css           # composición editorial y responsive
-├── sitemap.ts
-└── robots.ts
-components/                 # navegación, selector, formulario y proyectos
-content/                    # fuente única tipada para sitio y seis proyectos
-integrations/google-apps-script/ # receptor, manifiesto y guía operativa del formulario
-lib/                        # i18n, URLs, metadata, analytics y contacto
-public/media/projects/      # derivados autorizados y manifiesto
-tests/                      # validación de modelo y contratos
-views/                      # páginas compartidas entre locales
-docs/                       # brief y fichas factuales canónicas
+├── (root)/                 # rutas canónicas ES
+├── (root-en)/              # rutas canónicas EN
+├── (v2)/ y (v2-en)/        # aliases archivados que redirigen
+├── (archive)/              # V1 preservada
+├── [locale]/               # superficie legacy/redirects
+├── api/                    # contacto y administración de analytics
+├── globals.css
+├── robots.ts
+└── sitemap.ts
+components/v2/              # experiencia editorial vigente
+content/projects.ts         # fuente tipada de los seis casos
+lib/                        # metadata, i18n, analytics, loader y URLs
+public/media/               # medios locales y atribuciones
+tests/                      # Vitest
+tests/e2e/                  # Playwright + Axe
+docs/delivery/              # auditorías y planes de release
+artifacts/qa/               # evidencia generada, no fuente productiva
 ```
 
-## Variables
+## Loader y navegación
 
-Copiar `.env.example` a `.env.local`.
+El gesto de entrada de marca se ejecuta una sola vez por pestaña/sesión. La clave vive en `sessionStorage`; navegaciones posteriores conservan el contenido inmediato y no repiten la transición bloqueante. Un bootstrap pequeño evita el flash previo a hidratación y los layouts raíz declaran esa mutación controlada.
 
-| Variable | Valor local | Uso |
-|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | base para canonical, Open Graph y sitemap |
-| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | bloquea indexación en local; la publicación verificada en el dominio propio usa `true` |
-| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | usar `google-analytics` en producción; sin una configuración válida el adaptador es inerte |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | vacío | identificador público `G-…` de la propiedad; nunca acepta IDs arbitrarios |
-| `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | habilita `debug_mode` únicamente durante una verificación controlada |
-| `CONTACT_PROVIDER` | `disabled` | usar `google-apps-script` sólo después de autorizar y probar la app web |
-| `CONTACT_WEBHOOK_URL` | vacío | URL HTTPS de la implementación de Apps Script terminada en `/exec` |
-| `CONTACT_WEBHOOK_SECRET` | vacío | secreto de 32 caracteres o más, idéntico en Sites y en las propiedades del script; nunca se versiona |
-| `CONTACT_RECIPIENT_EMAIL` | `alegfink@gmail.com` | email confirmado de recepción; no habilita el formulario por sí solo |
+La navegación usa anchors nativos mientras Vinext mantenga la incompatibilidad documentada con el router cliente. Los redirects canónicos están centralizados en `next.config.ts`.
 
-### Contrato de contacto
+## Metadata e indexación
 
-Mientras la configuración siga incompleta:
+`lib/metadata.ts` centraliza títulos, descripciones, canonical, Open Graph, Twitter Card y alternates `es`, `en` y `x-default`. La política segura exige simultáneamente:
 
-- el email público funciona mediante un enlace `mailto:`;
-- el diagnóstico de diez pasos puede completarse, recorrerse hacia atrás y revisarse en español o inglés;
-- reúne objetivo principal, punto de partida, frenos, audiencia y acción, atributos de marca, soluciones buscadas, inversión actual opcional, plazo, etapa de decisión, datos de contacto y contexto abierto;
-- las selecciones múltiples se limitan a tres prioridades y cada bloque admite una alternativa escrita cuando corresponde;
-- las respuestas permanecen sólo en el estado de React de la pantalla: no se guardan en `localStorage`, cookies ni servicios externos;
-- únicamente el botón final se muestra inactivo y explica la autorización pendiente;
-- no se envían ni almacenan mensajes;
-- `POST /api/contact` responde `503 CONTACT_DISABLED` antes de leer el body;
-- no se muestra un éxito falso ni un email inventado.
+1. `NEXT_PUBLIC_INDEXING_ENABLED=true`;
+2. `NEXT_PUBLIC_SITE_URL` con hostname `alejandrofink.com` o `www.alejandrofink.com`.
 
-El flujo elegido no suma un servicio pago: Sites valida y reenvía a una aplicación de Google Apps Script; el receptor vuelve a validar, registra la consulta en una hoja privada y usa Google Mail para avisar a `alegfink@gmail.com`. La hoja creada es [Portfolio — Consultas de contacto](https://docs.google.com/spreadsheets/d/1fl2mZywov2_JLjJhA07EXMfGxQ8_qpfVI1P667KU2QI/edit) y conserva el mensaje aunque falle la notificación.
+Por lo tanto local y Preview permanecen en `noindex` aunque se copie accidentalmente el flag. El sitemap contiene sólo las ocho rutas canónicas y usa español como `x-default`.
 
-La protección sin servicios externos combina:
+## Variables principales
 
-- honeypot con respuesta silenciosa;
-- tiempo mínimo y vencimiento del formulario;
-- validación duplicada en Sites y Apps Script;
-- origen exacto y secreto servidor a servidor;
-- límite de ráfaga con clave IP anonimizada y no persistente;
-- ID idempotente para evitar filas y emails duplicados;
-- neutralización de formula injection antes de escribir en Sheets.
+| Variable | Valor local recomendado | Uso |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | canonical y metadata absoluta |
+| `NEXT_PUBLIC_INDEXING_ENABLED` | `false` | indexación, sólo activable en dominio oficial |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `disabled` | usar `google-analytics` únicamente en producción verificada |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | vacío | ID público `G-…` |
+| `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | depuración temporal controlada |
+| `CONTACT_PROVIDER` | `disabled` | integración heredada, no requerida por los CTAs actuales |
 
-La política de privacidad describe el proveedor, la finalidad, el acceso, los campos y una conservación máxima de 12 meses con eliminación manual. La guía de activación y recuperación está en [`integrations/google-apps-script/README.md`](integrations/google-apps-script/README.md).
+Consultar `.env.example` para el contrato completo.
 
-### Contrato de analytics
+## Contenido y claims
 
-`lib/analytics.ts` y `components/analytics-provider.tsx` implementan GA4 con Consent Mode: el script sólo carga después de aceptar y deja denegados almacenamiento publicitario, Google Signals y personalización. Las vistas App Router se registran manualmente para evitar duplicados.
+- Torvena permanece primero y es la evidencia operativa principal: negocio propio, catálogo, pedidos, soporte, proveedores y logística.
+- Los demás proyectos declaran su madurez real: producción, activación pendiente, experiencia operativa, MVP o prototipo.
+- No se publican conversiones, facturación, ROAS, testimonios ni resultados no documentados.
+- El footer conserva “Diseñado y desarrollado por Alejandro Fink” y su equivalente inglés.
+- Las fuentes y límites de uso de medios están en `public/media/projects/ATTRIBUTION.md`.
 
-La taxonomía cubre adquisición, páginas, secciones visibles, profundidad, tiempo activo, proyectos, casos, CTAs, Gmail/mailto, los diez pasos del diagnóstico, abandono, errores y Core Web Vitals. URLs y referentes se sanean; nombres, emails, respuestas y texto del formulario nunca se envían a Analytics. La primera atribución consentida se guarda sólo durante la sesión y se adjunta a la consulta confirmada en Sheets.
+## Accesibilidad, motion y responsive
 
-El plan operativo, las dimensiones, métricas, UTM, pruebas y blueprint para clientes se documentan en [`docs/strategy/analytics-measurement-plan.md`](docs/strategy/analytics-measurement-plan.md).
+La experiencia incluye landmarks, skip links, foco visible, targets táctiles, nombres accesibles, videos con poster y una variante completa para `prefers-reduced-motion`. El menú móvil contiene focus trap, cierre con Escape y retorno de foco. Las animaciones características se preservan; no son necesarias para acceder al contenido.
 
-## Contenido e i18n
+La matriz automatizada cubre Chromium, WebKit desktop, Pixel 7 emulado, iPhone 13 emulado y reduced motion. WebKit/iPhone son emulaciones y no sustituyen una pasada manual en hardware Apple real.
 
-- Una entidad canónica por proyecto con campos compartidos y contenido localizado.
-- Validación en runtime y tests para cantidad, IDs, orden, slugs, traducciones, decisiones y límites.
-- Rutas naturales `/es/proyectos/` y `/en/work/`.
-- Selector accesible que conserva Home, índice, casos, About, Contact y Privacy equivalentes.
-- Metadata única, canonical, alternates `es`, `en` y `x-default`, Open Graph, sitemap y robots.
-- Las rutas cruzadas, slugs inexistentes y URLs fuera del sitemap entregan 404.
+## Seguridad y rendimiento
 
-## Diseño y calidad
+Las respuestas agregan CSP, HSTS, protección de MIME, referrer policy, permisos restringidos y bloqueo de iframes externos. `npm audit --omit=dev` debe permanecer en cero antes de release.
 
-Los tokens están documentados al inicio de `app/globals.css`: marfil cálido, tinta casi negra, azul cobalto de acción, Instrument Sans Variable, Newsreader Variable y mono de sistema para metadata.
+Lighthouse se ejecuta tres veces por perfil y se reporta por mediana. La medición definitiva debe repetirse sobre Preview porque el servidor Vinext local entrega assets sin la compresión HTTP/2/Brotli del hosting final. No se debe deducir un score de producción a partir de una sola corrida local.
 
-La implementación apunta a WCAG 2.2 AA. Incluye HTML semántico, skip link, foco visible, navegación por teclado, targets táctiles, mensajes `aria-live`, alt text por idioma y una experiencia completa con `prefers-reduced-motion`.
+## Gate de publicación
 
-La referencia de rendimiento vigente usada es: LCP ≤ 2.5 s, INP ≤ 200 ms y CLS ≤ 0.1 al percentil 75 en mobile y desktop. Ver [Web Vitals](https://web.dev/articles/vitals) y [WCAG 2 Overview](https://www.w3.org/WAI/standards-guidelines/wcag/).
+`npm run check` y la matriz local no autorizan por sí mismos una publicación. El flujo es:
 
-Las imágenes de proyectos que están fuera del primer viewport cargan de forma diferida para no competir con el contenido inicial. La medición final de Core Web Vitals requiere ejecutar Lighthouse/PageSpeed sobre la publicación y, más adelante, observar datos reales de usuarios.
+1. candidato local verificado;
+2. Preview en `noindex`, con autorización separada;
+3. smoke y re-QA sobre Preview;
+4. deploy productivo autorizado;
+5. activación del flag de indexación sólo en el dominio oficial;
+6. verificación de robots, sitemap, canonical, hreflang y Web Vitals reales.
 
-Las respuestas incluyen CSP, HSTS, bloqueo de MIME sniffing, política de referer, restricción de permisos y protección frente a iframes. La CSP limita scripts, imágenes, fuentes, formularios y conexiones a los orígenes que el sitio necesita; HSTS obliga a reutilizar HTTPS después de la primera visita segura.
-
-## Assets
-
-Las carpetas externas se trataron como solo lectura. Solo se copiaron derivados necesarios y capturas públicas sin credenciales o datos personales. El origen, permiso y límite de cada grupo de medios está en [`public/media/projects/ATTRIBUTION.md`](public/media/projects/ATTRIBUTION.md).
-
-No se usan testimonios ilustrativos de Lourdes, métricas no verificadas, capturas administrativas ni datos de formularios.
-
-## Pendientes de producción
-
-La versión pública actual no depende de estos puntos. Son bloqueadores concretos de funcionalidades o mejoras futuras:
-
-1. reunir volumen real antes de sacar conclusiones: el tablero de GA4 necesita tráfico consentido y los informes estándar pueden demorar hasta 24–48 horas;
-2. repetir la revisión manual visual, el envío real y la lectura de Core Web Vitals después de cambios importantes de contenido o medios;
-3. reemplazar el recurso gráfico de About sólo si en el futuro se aprueba un retrato definitivo;
-4. el dominio propio de Brisa do Mar sigue pendiente; mientras tanto el caso conserva su URL operativa actual.
+La auditoría y el estado de preparación para Awwwards se mantienen en `docs/delivery/awwwards-readiness-audit.md`.

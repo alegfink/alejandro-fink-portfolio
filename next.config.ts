@@ -15,7 +15,6 @@ const contentSecurityPolicy = [
   "media-src 'self'",
   "manifest-src 'self'",
   "worker-src 'self' blob:",
-  ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const nextConfig: NextConfig = {
@@ -30,6 +29,15 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/es", destination: "/", permanent: true },
+      { source: "/es/proyectos/:slug", destination: "/proyectos#:slug", permanent: true },
+      { source: "/es/proyectos", destination: "/proyectos", permanent: true },
+      { source: "/es/sobre-mi", destination: "/acerca-de", permanent: true },
+      { source: "/es/privacidad", destination: "/privacidad", permanent: true },
+      { source: "/es/contacto", destination: "/acerca-de", permanent: true },
+      { source: "/en/work/:slug", destination: "/en/projects#:slug", permanent: true },
+      { source: "/en/work", destination: "/en/projects", permanent: true },
+      { source: "/en/contact", destination: "/en/about", permanent: true },
       { source: "/v2", destination: "/", permanent: true },
       { source: "/v2/proyectos", destination: "/proyectos", permanent: true },
       { source: "/v2/acerca-de", destination: "/acerca-de", permanent: true },

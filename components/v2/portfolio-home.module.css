@@ -1858,9 +1858,9 @@
   overflow: hidden;
   border: 1px solid rgb(64 37 30 / 35%);
   border-radius: clamp(30px, 3.1vw, 58px);
-  background: #ff6848;
+  background: #ef5737;
   box-shadow: 0 34px 90px rgb(72 37 27 / 15%);
-  opacity: .3;
+  opacity: 1;
   transform: translate3d(0, 70px, 0) scale(.985);
   transition:
     opacity 780ms cubic-bezier(.22, 1, .36, 1),

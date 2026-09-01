@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function PortfolioV2EnglishLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body><AnalyticsProvider /><PortfolioV2Loader>{children}</PortfolioV2Loader></body>
     </html>
   );
