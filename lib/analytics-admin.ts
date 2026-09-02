@@ -2,8 +2,7 @@ import { getSiteUrl } from "@/lib/urls";
 
 export const ANALYTICS_ADMIN_SESSION_COOKIE = "af-admin-ga-session-v1";
 export const ANALYTICS_ADMIN_OAUTH_COOKIE = "af-admin-ga-oauth-v1";
-export const GOOGLE_ANALYTICS_PANEL_URL =
-  "https://analytics.google.com/analytics/web/#/a404062247p549251072/reports/intelligenthome";
+export const GOOGLE_ANALYTICS_PANEL_URL = "https://analytics.google.com/analytics/web/";
 
 const SESSION_VERSION = 1;
 const sessionLifetimeSeconds = 60 * 60 * 24 * 30;

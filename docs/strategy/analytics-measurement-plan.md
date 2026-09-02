@@ -3,8 +3,8 @@
 Fecha de baseline: 2026-08-29
 Responsable: Alejandro Fink  
 Propiedad: `Alejandro Fink — Portfolio`  
-Property ID: `549251072`
-Measurement ID: `G-E0WZCBNV1W`
+- Property ID: configuración privada del servidor (`GOOGLE_ANALYTICS_PROPERTY_ID`).
+- Measurement ID: configuración pública del sitio (`NEXT_PUBLIC_GA_MEASUREMENT_ID`).
 
 ## Objetivo de negocio
 

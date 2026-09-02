@@ -11,7 +11,34 @@
 # local configuration
 .env*
 !.env.example
-!.env.production
+
+# private portfolio operations (never publish from this repository)
+/.agents/
+/.codex-remote-attachments/
+/00_SISTEMA/
+/01_PERFIL_Y_POSICIONAMIENTO/
+/02_EVIDENCIA_Y_PROYECTOS/
+/03_SERVICIOS_Y_OFERTAS/
+/04_ESTRATEGIA_DE_CARRERA/
+/05_CRITERIOS_DE_OPORTUNIDAD/
+/06_ACTIVOS_PROFESIONALES/
+/07_SKILLS/
+/08_PIPELINES/
+/09_METRICAS_Y_APRENDIZAJE/
+/10_DESARROLLO_DE_HABILIDADES/
+/99_ARCHIVO/
+/aportes-ale/
+/AGENTS.md
+/CV_*.pdf
+
+# local source material and generated working files
+/assets/
+/scripts/
+/output/
+/outputs/
+/tmp/
+/work33_sheet/
+/artifacts/brand/
 
 # test and tooling output
 /coverage

@@ -50,7 +50,8 @@ En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usar `np
 | `npm test` | suite Vitest de contenido y contratos |
 | `npm run test:e2e` | matriz Playwright configurada |
 | `npm run test:e2e:a11y` | Axe y skip link sobre rutas representativas |
-| `npm run check` | lint, typecheck, tests y build |
+| `npm run check:public-repo` | bloquea archivos privados, configuraciones productivas y localizadores internos |
+| `npm run check` | límite público, lint, typecheck, tests y build |
 
 Para probar una instancia ya iniciada:
 
@@ -108,7 +109,7 @@ Por lo tanto local y Preview permanecen en `noindex` aunque se copie accidentalm
 | `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | depuración temporal controlada |
 | `CONTACT_PROVIDER` | `disabled` | integración heredada, no requerida por los CTAs actuales |
 
-Consultar `.env.example` para el contrato completo.
+Consultar `.env.example` para el contrato completo. El repositorio no versiona archivos `.env.production`: los valores de producción se administran en Sites y los secretos nunca se guardan en el árbol de código.
 
 ## Contenido y claims
 

@@ -4,7 +4,7 @@ Esta integración recibe el diagnóstico comercial validado de `POST /api/contac
 
 ## Recursos
 
-- Hoja privada: `https://docs.google.com/spreadsheets/d/1fl2mZywov2_JLjJhA07EXMfGxQ8_qpfVI1P667KU2QI/edit`
+- Hoja privada: configurada fuera del repositorio. Su URL y su identificador no se versionan.
 - Código: `Code.gs`
 - Manifiesto: `appsscript.json`
 
