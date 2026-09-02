@@ -11,7 +11,9 @@ export default defineConfig([
     "coverage/**",
     "dist/**",
     "node_modules/**",
+    "scripts/**",
     "tmp/**",
+    "work33_sheet/**",
     "next-env.d.ts",
   ]),
 ]);
