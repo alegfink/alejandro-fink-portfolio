@@ -36,6 +36,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
+    "vite.config.ts",
     "node_modules",
     "output",
     "outputs",
