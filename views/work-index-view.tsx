@@ -15,7 +15,7 @@ export function WorkIndexView({ locale }: { locale: Locale }) {
           <h1>{copy.workIndex.title}</h1>
           <p>{copy.workIndex.intro}</p>
         </div>
-        <div className="page-hero__index-strip" aria-hidden="true"><span>06</span><span>{locale === "es" ? "PROYECTOS SELECCIONADOS" : "SELECTED PROJECTS"}</span></div>
+        <div className="page-hero__index-strip" aria-hidden="true"><span>{String(projects.length).padStart(2, "0")}</span><span>{locale === "es" ? "PROYECTOS SELECCIONADOS" : "SELECTED PROJECTS"}</span></div>
       </section>
       <section className="work-index shell" data-analytics-section="work-list" aria-label={locale === "es" ? "Lista de proyectos" : "Project list"}>
         {projects.map((project) => <ProjectCard key={project.id} project={project} locale={locale} placement="index" featured={project.caseType === "full"} />)}

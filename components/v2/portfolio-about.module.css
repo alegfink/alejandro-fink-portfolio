@@ -395,8 +395,8 @@
 .footer a { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; }
 .footer a:hover { color: #d94e31; }
 
-[data-about-reveal] { opacity: 0; filter: blur(8px); transform: translateY(42px); transition: opacity 900ms cubic-bezier(.22, 1, .36, 1), filter 900ms cubic-bezier(.22, 1, .36, 1), transform 900ms cubic-bezier(.22, 1, .36, 1); }
-[data-about-reveal][data-visible="true"] { opacity: 1; filter: blur(0); transform: translateY(0); }
+.page [data-about-reveal] { opacity: 0; filter: blur(8px); transform: translateY(42px); transition: opacity 900ms cubic-bezier(.22, 1, .36, 1), filter 900ms cubic-bezier(.22, 1, .36, 1), transform 900ms cubic-bezier(.22, 1, .36, 1); }
+.page [data-about-reveal][data-visible="true"] { opacity: 1; filter: blur(0); transform: translateY(0); }
 
 @media (max-width: 980px) {
   .principle { grid-template-columns: 1fr; }
@@ -546,7 +546,7 @@
   .storyStep { opacity: 1; filter: none; transform: none; transition: none; }
   .storyMedia { transition: none; }
   .storyMedia img { transform: none; }
-  [data-about-reveal] { opacity: 1; filter: none; transform: none; transition: none; }
+  .page [data-about-reveal] { opacity: 1; filter: none; transform: none; transition: none; }
   .headerButton,
   .headerWordViewport > span,
   .presentGrid li,

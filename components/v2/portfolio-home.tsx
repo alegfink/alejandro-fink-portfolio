@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { NativeLink as Link } from "@/components/v2/native-link";
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { projects, type Project, type ProjectMedia } from "@/content/projects";
 import { HeroLab } from "@/components/v2/hero-lab";
 import { AmbientVideo } from "@/components/v2/ambient-video";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
+import { GastonHeroPreview } from "@/components/v2/gaston-hero-preview";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
@@ -22,11 +24,11 @@ const projectById = new Map(projects.map((project) => [project.id, project]));
 const projectCollectionConfig = {
   es: [
     { number: "01", label: "E-commerce & conversión", title: "Páginas que convierten interés en una próxima acción", description: "Tienda, catálogo y decisión conectados para que la experiencia no termine en una pieza aislada.", projectIds: ["torvena", "brisa-do-mar", "cuidalo"] },
-    { number: "02", label: "Experiencia & relato", title: "Páginas que hacen que quieras seguir recorriendo", description: "Dirección visual, ritmo y narrativa para construir una primera impresión que se sostiene más allá del hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada"] },
+    { number: "02", label: "Experiencia & relato", title: "Páginas que hacen que quieras seguir recorriendo", description: "Dirección visual, ritmo y narrativa para construir una primera impresión que se sostiene más allá del hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada", "gaston-coronel"] },
   ],
   en: [
     { number: "01", label: "E-commerce & conversion", title: "Pages that turn interest into a next action", description: "Store, catalog and decision-making work together, so the experience becomes more than an isolated page.", projectIds: ["torvena", "brisa-do-mar", "cuidalo"] },
-    { number: "02", label: "Experience & story", title: "Pages that make you want to keep exploring", description: "Art direction, rhythm and narrative that sustain a first impression beyond the hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada"] },
+    { number: "02", label: "Experience & story", title: "Pages that make you want to keep exploring", description: "Art direction, rhythm and narrative that sustain a first impression beyond the hero.", projectIds: ["luca-ds", "salto-cuantico", "lourdes-mirada", "gaston-coronel"] },
   ],
 } as const;
 
@@ -181,6 +183,7 @@ function ProjectFolderPreview({ project, media, locale }: Readonly<{ project: Pr
         <div className={styles.projectSiteViewport}>
           {project.id === "lourdes-mirada"
             ? <LourdesHeroPreview locale={locale} />
+            : project.id === "gaston-coronel" ? <GastonHeroPreview locale={locale} />
             : <ProjectPreviewMedia media={media} locale={locale} />}
         </div>
       </div>
@@ -323,6 +326,83 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
   const [headerAwake, setHeaderAwake] = useState(false);
   const [activeStoryIndex, setActiveStoryIndex] = useState(0);
   const [emailCopied, setEmailCopied] = useState(false);
+  const [previewProject, setPreviewProject] = useState<Project | null>(null);
+  const previewSequence = projectCollections.flatMap((collection) => collection.projects);
+  const previewIndex = previewSequence.findIndex((project) => project.id === previewProject?.id);
+  const previousPreview = previewSequence[previewIndex - 1];
+  const nextPreview = previewSequence[previewIndex + 1];
+  const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const previewTriggerRef = useRef<HTMLAnchorElement | null>(null);
+  const previewPanelRef = useRef<HTMLElement | null>(null);
+  const suppressPreviewFocusRef = useRef(false);
+  const previewFocusScrollUntilRef = useRef(0);
+
+  const cancelPreviewTimer = () => {
+    if (previewTimerRef.current !== null) clearTimeout(previewTimerRef.current);
+    previewTimerRef.current = null;
+  };
+  const closePreview = () => {
+    cancelPreviewTimer();
+    setPreviewProject(null);
+  };
+  const movePreview = (project: Project) => {
+    cancelPreviewTimer();
+    setPreviewProject(project);
+    // Keep keyboard focus in the panel even when an end arrow disappears.
+    previewPanelRef.current?.focus({ preventScroll: true });
+  };
+  const leavePreview = (preserveFocus = true) => {
+    cancelPreviewTimer();
+    previewTimerRef.current = setTimeout(() => {
+      if (!preserveFocus || (!previewPanelRef.current?.contains(document.activeElement)
+        && document.activeElement !== previewTriggerRef.current)) setPreviewProject(null);
+    }, 350);
+  };
+  const showPreview = (project: Project, trigger: HTMLAnchorElement, keyboard = false) => {
+    if (suppressPreviewFocusRef.current || !window.matchMedia("(min-width: 701px)").matches) return;
+    if (!keyboard && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    cancelPreviewTimer();
+    previewTriggerRef.current = trigger;
+    if (keyboard) {
+      // Native focus can smoothly reveal the card; keep its preview through that scroll.
+      previewFocusScrollUntilRef.current = performance.now() + 800;
+      setPreviewProject(project);
+    }
+    else previewTimerRef.current = setTimeout(() => setPreviewProject(project), 160);
+  };
+
+  useEffect(() => {
+    const dismiss = () => {
+      if (previewTimerRef.current !== null) clearTimeout(previewTimerRef.current);
+      setPreviewProject(null);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) dismiss();
+      if (event.key !== "Escape") return;
+      if (previewPanelRef.current?.contains(document.activeElement)) {
+        suppressPreviewFocusRef.current = true;
+        previewTriggerRef.current?.focus({ preventScroll: true });
+        suppressPreviewFocusRef.current = false;
+      }
+      dismiss();
+    };
+    const onScroll = () => {
+      if (performance.now() >= previewFocusScrollUntilRef.current) dismiss();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", dismiss, { passive: true });
+    window.addEventListener("resize", dismiss);
+    window.addEventListener("blur", dismiss);
+    return () => {
+      if (previewTimerRef.current !== null) clearTimeout(previewTimerRef.current);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", dismiss);
+      window.removeEventListener("resize", dismiss);
+      window.removeEventListener("blur", dismiss);
+    };
+  }, []);
 
   useEffect(() => {
     const root = pageRef.current;
@@ -518,7 +598,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         const travel = Math.max(1, scene.offsetHeight - window.innerHeight);
         const progress = clamp(-rect.top / travel);
         const stage = scene.querySelector<HTMLElement>("[data-folder-stage]");
-        const cards = Array.from(scene.querySelectorAll<HTMLElement>("[data-folder-page]"));
+        const cards = Array.from(scene.querySelectorAll<HTMLElement>("[data-folder-page]")).filter((card) => !isMobile || card.dataset.mobileFolderVisible === "true");
         if (!stage || cards.length === 0) return;
 
         const arrival = smoothstep(.02, .2, progress);
@@ -539,11 +619,12 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         scene.style.setProperty("--folder-copy-opacity", `${(1 - copyExit * .72).toFixed(4)}`);
 
         cards.forEach((card, index) => {
-          const direction = index - 1;
+          const center = (cards.length - 1) / 2;
+          const direction = (index - center) / Math.max(1, center);
           const initialX = direction * (isMobile ? 7 : 12);
           const targetX = isMobile ? direction * 16 : direction * spread;
           const initialY = 92 + Math.abs(direction) * 12;
-          const targetY = isMobile ? direction * 112 : index === 1 ? -18 : 4;
+          const targetY = isMobile ? direction * 112 : Math.abs(direction) < .4 ? -18 : 4;
           const x = initialX + (targetX - initialX) * fan;
           const y = (1 - arrival) * 110 + initialY * (1 - fan) + targetY * fan - exit * 58;
           const rotation = direction * 4.4 * (1 - fan) + (isMobile ? direction * 1.2 * fan : 0);
@@ -578,6 +659,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
     if (!section) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const stage = section.querySelector<HTMLElement>("[data-benefits-stage]");
     const proof = section.querySelector<HTMLElement>("[data-benefits-proof]");
     const proofHeading = proof?.querySelector<HTMLElement>("h3");
     const benefitItems = Array.from(section.querySelectorAll<HTMLElement>("[data-benefit-item]"));
@@ -608,26 +690,35 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
     const updateBenefits = () => {
       benefitsFrameRef.current = null;
       const rect = section.getBoundingClientRect();
-      const travel = Math.max(1, section.offsetHeight - window.innerHeight);
-      const progress = clamp(-rect.top / travel);
+      const isNarrow = window.innerWidth <= 700;
+      // Keep the introduction's pace, then spend scroll distance only on
+      // visible reading. Release the sticky stage as soon as the last item is read.
+      const timelineTravel = window.innerHeight * (isNarrow ? 4.7 : 5.6);
+      const scrollDistance = Math.max(0, -rect.top);
+      const readingStart = timelineTravel * strengthRevealRanges[0].textEnd;
+      const readingTravel = proof
+        ? Math.max(0, proof.offsetTop + proof.offsetHeight - window.innerHeight * .88)
+        : 0;
+      const pinDistance = isNarrow
+        ? timelineTravel * mobileStrengthRevealRanges.at(-1)!.textEnd
+        : readingStart + readingTravel;
+      const journeyHeight = (stage?.offsetHeight ?? window.innerHeight) + pinDistance;
+      section.style.setProperty("--benefits-journey-height", `${journeyHeight.toFixed(2)}px`);
+      const progress = clamp(Math.min(scrollDistance, pinDistance) / timelineTravel);
       const entryProgress = clamp((window.innerHeight - rect.top) / Math.max(1, window.innerHeight));
       const wordTravel = smoothstep(.04, .88, entryProgress);
       const wordsIn = smoothstep(.02, .3, entryProgress);
-      const isNarrow = window.innerWidth <= 700;
       const introTiming = getBenefitsIntroTiming(isNarrow);
       const answerIn = smoothstep(introTiming.answerEnter.start, introTiming.answerEnter.end, progress);
       const answerOut = smoothstep(introTiming.answerExit.start, introTiming.answerExit.end, progress);
-      const photoJourney = smoothstep(isNarrow ? .57 : .66, isNarrow ? .88 : .92, progress);
+      const readingScroll = Math.min(readingTravel, Math.max(0, scrollDistance - readingStart));
+      const photoJourney = isNarrow ? 0 : smoothstep(0, Math.max(1, readingTravel), readingScroll);
       const proofIn = smoothstep(introTiming.proofEnter.start, introTiming.proofEnter.end, progress);
-      const proofTravel = smoothstep(.66, .92, progress);
-      const proofOut = smoothstep(isNarrow ? .855 : .875, isNarrow ? .965 : .985, progress);
       const photoY = isNarrow ? 7 - photoJourney * 18 : 2 - photoJourney * 5;
       const photoScale = isNarrow ? 1.22 - photoJourney * .12 : 1.08 - photoJourney * .045;
-      const portraitHeight = window.innerWidth * (1672 / 941);
-      const photoCropTravelVh = Math.max(0, ((portraitHeight - window.innerHeight) / window.innerHeight) * 62);
-      const proofY = (1 - proofIn) * 72 - proofOut * 44;
+      const proofY = (1 - proofIn) * 72;
 
-      section.style.setProperty("--benefits-progress", progress.toFixed(4));
+      section.style.setProperty("--benefits-progress", clamp(scrollDistance / Math.max(1, pinDistance)).toFixed(4));
       section.style.setProperty("--benefits-entry-progress", entryProgress.toFixed(4));
       section.style.setProperty("--benefits-photo-position-y", `${(16 + photoJourney * 62).toFixed(2)}%`);
       section.style.setProperty("--benefits-photo-y", `${photoY.toFixed(2)}vh`);
@@ -642,50 +733,46 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
       );
       section.style.setProperty("--benefits-answer-opacity", `${(answerIn * (1 - answerOut)).toFixed(4)}`);
       section.style.setProperty("--benefits-answer-y", `${((1 - answerIn) * 28 - answerOut * 26).toFixed(2)}px`);
-      section.style.setProperty("--benefits-proof-opacity", `${(proofIn * (1 - proofOut)).toFixed(4)}`);
+      section.style.setProperty("--benefits-proof-opacity", proofIn.toFixed(4));
       section.style.setProperty("--benefits-proof-y", `${proofY.toFixed(2)}px`);
 
-      const benefitRevealStartY = window.innerHeight * .92;
-      const benefitRevealCompleteY = window.innerHeight * .5;
-      const benefitRevealDistance = Math.max(1, benefitRevealStartY - benefitRevealCompleteY);
+      if (!isNarrow) {
+        section.style.setProperty("--benefits-proof-scroll-y", `${(-readingScroll).toFixed(2)}px`);
+      }
 
       const benefitEnterProgresses: number[] = [];
 
       benefitItems.forEach((item, itemIndex) => {
-        const itemTop = item.getBoundingClientRect().top;
-        const rawViewportProgress = clamp((benefitRevealStartY - itemTop) / benefitRevealDistance);
+        // Use untransformed layout geometry so fast or reverse scrolling never
+        // reads positions left over from the previous animation frame.
+        const itemTop = (proof?.offsetTop ?? 0) + item.offsetTop - readingScroll;
+        const rawViewportProgress = clamp(
+          (window.innerHeight * .98 - itemTop) / Math.max(1, item.offsetHeight + window.innerHeight * .06),
+        );
         const activeRevealRanges = isNarrow ? mobileStrengthRevealRanges : strengthRevealRanges;
         const revealRange = activeRevealRanges[itemIndex] ?? activeRevealRanges.at(-1)!;
         const revealDuration = Math.max(.0001, revealRange.textEnd - revealRange.titleStart);
         const scrollDrivenProgress = clamp((progress - revealRange.titleStart) / revealDuration);
-        const headlineGate = itemIndex === 0
-          ? smoothstep(introTiming.firstItemGate.start, introTiming.firstItemGate.end, progress)
-          : 1;
-        // On narrow viewports the stacked cards can enter the physical viewport
-        // before the proof headline has finished. Keep mobile on one shared,
-        // top-to-bottom timeline so a later card can never overtake the title or
-        // a preceding card. Desktop keeps the viewport assist for its wider,
-        // less vertically constrained composition.
-        const viewportProgress = isNarrow
+        const firstItemComplete = clamp(
+          (progress - strengthRevealRanges[0].titleStart)
+          / (strengthRevealRanges[0].textEnd - strengthRevealRanges[0].titleStart),
+        );
+        const viewportProgress = isNarrow || itemIndex === 0
           ? scrollDrivenProgress
-          : Math.max(rawViewportProgress * headlineGate, scrollDrivenProgress);
+          : Math.min(rawViewportProgress, firstItemComplete);
         const enter = smoothstep(0, .16, viewportProgress);
         benefitEnterProgresses.push(enter);
-        const opacity = enter * (1 - proofOut);
-        const y = (1 - enter) * 18 - proofOut * 62;
-        const blur = proofOut * 5;
         item.dataset.benefitViewportProgress = viewportProgress.toFixed(4);
-        item.style.setProperty("--benefit-opacity", opacity.toFixed(4));
-        item.style.setProperty("--benefit-y", `${y.toFixed(2)}px`);
-        item.style.setProperty("--benefit-blur", `${blur.toFixed(2)}px`);
+        item.style.setProperty("--benefit-opacity", enter.toFixed(4));
+        item.style.setProperty("--benefit-y", `${((1 - enter) * 18).toFixed(2)}px`);
+        item.style.setProperty("--benefit-blur", "0px");
       });
 
       if (isNarrow && proof && proofHeading) {
-        const proofRect = proof.getBoundingClientRect();
-        let revealedBottom = proofHeading.getBoundingClientRect().bottom - proofRect.top;
+        let revealedBottom = proofHeading.offsetTop + proofHeading.offsetHeight;
 
         benefitItems.forEach((item, itemIndex) => {
-          const itemBottom = item.getBoundingClientRect().bottom - proofRect.top;
+          const itemBottom = item.offsetTop + item.offsetHeight;
           const enter = benefitEnterProgresses[itemIndex] ?? 0;
           revealedBottom += (itemBottom - revealedBottom) * enter;
         });
@@ -695,10 +782,6 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         const requiredTravelPx = Math.max(0, visibleContentBottom - bottomLimit);
         const maxTravelPx = window.innerHeight * .7;
         const proofScrollY = -Math.min(requiredTravelPx, maxTravelPx) / window.innerHeight * 100;
-        section.style.setProperty("--benefits-proof-scroll-y", `${proofScrollY.toFixed(2)}vh`);
-      } else {
-        const proofTravelVh = photoCropTravelVh + 5;
-        const proofScrollY = -proofTravel * proofTravelVh;
         section.style.setProperty("--benefits-proof-scroll-y", `${proofScrollY.toFixed(2)}vh`);
       }
 
@@ -969,7 +1052,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                   data-story-chapter
                   key={chapter.number}
                 >
-                  <p>{chapter.number} · {chapter.label}</p>
+                  <p>{chapter.label}</p>
                   <h2 id={index === 0 ? "story-title" : undefined}>{chapter.copy}</h2>
                 </article>
               ))}
@@ -984,7 +1067,6 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                 <span className={styles.storyProgressFill} />
                 <span className={styles.storyProgressDot} />
               </span>
-              <span className={styles.storyRailNumber}>0{activeStoryIndex + 1}</span>
             </div>
 
           </div>
@@ -998,11 +1080,12 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                 key={collection.number}
                 aria-labelledby={`project-collection-${collection.number}`}
                 data-project-scene
+                style={{ "--folder-card-width": collection.projects.length > 3 ? "24%" : "31%" } as CSSProperties}
                 ref={(node) => { projectSceneRefs.current[collectionIndex] = node; }}
               >
                 <div className={styles.projectFolderStage} data-folder-stage>
                   <header className={styles.projectFolderCopy}>
-                    <p><span>{collection.number}</span>{collection.label}</p>
+                    <p>{collection.label}</p>
                     <StaggeredProjectTitle text={collection.title} id={`project-collection-${collection.number}`} />
                     <p>{collection.description}</p>
                   </header>
@@ -1019,15 +1102,16 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                         const media = project.media[0];
                         const projectStyle = {
                           "--project-accent": project.accent,
-                          "--folder-card-layer": 3 - projectIndex,
+                          "--folder-card-layer": collection.projects.length - projectIndex,
                         } as CSSProperties;
 
                         return (
                           <article
                             className={styles.projectFolderPage}
                             data-folder-page
+                            data-mobile-folder-visible={collection.projects.filter((item) => item.id !== "salto-cuantico").slice(0, 3).some((item) => item.id === project.id)}
                             data-project-preview-id={project.id}
-                            data-project-preview-position={collectionIndex * 3 + projectIndex + 1}
+                            data-project-preview-position={projectCollections.slice(0, collectionIndex).reduce((count, group) => count + group.projects.length, 0) + projectIndex + 1}
                             key={project.id}
                             style={projectStyle}
                             aria-label={content.title}
@@ -1036,6 +1120,24 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
                               className={styles.projectPreviewLink}
                             >
                               <ProjectFolderPreview project={project} media={media} locale={locale} />
+                              <Link
+                                className={styles.projectFolderCaseLink}
+                                href={`${getV2Path(locale, "projects")}#${project.id}`}
+                                aria-label={`${locale === "es" ? "Ver proyecto" : "View project"}: ${content.title}`}
+                                aria-details={previewProject?.id === project.id ? "project-quick-preview" : undefined}
+                                onPointerEnter={(event) => {
+                                  if (event.pointerType === "mouse") showPreview(project, event.currentTarget);
+                                }}
+                                onPointerLeave={() => leavePreview(false)}
+                                onFocus={(event) => showPreview(project, event.currentTarget, true)}
+                                onBlur={() => leavePreview()}
+                                onClick={closePreview}
+                              >
+                                <span className={styles.projectFolderCaseHint} aria-hidden="true">
+                                  {locale === "es" ? "Ver proyecto" : "View project"}
+                                  <span>→</span>
+                                </span>
+                              </Link>
                             </div>
                           </article>
                         );
@@ -1077,7 +1179,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
             "--benefits-proof-scroll-y": "0vh",
           } as CSSProperties}
         >
-          <div className={styles.benefitsStage}>
+          <div className={styles.benefitsStage} data-benefits-stage>
             <div className={styles.benefitsMedia} aria-hidden="true">
               <Image
                 className={styles.benefitsMainImage}
@@ -1108,13 +1210,16 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
             </p>
 
             <div className={styles.benefitsSubjectMask} aria-hidden="true">
-              <Image
-                className={styles.benefitsSubjectImage}
-                src="/media/v2/benefits-subject-cutout-v4.webp"
-                alt=""
-                fill
-                sizes="100vw"
-              />
+              <div className={styles.benefitsSubjectPhoto}>
+                <Image
+                  className={styles.benefitsSubjectImage}
+                  src="/media/v2/benefits-mountain-warm-v3.webp"
+                  alt=""
+                  fill
+                  sizes="100vw"
+                />
+                <span className={`${styles.benefitsMediaWash} ${styles.benefitsSubjectWash}`} />
+              </div>
             </div>
 
             <header className={`${styles.benefitsKinetic} ${styles.benefitsKineticForeground}`} aria-hidden="true">
@@ -1167,8 +1272,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           <div className={styles.closingCtaShell}>
             <header className={styles.closingCtaIntro}>
               <p className={styles.closingCtaEyebrow}>
-                <span>04</span>
-                <span>{copy.ctaEyebrow}</span>
+                {copy.ctaEyebrow}
               </p>
               <h2 id="closing-cta-title">
                 {copy.ctaTitle}
@@ -1216,7 +1320,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
         </div>
 
         <div className={styles.footerTopline}>
-          <p><span>05</span> {copy.footerEyebrow}</p>
+          <p>{copy.footerEyebrow}</p>
           <BrandMark />
         </div>
 
@@ -1230,17 +1334,14 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
 
         <nav className={styles.footerNav} aria-label={copy.footerNav}>
           <a href="#contenido">
-            <span>01</span>
             <strong>{shared.home}</strong>
             <i aria-hidden="true">↑</i>
           </a>
           <Link href={getV2Path(locale, "projects")}>
-            <span>02</span>
             <strong>{shared.projects}</strong>
             <i aria-hidden="true">↗</i>
           </Link>
           <Link href={getV2Path(locale, "about")}>
-            <span>03</span>
             <strong>{shared.about}</strong>
             <i aria-hidden="true">↗</i>
           </Link>
@@ -1257,6 +1358,7 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           <nav className={styles.footerContactLinks} aria-label={copy.contactNav}>
             <V2TrackedContactLink channel="whatsapp" href={whatsappContactUrl(locale)} locale={locale} placement="footer" target="_blank" rel="noreferrer">WhatsApp</V2TrackedContactLink>
             <V2TrackedContactLink channel="linkedin" href={v2ContactProfiles.linkedin} locale={locale} placement="footer" target="_blank" rel="noreferrer">LinkedIn</V2TrackedContactLink>
+            <V2TrackedContactLink channel="behance" href={v2ContactProfiles.behance} locale={locale} placement="footer" target="_blank" rel="noreferrer">Behance</V2TrackedContactLink>
             <V2TrackedContactLink channel="github" href={v2ContactProfiles.github} locale={locale} placement="footer" target="_blank" rel="noreferrer">GitHub</V2TrackedContactLink>
           </nav>
           <div className={styles.footerUtilities}>
@@ -1265,6 +1367,62 @@ export function PortfolioV2Home({ locale = "es" }: Readonly<{ locale?: Locale }>
           </div>
         </div>
       </footer>
+      {previewProject && createPortal(
+        <div className={styles.projectQuickLayer} lang={locale}>
+          <div className={styles.projectQuickBackdrop} aria-hidden="true" />
+          <section
+            className={styles.projectQuickPanel}
+            style={{ "--project-accent": previewProject.accent } as CSSProperties}
+            id="project-quick-preview"
+            aria-labelledby="project-quick-title"
+            ref={previewPanelRef}
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              const project = event.key === "ArrowLeft" ? previousPreview : event.key === "ArrowRight" ? nextPreview : undefined;
+              if (project) {
+                event.preventDefault();
+                movePreview(project);
+              }
+            }}
+            onPointerEnter={cancelPreviewTimer}
+            onPointerLeave={() => leavePreview(false)}
+            onFocus={cancelPreviewTimer}
+            onBlur={() => leavePreview()}
+          >
+            {previousPreview && <button type="button"
+              className={`${styles.projectQuickArrow} ${styles.projectQuickPrevious}`}
+              aria-label={`${locale === "es" ? "Proyecto anterior" : "Previous project"}: ${previousPreview.content[locale].title}`}
+              onClick={() => movePreview(previousPreview)}><span aria-hidden="true">←</span></button>}
+            {nextPreview && <button type="button"
+              className={`${styles.projectQuickArrow} ${styles.projectQuickNext}`}
+              aria-label={`${locale === "es" ? "Proyecto siguiente" : "Next project"}: ${nextPreview.content[locale].title}`}
+              onClick={() => movePreview(nextPreview)}><span aria-hidden="true">→</span></button>}
+            <button className={styles.projectQuickClose} type="button"
+              aria-label={locale === "es" ? "Cerrar vista rápida" : "Close quick view"}
+              onClick={() => {
+                suppressPreviewFocusRef.current = true;
+                previewTriggerRef.current?.focus({ preventScroll: true });
+                suppressPreviewFocusRef.current = false;
+                closePreview();
+              }}>×</button>
+            <div className={styles.projectQuickLink}>
+              <div className={styles.projectQuickMedia} aria-hidden="true" inert>
+                <ProjectFolderPreview key={previewProject.id} project={previewProject} media={previewProject.media[0]} locale={locale} />
+              </div>
+              <div className={styles.projectQuickContent}>
+                <p className={styles.projectQuickEyebrow}>{previewProject.content[locale].category}</p>
+                <h2 id="project-quick-title" aria-live="polite" aria-atomic="true">{previewProject.content[locale].title}</h2>
+                <p className={styles.projectQuickSummary}>{previewProject.content[locale].summary}</p>
+                <p className={styles.projectQuickStatus}>{previewProject.content[locale].statusLabel}</p>
+                <Link className={styles.projectQuickCta} href={`${getV2Path(locale, "projects")}#${previewProject.id}`}>
+                  {locale === "es" ? "Ver caso completo" : "Explore the full case"}
+                  <span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>, document.body
+      )}
     </div>
   );
 }

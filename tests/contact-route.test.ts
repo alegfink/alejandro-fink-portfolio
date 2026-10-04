@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { clearContactRateLimitForTests, POST } from "../app/api/contact/route";
+import { POST } from "../app/api/contact/route";
+import { clearContactRateLimitForTests } from "../lib/contact-rate-limit";
 import { CONTACT_MIN_COMPLETION_MS } from "../lib/contact";
 
 const siteUrl = "https://portfolio.example";

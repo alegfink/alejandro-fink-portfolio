@@ -7,6 +7,7 @@ import { projectPath } from "@/lib/urls";
 import { TrackedLink } from "@/components/tracked-link";
 
 const liveVisuals: Record<string, { desktop: string; mobile: string }> = {
+  "gaston-coronel": { desktop: "/media/projects/gaston-coronel/live-desktop.png", mobile: "/media/projects/gaston-coronel/live-mobile.png" },
   torvena: { desktop: "/media/projects/torvena/live-desktop.png", mobile: "/media/projects/torvena/live-mobile.png" },
   "brisa-do-mar": { desktop: "/media/projects/brisa-do-mar/live-desktop.png", mobile: "/media/projects/brisa-do-mar/live-mobile.png" },
   cuidalo: { desktop: "/media/projects/cuidalo/live-desktop.png", mobile: "/media/projects/cuidalo/live-mobile.png" },
@@ -46,11 +47,11 @@ export function HomeView({ locale }: { locale: Locale }) {
 
             <div className="motion-hero__scene" aria-hidden="true">
               <div className="scene-window scene-window--back">
-                <span>02 / 06 · BRISA DO MAR</span>
+                <span>02 / 07 · BRISA DO MAR</span>
                 <Image src={liveVisuals["brisa-do-mar"].desktop} alt="" fill priority sizes="40vw" />
               </div>
               <div className="scene-window scene-window--main">
-                <span>01 / 06 · TORVENA</span>
+                <span>01 / 07 · TORVENA</span>
                 <Image src={liveVisuals.torvena.desktop} alt="" fill priority sizes="55vw" />
               </div>
               <div className="scene-phone">
@@ -69,20 +70,20 @@ export function HomeView({ locale }: { locale: Locale }) {
       </section>
 
       <section className="story-intro shell" data-reveal data-analytics-section="home-work-intro">
-        <p className="eyebrow">{locale === "es" ? "Archivo de trabajo · 06 proyectos" : "Work archive · 06 projects"}</p>
+        <p className="eyebrow">{locale === "es" ? "Archivo de trabajo · 07 proyectos" : "Work archive · 07 projects"}</p>
         <div>
           <h2>{locale === "es" ? "Cada proyecto revela una forma distinta de convertir contexto en experiencia." : "Every project reveals a different way to turn context into experience."}</h2>
           <p>{locale === "es" ? "Desplazate para recorrerlos o elegí un número para ir directo a un proyecto. Cada caso declara qué existe, qué fue una decisión y qué todavía es un límite." : "Scroll to explore them or choose a number to jump directly to a project. Every case states what exists, what was a decision and what remains a limit."}</p>
         </div>
       </section>
 
-      <section className="project-story" id="proyectos" data-project-story data-analytics-section="home-projects" style={{ "--project-count": projects.length } as React.CSSProperties} aria-label={locale === "es" ? "Recorrido por seis proyectos" : "Six-project journey"}>
+      <section className="project-story" id="proyectos" data-project-story data-analytics-section="home-projects" style={{ "--project-count": projects.length } as React.CSSProperties} aria-label={locale === "es" ? "Recorrido por siete proyectos" : "Seven-project journey"}>
         <div className="project-story__sticky">
           <div className="project-story__chrome shell-wide">
             <div className="project-story__topline" aria-hidden="true">
               <span>{locale === "es" ? "Trabajo seleccionado" : "Selected work"}</span>
               <i><b /></i>
-              <span>01—06</span>
+              <span>01—07</span>
             </div>
 
             <div className="project-story__canvas">

@@ -56,9 +56,8 @@ export function PortfolioV2Privacy({ locale }: Readonly<{ locale: Locale }>) {
         </section>
 
         <section className={styles.policy} aria-label={copy.title} data-analytics-section="privacy_policy">
-          {copy.sections.map((section, index) => (
+          {copy.sections.map((section) => (
             <article key={section.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
               <div><h2>{section.title}</h2><p>{section.text}</p></div>
             </article>
           ))}

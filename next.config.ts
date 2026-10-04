@@ -18,6 +18,7 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   agentRules: false,
   experimental: {
     globalNotFound: true,
@@ -25,6 +26,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
+    // SiteGround rejects the optimizer's URL query; serve existing local assets.
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
@@ -52,7 +55,7 @@ const nextConfig: NextConfig = {
       {
         source: "/_next/static/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          { key: "Cache-Control", value: isDevelopment ? "no-store" : "public, max-age=31536000, immutable" },
         ],
       },
       {

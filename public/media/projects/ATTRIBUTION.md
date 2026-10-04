@@ -12,3 +12,12 @@ All files in this directory are derivatives selected for Alejandro Fink's portfo
 | Lourdes Mirada | selected work | Copied from the authorized project public folder. Images are Lourdes's real work. Illustrative testimonials are intentionally excluded. |
 
 External source folders are treated as read-only. No personal data, credentials or admin screenshots were copied.
+
+## Update — October 3, 2026
+
+- Gastón Coronel: `gaston-coronel/live-desktop.png` and `live-mobile.png` are real screenshots of the public website at the domain supplied by Alejandro, captured at 1440×1000 and 390×844. Its footer credits Alejandro Fink for design and development. Captures show the public hero; no completed inquiry or private account is included.
+- Torvena: existing screenshots and videos represent the previous Shopify/Hydrogen stage, captured in August 2026. They are not evidence of the new WordPress/WooCommerce interface.
+
+## Update — October 4, 2026
+
+- Gastón Coronel: `hero-scene.webp`, `profile-scene.webp` and `dusk-scene.webp` are existing optimized assets copied from the authorized local project. Their three scenes and texts were compared with the public site's hero. The portfolio presents an animated reconstruction using those assets; the mobile screenshot remains a dated real capture. No original image was edited.

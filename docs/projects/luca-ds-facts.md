@@ -1,7 +1,7 @@
 # Luca DS Coaching — ficha factual consolidada
 
 **Estado del documento:** base confirmada para un caso compacto y actualizada tras la publicación de la nueva landing.
-**Última actualización:** 28 de agosto de 2026.
+**Última actualización:** 31 de agosto de 2026.
 
 Este archivo reúne información aportada por Alejandro y evidencia de la implementación disponible en `C:\Users\Ale\Desktop\Luca-programa`.
 
@@ -14,7 +14,7 @@ Este archivo reúne información aportada por Alejandro y evidencia de la implem
 - **Estado:** proyecto compartido en evolución; la nueva landing está publicada en producción. Todavía no existen métricas atribuibles suficientes para comunicar resultados.
 - **Autorización:** Alejandro cuenta con permiso para mostrar el nombre, Instagram, fotografías, caso de éxito, ofertas, pantallas y proceso en su portfolio.
 - **Fecha de implementación inicial verificable:** 2 de agosto de 2026.
-- **Última publicación verificada:** 28 de agosto de 2026.
+- **Última publicación verificada:** 31 de agosto de 2026.
 
 ## Definición breve
 
@@ -204,19 +204,19 @@ El caso se presenta como experiencia individual y el footer aclara que los resul
 
 ## Resultados
 
-No existen métricas de tráfico, consultas o ventas atribuibles a la landing porque todavía no se lanzó como página de producción y no tiene analytics propios.
+No existen métricas de tráfico, consultas o ventas atribuibles a la landing. La página ya está publicada en producción, pero la conversión termina en Instagram y todavía no tiene analytics propios que permitan atribuir consultas.
 
 El resultado actual es un sistema comercial y visual acordado entre los socios, materializado en una landing pública de trabajo y preparado para evolucionar antes del lanzamiento.
 
 ## Ángulo narrativo recomendado
 
-**Construir junto a un socio una marca de coaching lista para pasar de Instagram a un sistema comercial propio.**
+**Construir junto a un socio una marca de coaching que ya dio el primer paso desde Instagram hacia un sistema comercial propio.**
 
 El caso puede demostrar posicionamiento, arquitectura de oferta high-ticket, dirección verbal, diseño orientado a conversión y desarrollo visual, manteniendo visible que el proyecto todavía está en construcción.
 
 ## Estado visible recomendado
 
-`Proyecto en desarrollo · Lanzamiento próximo`
+`Landing pública · En producción`
 
 ## Pendientes mínimos
 
@@ -225,4 +225,4 @@ El caso puede demostrar posicionamiento, arquitectura de oferta high-ticket, dir
 3. Confirmar nombres, duración, precio, cupos y modalidad antes del lanzamiento.
 4. Definir cómo se medirán las conversaciones originadas en la landing.
 5. Actualizar las pruebas automatizadas para que validen la página real.
-6. Reemplazar el estado del caso por “En producción” solo después del lanzamiento efectivo.
+6. Mantener el estado “En producción” separado de cualquier claim de resultados hasta contar con medición atribuible.

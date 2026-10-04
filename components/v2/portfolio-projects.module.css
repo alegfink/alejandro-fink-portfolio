@@ -224,7 +224,7 @@
 
 .projectIndex a {
   display: grid;
-  grid-template-columns: 38px 1fr auto;
+  grid-template-columns: 1fr auto;
   gap: 14px;
   align-items: center;
   min-height: 48px;
@@ -329,12 +329,6 @@
 }
 
 .projectCaseHeading > p:first-child span:first-child {
-  display: grid;
-  width: 35px;
-  height: 35px;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--project-tone) 68%, #fff 8%);
-  border-radius: 50%;
   color: color-mix(in srgb, var(--project-tone) 70%, #fff 30%);
 }
 
@@ -382,6 +376,10 @@
 }
 
 .projectFacts dd { margin: 0; color: #d6c2bb; font-size: clamp(12px, .78vw, 14px); line-height: 1.52; }
+
+.projectCaseDetailed .projectCaseInfo { position: relative; top: auto; }
+.projectCaseDetailed .projectFacts dd p { margin: 0 0 12px; }
+.projectCaseDetailed .projectFacts dd p:last-child { margin-bottom: 0; }
 
 .serviceList { display: flex; flex-wrap: wrap; gap: 7px; margin: -4px 0 0; padding: 0; list-style: none; }
 .serviceList li { padding: 7px 10px; border: 1px solid rgb(255 237 228 / 18%); border-radius: 999px; color: #f3dfd8; font-size: 11px; line-height: 1; }
@@ -483,14 +481,14 @@
   text-transform: uppercase;
 }
 
-[data-project-reveal] {
+.page [data-project-reveal] {
   opacity: 0;
   filter: blur(7px);
   transform: translate3d(0, 44px, 0);
   transition: opacity 800ms cubic-bezier(.22, 1, .36, 1), filter 900ms cubic-bezier(.22, 1, .36, 1), transform 950ms cubic-bezier(.22, 1, .36, 1);
 }
 
-[data-project-reveal][data-visible="true"] { opacity: 1; filter: blur(0); transform: translate3d(0, 0, 0); }
+.page [data-project-reveal][data-visible="true"] { opacity: 1; filter: blur(0); transform: translate3d(0, 0, 0); }
 
 .projectsClosing {
   position: relative;
@@ -661,7 +659,7 @@
     transform: none;
   }
 
-  [data-project-reveal] { opacity: 1; filter: none; transform: none; transition: none; }
+  .page [data-project-reveal] { opacity: 1; filter: none; transform: none; transition: none; }
   .projectMediaSurface img,
   .projectMediaSurface video,
   .headerButton,

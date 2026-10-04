@@ -17,7 +17,7 @@ export function ProjectCaseView({ project, locale }: { project: Project; locale:
     <main id="main-content" className={`case-page case-page--${project.caseType}`} style={{ "--project-accent": project.accent } as React.CSSProperties}>
       <CaseStudyAnalytics projectId={project.id} locale={locale} caseType={project.caseType} />
       <header className="case-hero shell" data-project-number={String(project.order).padStart(2, "0")} data-reveal>
-        <div className="case-hero__topline"><span>{String(project.order).padStart(2, "0")} / 06</span><span>{content.category}</span><span>{project.year}</span></div>
+        <div className="case-hero__topline"><span>{String(project.order).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span><span>{content.category}</span><span>{project.year}</span></div>
         <p className="status-pill"><span aria-hidden="true" />{content.statusLabel}</p>
         <h1>{content.title}</h1>
         <p className="case-hero__summary">{content.summary}</p>

@@ -1,6 +1,6 @@
 export type AnalyticsConsent = "granted" | "denied" | "unknown";
 
-export type ContactChannel = "gmail" | "mailto" | "whatsapp" | "linkedin" | "github" | "copy_email";
+export type ContactChannel = "gmail" | "mailto" | "whatsapp" | "linkedin" | "behance" | "github" | "copy_email";
 export type ContactPlacement = "header" | "hero" | "case" | "footer" | "index" | "about" | "projects" | "closing" | "contact" | "contact_strip" | "mobile_menu" | "privacy";
 
 export type AnalyticsEventMap = {

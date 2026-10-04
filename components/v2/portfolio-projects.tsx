@@ -6,7 +6,9 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { projects, type Project } from "@/content/projects";
 import styles from "@/components/v2/portfolio-projects.module.css";
 import { usePageEntrance } from "@/components/v2/use-page-entrance";
+import { useProjectAnchor } from "@/components/v2/use-project-anchor";
 import { LourdesHeroPreview } from "@/components/v2/lourdes-hero-preview";
+import { GastonHeroPreview } from "@/components/v2/gaston-hero-preview";
 import { AmbientVideo } from "@/components/v2/ambient-video";
 import { V2LanguageSwitcher } from "@/components/v2/v2-language-switcher";
 import { V2MobileMenu } from "@/components/v2/v2-mobile-menu";
@@ -26,6 +28,7 @@ type ProjectAsset = {
 };
 
 const servicesByProject: Record<string, string[]> = {
+  "gaston-coronel": ["Posicionamiento", "Arquitectura de contenido", "UX & dirección visual", "Implementación asistida"],
   torvena: ["Estrategia de e-commerce", "Identidad y oferta", "UX & storefront", "Operación & medición"],
   "brisa-do-mar": ["Descubrimiento", "Arquitectura UX", "Copy multilingüe", "Frontend & panel"],
   cuidalo: ["Research de mercado", "Marca y posicionamiento", "UX de conversión", "MVP & medición"],
@@ -35,6 +38,7 @@ const servicesByProject: Record<string, string[]> = {
 };
 
 const servicesByProjectEn: Record<string, string[]> = {
+  "gaston-coronel": ["Positioning", "Content architecture", "UX & art direction", "AI-assisted implementation"],
   torvena: ["E-commerce strategy", "Identity & offer", "UX & storefront", "Operations & measurement"],
   "brisa-do-mar": ["Discovery", "UX architecture", "Multilingual copy", "Frontend & dashboard"],
   cuidalo: ["Market research", "Brand & positioning", "Conversion UX", "MVP & measurement"],
@@ -44,12 +48,16 @@ const servicesByProjectEn: Record<string, string[]> = {
 };
 
 const assetsByProject: Record<string, ProjectAsset[]> = {
+  "gaston-coronel": [
+    { src: "/media/projects/gaston-coronel/live-desktop.png", alt: "Sitio público de Gastón Coronel en escritorio", label: "Hero · secuencia de tres escenas", layout: "hero", position: "top" },
+    { src: "/media/projects/gaston-coronel/live-mobile.png", alt: "Sitio público de Gastón Coronel en móvil", label: "Experiencia móvil · 03/10/2026", layout: "portrait", position: "top" },
+  ],
   torvena: [
     {
       src: "/media/projects/torvena/page-preview.mp4",
       poster: "/media/projects/torvena/live-desktop.png",
       alt: "Recorrido de la tienda Torvena en funcionamiento",
-      label: "Storefront en movimiento",
+      label: "Etapa anterior Shopify/Hydrogen · agosto 2026",
       layout: "hero",
       video: true,
     },
@@ -62,7 +70,7 @@ const assetsByProject: Record<string, ProjectAsset[]> = {
     {
       src: "/media/projects/torvena/live-mobile.png",
       alt: "Tienda Torvena en su versión mobile",
-      label: "Experiencia mobile",
+      label: "Shopify/Hydrogen móvil · etapa anterior",
       layout: "portrait",
       position: "top",
     },
@@ -190,9 +198,11 @@ const assetsByProject: Record<string, ProjectAsset[]> = {
 };
 
 const projectAssetEnglish: Record<string, { alt: string; label: string }> = {
-  "/media/projects/torvena/page-preview.mp4": { alt: "Tour of the live Torvena store", label: "Storefront in motion" },
+  "/media/projects/gaston-coronel/live-desktop.png": { alt: "Gastón Coronel public website on desktop", label: "Hero · three-scene sequence" },
+  "/media/projects/gaston-coronel/live-mobile.png": { alt: "Gastón Coronel public website on mobile", label: "Mobile experience · October 3, 2026" },
+  "/media/projects/torvena/page-preview.mp4": { alt: "Tour of the live Torvena store", label: "Previous Shopify/Hydrogen stage · August 2026" },
   "/media/projects/torvena/context-luo.png": { alt: "Technology product from the Torvena catalog", label: "Product & context" },
-  "/media/projects/torvena/live-mobile.png": { alt: "Torvena store on mobile", label: "Mobile experience" },
+  "/media/projects/torvena/live-mobile.png": { alt: "Torvena store on mobile", label: "Previous Shopify/Hydrogen mobile experience" },
   "/media/projects/brisa-do-mar/context-playa.webp": { alt: "Beach landscape framing Brisa do Mar's tourism proposition", label: "The destination as a starting point" },
   "/media/projects/brisa-do-mar/live-desktop.png": { alt: "Brisa do Mar multilingual landing page on desktop", label: "Comparison & recommendation" },
   "/media/projects/brisa-do-mar/live-mobile.png": { alt: "Brisa do Mar multilingual landing page on mobile", label: "Inquiry from a phone" },
@@ -246,6 +256,7 @@ const projectArchiveOrder = [
   "brisa-do-mar",
   "cuidalo",
   "salto-cuantico",
+  "gaston-coronel",
 ] as const;
 
 const archiveProjects = projectArchiveOrder
@@ -280,6 +291,8 @@ function ProjectMedia({ asset, project, locale }: Readonly<{ asset: ProjectAsset
       <div className={styles.projectMediaSurface}>
         {project.id === "lourdes-mirada" && asset.src.endsWith("/live-desktop.png") ? (
           <LourdesHeroPreview locale={locale} />
+        ) : project.id === "gaston-coronel" && asset.src.endsWith("/live-desktop.png") ? (
+          <GastonHeroPreview locale={locale} />
         ) : asset.video ? (
           <AmbientVideo
             src={asset.src}
@@ -306,7 +319,7 @@ function ProjectMedia({ asset, project, locale }: Readonly<{ asset: ProjectAsset
   );
 }
 
-function ProjectCase({ project, index, locale }: Readonly<{ project: Project; index: number; locale: Locale }>) {
+function ProjectCase({ project, locale }: Readonly<{ project: Project; locale: Locale }>) {
   const content = project.content[locale];
   const copy = projectsPageCopy[locale];
   const assets = assetsByProject[project.id] ?? [];
@@ -314,21 +327,18 @@ function ProjectCase({ project, index, locale }: Readonly<{ project: Project; in
 
   return (
     <article
-      className={styles.projectCase}
+      className={`${styles.projectCase} ${project.id === "torvena" || project.id === "gaston-coronel" ? styles.projectCaseDetailed : ""}`}
       id={project.id}
       data-project-case={project.id}
       data-analytics-section={`project_${project.id}`}
       style={{ "--project-tone": projectToneById[project.id] ?? project.accent } as CSSProperties}
     >
-      <div className={styles.projectCaseBackdrop} aria-hidden="true">
-        <span>{String(index + 1).padStart(2, "0")}</span>
-      </div>
+      <div className={styles.projectCaseBackdrop} aria-hidden="true" />
 
       <div className={styles.projectCaseLayout}>
         <div className={styles.projectCaseInfo}>
           <div className={styles.projectCaseHeading} data-project-reveal>
             <p>
-              <span>{String(index + 1).padStart(2, "0")}</span>
               <span>{content.statusLabel}</span>
             </p>
             <h2>{content.title}</h2>
@@ -352,6 +362,15 @@ function ProjectCase({ project, index, locale }: Readonly<{ project: Project; in
               <dt>{copy.role}</dt>
               <dd>{content.role}</dd>
             </div>
+            {project.id === "torvena" || project.id === "gaston-coronel" ? (
+              <>
+                <div data-project-reveal><dt>{locale === "es" ? "Solución" : "Solution"}</dt><dd>{content.solution}</dd></div>
+                <div data-project-reveal><dt>{locale === "es" ? "Decisiones" : "Decisions"}</dt><dd>{content.decisions.map((decision) => <p key={decision.title}><strong>{decision.title}.</strong> {decision.text}</p>)}</dd></div>
+                <div data-project-reveal><dt>{locale === "es" ? "Funcionalidades" : "Features"}</dt><dd>{content.features.map((feature) => <p key={feature}>{feature}</p>)}</dd></div>
+                <div data-project-reveal><dt>{locale === "es" ? "Estado y límites" : "Status and limits"}</dt><dd>{content.limits.map((limit) => <p key={limit}>{limit}</p>)}</dd></div>
+                <div data-project-reveal><dt>{locale === "es" ? "Evidencia" : "Evidence"}</dt><dd>{content.outcomes.map((outcome) => <p key={outcome}>{outcome}</p>)}</dd></div>
+              </>
+            ) : null}
           </dl>
 
           <a
@@ -380,6 +399,7 @@ function ProjectCase({ project, index, locale }: Readonly<{ project: Project; in
 
 export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Locale }>) {
   const pageReady = usePageEntrance();
+  useProjectAnchor(pageReady);
   const shared = v2SharedCopy[locale];
   const copy = projectsPageCopy[locale];
   const [activeProject, setActiveProject] = useState(archiveProjects[0]?.id ?? "");
@@ -482,14 +502,13 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
           </div>
 
           <nav className={styles.projectIndex} aria-label={copy.index} data-project-index>
-            {archiveProjects.map((project, index) => (
+            {archiveProjects.map((project) => (
               <a
                 href={`#${project.id}`}
                 className={activeProject === project.id ? styles.projectIndexActive : ""}
                 onClick={() => trackEvent("project_open", { projectId: project.id, locale, placement: "index" })}
                 key={project.id}
               >
-                <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{project.content[locale].title}</strong>
                 <i aria-hidden="true">↓</i>
               </a>
@@ -499,7 +518,7 @@ export function PortfolioV2Projects({ locale = "es" }: Readonly<{ locale?: Local
         </section>
 
         <section className={styles.projectsArchive} id="archivo" aria-label={copy.archive} data-analytics-section="projects_archive">
-          {archiveProjects.map((project, index) => <ProjectCase project={project} index={index} locale={locale} key={project.id} />)}
+          {archiveProjects.map((project) => <ProjectCase project={project} locale={locale} key={project.id} />)}
         </section>
 
         <section className={styles.projectsClosing} data-analytics-section="projects_contact">

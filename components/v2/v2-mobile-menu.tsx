@@ -189,6 +189,7 @@ export function V2MobileMenu({ locale, page }: Readonly<{ locale: Locale; page: 
 
           <div className={styles.panelSecondary}>
             <a href={v2ContactProfiles.linkedin} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "linkedin", "mobile_menu"); setIsOpen(false); }}>LinkedIn</a>
+            <a href={v2ContactProfiles.behance} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "behance", "mobile_menu"); setIsOpen(false); }}>Behance</a>
             <a href={v2ContactProfiles.github} target="_blank" rel="noreferrer" onClick={() => { trackContactChannel(locale, "github", "mobile_menu"); setIsOpen(false); }}>GitHub</a>
             <Link
               href={getV2Path(locale, "privacy")}

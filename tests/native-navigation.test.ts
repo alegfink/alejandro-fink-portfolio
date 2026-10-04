@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { NativeLink } from "@/components/v2/native-link";
-import { emailContactUrl, v2Routes } from "@/lib/v2-i18n";
+import { emailContactUrl, v2ContactProfiles, v2Routes } from "@/lib/v2-i18n";
 import nextConfig from "@/next.config";
 
 const portfolioNavigationFiles = [
@@ -46,6 +46,10 @@ describe("portfolio native navigation", () => {
     expect(emailContactUrl("es")).toContain("mailto:alegfink@gmail.com");
     expect(emailContactUrl("es")).toContain("Consulta%20desde%20el%20portfolio");
     expect(emailContactUrl("en")).toContain("Inquiry%20from%20the%20portfolio");
+  });
+
+  it("keeps the public Behance profile in the shared contact configuration", () => {
+    expect(v2ContactProfiles.behance).toBe("https://www.behance.net/alejandrofink");
   });
 
   it("redirects legacy public routes to the single canonical experience", async () => {
