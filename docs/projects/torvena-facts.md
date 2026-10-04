@@ -1,7 +1,7 @@
 # Torvena — ficha factual consolidada
 
 **Estado del documento:** base confirmada para redactar el caso.  
-**Última actualización:** 17 de agosto de 2026.
+**Última actualización:** 3 de octubre de 2026.
 
 Este archivo separa información aportada por Alejandro, evidencia observada en producción y datos verificados en los repositorios de Torvena.
 
@@ -10,7 +10,7 @@ Este archivo separa información aportada por Alejandro, evidencia observada en 
 - **Nombre:** Torvena.
 - **URL:** https://torvena.com.ar/
 - **Relación:** negocio propio de Alejandro Fink.
-- **Estado:** en producción, recibiendo pedidos y con campañas publicitarias activas.
+- **Estado:** negocio activo; transición desde Shopify/Hydrogen hacia WordPress/WooCommerce en verificación final según declaración del 2 de octubre.
 - **Categoría:** e-commerce argentino de tecnología y soluciones prácticas para vehículos.
 - **Modelo de producto:** selección de accesorios importados; Torvena no fabrica los productos.
 - **Alcance geográfico:** Argentina.
@@ -29,6 +29,7 @@ Torvena es una marca argentina de accesorios tecnológicos y soluciones práctic
 - **Principios de julio:** relanzamiento.
 - **Desde julio:** reestructuración completa del storefront con ChatGPT Codex.
 - **14 de julio:** primer commit verificable del repositorio actual basado en Shopify Hydrogen.
+- **30 de agosto–1 de septiembre:** construcción y validación local de una tienda paralela con WordPress/WooCommerce; catálogo importado el 31 de agosto; salida productiva todavía pendiente.
 
 Alejandro confirmó que marzo, mayo y julio corresponden a 2026.
 
@@ -58,6 +59,7 @@ Alejandro fundó y opera Torvena de punta a punta. Su participación confirmada 
 - dirección visual y experiencia de usuario;
 - dirección de la implementación técnica asistida por IA;
 - configuración y operación de Shopify;
+- dirección funcional y validación de la migración hacia WordPress/WooCommerce;
 - páginas de producto, colecciones y contenido comercial;
 - combos, descuentos, upsells y experiencia de carrito;
 - producción y dirección de imágenes, videos y copy;
@@ -105,6 +107,23 @@ La implementación pública y el repositorio permiten verificar:
 - Registro seguro de pedidos pagados sin almacenar datos personales en la capa analítica.
 - Base técnica preparada para Customer Account, aunque el acceso público se presenta actualmente como “próximamente”.
 
+## Migración paralela a WordPress/WooCommerce
+
+El repositorio `torvena-creadora-de-contenido/wordpress` documenta una segunda implementación, independiente del storefront Shopify/Hydrogen:
+
+- WordPress sobre PHP 8.3/Apache y MariaDB 11.4;
+- WooCommerce sin tema premium;
+- tema híbrido propio `torvena`, con plantillas PHP, `theme.json` y estilos de marca;
+- plugin propio `torvena-core` para reglas comerciales desacopladas del tema;
+- 11 productos y 74 imágenes importados desde Shopify sin guardar credenciales;
+- home, tienda, categorías, producto, carrito, checkout y cuenta responsive;
+- carrito lateral con actualización de cantidades, beneficios y totales sobre WooCommerce;
+- Argentina y ARS configurados; envío gratis desde ARS 70.000;
+- Mercado Pago 8.9.3 instalado y activo en local, con medios desactivados hasta cargar credenciales de prueba y hacer QA HTTPS;
+- Andreani 1.6.5 instalado pero desactivado hasta contar con `Credential ID` y completar medidas/tarifas.
+
+La migración todavía no reemplazó la tienda pública. Faltan hosting/staging, correo transaccional, definición de checkout Mercado Pago, compra de prueba, envíos definitivos, revisión legal, analítica/consentimientos, SEO técnico y smoke previo al cambio de DNS.
+
 ## Arquitectura técnica verificada
 
 ### Comercio y hosting
@@ -148,6 +167,12 @@ La implementación pública y el repositorio permiten verificar:
 - Herramientas de generación de imágenes y video documentadas en el brand system.
 - CapCut para compilación y edición manual de video.
 
+### WordPress/WooCommerce
+
+- Uso práctico confirmado dentro de una migración e-commerce real.
+- Alejandro define alcance, UX, reglas comerciales y criterios; coordina la implementación asistida y valida el resultado.
+- No presentar como desarrollo autónomo en PHP, themes/plugins o integración productiva de pasarelas.
+
 No es necesario enumerar todas estas tecnologías en la Home del portfolio. En el caso deben aparecer solo las que explican decisiones relevantes.
 
 ## Decisiones demostrables
@@ -190,6 +215,7 @@ Alejandro definió prioridades y criterios de aceptación, configuró o revisó 
 ## Estado actual y límites
 
 - Storefront, catálogo, carrito, checkout, campañas y operación: activos.
+- La tienda paralela WordPress/WooCommerce está funcional en local y en fase final; no está publicada ni reemplaza todavía a Shopify/Hydrogen.
 - La tienda pública, el carrito y el checkout están operativos. Lo que permanece pendiente es el acceso privado para que cada cliente inicie sesión y gestione su cuenta; esto no limita el recorrido público de compra.
 - El seguimiento first-party de pedidos pagados funciona en producción y forma parte de la operación habitual.
 - Google Analytics 4 está implementado en Torvena y Alejandro inició su revisión práctica. La experiencia es inicial: no se presenta como dominio avanzado ni como base suficiente para atribución o mejoras causales. Los resultados cuantitativos se documentarán cuando exista un período y una fuente consistentes.
@@ -248,5 +274,14 @@ Torvena debe demostrar que Alejandro no solo diseña una interfaz: define una of
 
 1. Acumular historial comparable de GA4 y analytics first-party antes de sostener atribución, crecimiento o mejora causal.
 2. Obtener reportes compatibles de Meta y datos de costos/margen sólo si un claim futuro los vuelve necesarios.
-3. Mantener el acceso privado de clientes como funcionalidad pendiente hasta que esté disponible y verificado públicamente.
+3. Validar las cuentas con puntos incorporadas en la nueva etapa; no equiparar implementación declarada y disponibilidad pública.
 4. Curar 6–10 pantallas o assets y decidir qué métricas fechadas, si alguna, se mostrarán en el portfolio público.
+5. Completar staging WordPress/WooCommerce, credenciales de prueba, pagos, envíos, políticas, analítica/SEO, compra end-to-end y smoke antes de cambiar DNS o declarar la migración cerrada.
+
+## Actualización conciliada — 2026-10-03
+
+Fuente: declaración directa de Alejandro del 2 de octubre, recuperada en el brief de traspaso y el historial «Actualizar portfolio web». La nueva etapa WordPress/WooCommerce incorpora chatbot, cuentas de clientes con sistema de puntos y emails más personalizados. Faltan verificaciones finales; no hay confirmación de migración cerrada ni disponibilidad pública de esas funciones.
+
+La ficha previa del 1 de septiembre ya registraba WordPress/WooCommerce y una cuenta local: esta actualización amplía esa evidencia, no inaugura la experiencia con esas plataformas ni elimina Shopify/Hydrogen, Storefront API y Supabase. Son etapas independientes. Las cuentas de la nueva versión deben distinguirse del acceso pendiente de la etapa anterior. Los gates detallados en septiembre son antecedentes por revalidar, no una lista auditada de pendientes al 3 de octubre.
+
+La revisión de código local corroboró una integración del chatbot con OpenAI Responses API, módulos de puntos/beneficios y personalización de la firma de emails. Es evidencia de implementación interna, no de funcionamiento completo, entrega de correo ni disponibilidad pública. Las reglas de puntos y el alcance final de los emails siguen pendientes de validación. No se atribuye impacto comercial. Capturas y video existentes: etapa anterior Shopify/Hydrogen, agosto de 2026; nuevas capturas WooCommerce pendientes.

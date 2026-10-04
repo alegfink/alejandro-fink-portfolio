@@ -32,7 +32,7 @@ GA4 mide adquisición, navegación, interacción, conversión y rendimiento sól
 
 ### Capa 2 — atribución de campañas
 
-Si la persona aceptó analítica, el sitio y GA4 pueden relacionar la primera landing, los parámetros UTM saneados y el referente externo con las páginas, proyectos y llamados a contacto que se utilizaron. Los mensajes se envían en Gmail, email, WhatsApp, LinkedIn o GitHub: su contenido nunca pasa por Analytics ni se almacena en el portfolio.
+Si la persona aceptó analítica, el sitio y GA4 pueden relacionar la primera landing, los parámetros UTM saneados y el referente externo con las páginas, proyectos y llamados a contacto que se utilizaron. Los mensajes se envían en Gmail, email, WhatsApp, LinkedIn, Behance o GitHub: su contenido nunca pasa por Analytics ni se almacena en el portfolio.
 
 ### Capa 3 — rendimiento real
 
@@ -81,7 +81,7 @@ Crear como métricas personalizadas:
 - `max_scroll_percent`
 - `metric_value`
 
-En la V2 pública, usar `contact_cta` como evento clave de intención y leer `contact_channel_click` para distinguir Gmail, email, WhatsApp, LinkedIn, GitHub o copia de correo. Reservar `generate_lead` para una consulta realmente recibida; no convertir un clic de contacto en un lead confirmado.
+En la V2 pública, usar `contact_cta` como evento clave de intención y leer `contact_channel_click` para distinguir Gmail, email, WhatsApp, LinkedIn, Behance, GitHub o copia de correo. Reservar `generate_lead` para una consulta realmente recibida; no convertir un clic de contacto en un lead confirmado.
 
 ## Tableros y lectura operativa
 
@@ -90,7 +90,7 @@ En la V2 pública, usar `contact_cta` como evento clave de intención y leer `co
 - usuarios, sesiones e intenciones de contacto;
 - fuentes, campañas y landings que originaron esas intenciones;
 - páginas o proyectos más asociados con llamados a contacto;
-- canales elegidos: Gmail, email, WhatsApp, LinkedIn, GitHub o copia de correo;
+- canales elegidos: Gmail, email, WhatsApp, LinkedIn, Behance, GitHub o copia de correo;
 - Core Web Vitals `poor`, especialmente en mobile.
 
 La entrada privada es `https://www.alejandrofink.com/admin/metricas`. Redirige a la propiedad correcta de Google Analytics, exige la cuenta de Google autorizada y marca ese navegador como tráfico interno. La dirección no se publica en navegación ni sitemap; la seguridad real depende del acceso de Google, no de ocultar la URL.

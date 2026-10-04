@@ -370,7 +370,6 @@ export function HeroLab({ standalone = false, entryReady = true, locale = "es" }
                     href={signal.href}
                     aria-label={`${signal.label}: ${publicCopy.goTo}`}
                   >
-                    <span className={styles.signalIndex} aria-hidden="true">{signal.number}</span>
                     <span className={styles.signalWordViewport} aria-hidden="true">
                       <span className={`${styles.signalWord} ${styles.signalWordCurrent}`}>{signal.label}</span>
                       <span className={`${styles.signalWord} ${styles.signalWordClone}`}>{signal.label}</span>
@@ -411,9 +410,9 @@ export function HeroLab({ standalone = false, entryReady = true, locale = "es" }
             <CinematicTitle variant="echo" />
           </div>
           <div className={styles.echoRail} aria-label="Capas del trabajo">
-            <span><b>01</b> Entender</span>
-            <span><b>02</b> Diseñar</span>
-            <span><b>03</b> Implementar</span>
+            <span>Entender</span>
+            <span>Diseñar</span>
+            <span>Implementar</span>
           </div>
           <div className={styles.cinematicFooter}>
             <p>La estrategia toma forma cuando el recorrido y la operación responden a la misma prioridad.</p>

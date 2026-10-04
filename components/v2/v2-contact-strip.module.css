@@ -52,7 +52,7 @@
 .channels a {
   min-height: clamp(82px, 9vh, 112px);
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
   border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);

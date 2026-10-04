@@ -1,0 +1,52 @@
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+  background: #101b17;
+  color: #f8f3e9;
+}
+.scene, .wash, .interface { position: absolute; inset: 0; }
+.scene {
+  opacity: 0;
+  animation: gastonScene 18s ease-in-out var(--scene-delay) infinite;
+  animation-play-state: paused;
+}
+.root[data-playing="true"] .scene { animation-play-state: running; }
+.scene img { object-fit: cover; }
+.wash {
+  background: linear-gradient(90deg, rgb(8 18 14 / 79%), rgb(8 18 14 / 50%) 39%, rgb(8 18 14 / 6%) 68%), linear-gradient(0deg, rgb(8 18 14 / 76%), transparent 42%), linear-gradient(180deg, rgb(8 18 14 / 30%), transparent 30%);
+}
+.line {
+  position: absolute;
+  top: 27%;
+  left: 6.2%;
+  width: 59%;
+  font: 400 7.1cqw/.92 "Newsreader Variable", Georgia, serif;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+.interface { z-index: 2; }
+.topbar { position: absolute; top: 3.6%; left: 3.6%; right: 3.6%; display: flex; align-items: center; justify-content: space-between; gap: 2cqw; }
+.signature { display: flex; gap: 1.2cqw; align-items: center; font: 400 2.2cqw/1 Georgia, serif; }
+.signature i { font-size: 3.3cqw; letter-spacing: -.28em; margin-right: .5cqw; }
+.signature small { display: block; margin-top: .5cqw; font: .55cqw/1.2 Arial, sans-serif; letter-spacing: .22em; }
+.menu, .pill { font: .83cqw/1.2 Arial, sans-serif; border-radius: 99px; padding: 1.1cqw 1.6cqw; white-space: nowrap; }
+.menu { border: 1px solid rgb(248 243 233 / 40%); }
+.pill { background: #f8f3e9; color: #1c3026; }
+.kicker { position: absolute; top: 21%; left: 6.2%; font: .72cqw/1.2 Arial, sans-serif; letter-spacing: .19em; text-transform: uppercase; }
+.bottom { position: absolute; left: 6.2%; bottom: 15%; width: 61%; display: flex; align-items: center; gap: 2cqw; }
+.bottom p { max-width: 32cqw; margin: 0; font: 1.08cqw/1.5 Arial, sans-serif; color: rgb(248 243 233 / 76%); }
+.progress { position: absolute; left: 6.2%; bottom: 4%; display: flex; align-items: center; gap: 1cqw; font-size: 1cqw; }
+.progress i { width: 1.3cqw; height: 1px; background: currentColor; opacity: .6; }
+@keyframes gastonScene {
+  0% { opacity: 1; transform: scale(1.025); }
+  33.333% { opacity: 1; transform: scale(1); }
+  40%, 93.333% { opacity: 0; transform: scale(1.025); }
+  100% { opacity: 1; transform: scale(1.025); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene { animation: none; transform: none; opacity: 0; }
+  .scene:first-child { opacity: 1; }
+}

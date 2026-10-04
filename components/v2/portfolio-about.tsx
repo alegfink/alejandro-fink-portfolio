@@ -278,7 +278,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           aria-labelledby="story-title"
         >
           <header className={styles.storyIntro} data-about-reveal>
-            <p><span>01</span> {copy.storyEyebrow}</p>
+            <p>{copy.storyEyebrow}</p>
             <h2 id="story-title">{copy.storyTitle}</h2>
             <p>{copy.storyLead}</p>
           </header>
@@ -292,7 +292,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
                   </div>
                 ))}
                 <div className={styles.storyMediaOverlay} />
-                <p><span>{copy.layer}</span><strong>0{activeChapter + 1}</strong></p>
+                <p>{chapters[activeChapter].label}</p>
                 <div className={styles.storyProgress}><span /></div>
               </div>
             </div>
@@ -316,7 +316,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
 
         <section className={styles.present} aria-labelledby="present-title" data-analytics-section="about_present">
           <header className={styles.presentHeader} data-about-reveal>
-            <p><span>02</span> {copy.presentEyebrow}</p>
+            <p>{copy.presentEyebrow}</p>
             <h2 id="present-title">{copy.presentTitle}</h2>
             <p>{copy.presentLead}</p>
           </header>
@@ -324,7 +324,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
           <ol className={styles.presentGrid}>
             {currentWork.map((item) => (
               <li key={item.number} data-about-reveal>
-                <p><span>{item.number}</span>{item.eyebrow}</p>
+                <p>{item.eyebrow}</p>
                 <h3>{item.title}</h3>
                 <p>{item.copy}</p>
                 <i aria-hidden="true">↘</i>
@@ -335,7 +335,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
 
         <section className={styles.principle} aria-labelledby="principle-title" data-analytics-section="about_principle">
           <div className={styles.principleLabel} data-about-reveal>
-            <p><span>03</span> {copy.principleEyebrow}</p>
+            <p>{copy.principleEyebrow}</p>
             <p>{copy.principleAside}</p>
           </div>
           <div className={styles.principleCopy} data-about-reveal>
@@ -350,7 +350,7 @@ export function PortfolioV2About({ locale = "es" }: Readonly<{ locale?: Locale }
 
         <section className={styles.cta} aria-labelledby="about-cta-title" data-analytics-section="about_contact">
           <div className={styles.ctaShell} data-about-reveal>
-            <p><span>04</span> {copy.ctaEyebrow}</p>
+            <p>{copy.ctaEyebrow}</p>
             <h2 id="about-cta-title">{copy.ctaTitle}</h2>
             <V2TrackedContactLink channel="mailto" href={`mailto:alegfink@gmail.com?subject=${encodeURIComponent(shared.contactSubject)}`} locale={locale} placement="about">
               <span className={styles.ctaArrow} aria-hidden="true">↗</span>

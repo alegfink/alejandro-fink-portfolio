@@ -55,3 +55,12 @@ Las decisiones de este archivo son la baseline operativa. Pueden cambiar, pero c
 2. Cambiar su estado a `Reemplazada`.
 3. Crear una nueva fila con otro ID.
 4. Explicar qué documentos y pantallas quedan afectados.
+
+## Decisiones del 2026-10-03
+
+| ID | Fecha | Decisión | Estado | Motivo |
+|---|---|---|---|---|
+| D-045 | 2026-10-03 | Incorporar Gastón como séptimo caso y preservar Torvena como ancla; reflejar funciones nuevas declaradas y migración en verificación. | Vigente | Brief y revisión de fuentes actuales; no inventar cierre ni resultados. D-007 queda ampliada a siete casos y D-015 conserva el caso ancla con el estado editorial actualizado. |
+| D-046 | 2026-10-03 | Conservar posicionamiento canónico e-commerce/operaciones vigente en código, pruebas y base profesional; la propuesta web de D-025 queda como antecedente histórico. | Vigente | Modelo canónico 2026-08-12 y perfil del 1 de septiembre superan el prompt histórico de agosto. |
+| D-047 | 2026-10-03 | Trabajar esta actualización exclusivamente local; no publicar ni escribir remotamente sobre el portfolio. | Reemplazada por D-048 | Se preservó la revisión local hasta la aprobación explícita de la versión final. |
+| D-048 | 2026-10-04 | Publicar en SiteGround la versión visual aprobada y registrar la fuente en GitHub. | Vigente | Autorización explícita posterior a probar vistas rápidas, flechas, margen de interacción y llegada directa a los casos. |

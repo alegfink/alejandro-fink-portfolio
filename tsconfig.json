@@ -36,6 +36,14 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "output",
+    "outputs",
+    "tmp",
+    "scripts",
+    "artifacts",
+    "work33_sheet",
+    ".agents",
+    ".codex-tmp"
   ]
 }

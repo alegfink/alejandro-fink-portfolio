@@ -54,14 +54,14 @@ export const projects: Project[] = [
     year: "2026—",
     publicUrl: "https://torvena.com.ar/",
     accent: "#087484",
-    technologies: ["Shopify Hydrogen", "TypeScript", "Storefront API", "Supabase"],
+    technologies: ["Shopify Hydrogen", "WordPress", "WooCommerce", "TypeScript", "Storefront API", "Supabase"],
     media: [
       {
         src: "/media/projects/torvena/live-desktop.png",
         mobileSrc: "/media/projects/torvena/live-mobile.png",
         videoSrc: "/media/projects/torvena/page-preview.mp4",
         alt: { es: "Home de Torvena con navegación comercial y presentación de un accesorio tecnológico para el auto", en: "Torvena home page with commercial navigation and a car technology product hero" },
-        caption: { es: "Storefront en producción · captura de agosto de 2026", en: "Production storefront · captured August 2026" },
+        caption: { es: "Etapa anterior Shopify/Hydrogen · captura de agosto de 2026", en: "Previous Shopify/Hydrogen stage · captured August 2026" },
         tone: "dark",
       },
     ],
@@ -69,40 +69,42 @@ export const projects: Project[] = [
       es: {
         title: "Torvena",
         category: "E-commerce · Negocio propio",
-        statusLabel: "Negocio propio · En producción",
-        summary: "De cero a un e-commerce argentino operado en primera persona: marca, catálogo, storefront, adquisición, medición y operación conectados en un mismo sistema.",
+        statusLabel: "Negocio activo · Migración en verificación",
+        summary: "E-commerce propio en evolución hacia WordPress y WooCommerce, con chatbot, cuentas de clientes con sistema de puntos y emails personalizados. La nueva versión se encuentra en verificación final.",
         problem: "Torvena empezó sin nombre, marca, catálogo, proveedores ni canal de venta. El desafío no era implementar una tienda ya definida, sino construir un negocio alrededor de soluciones tecnológicas útiles para vehículos y aprender desde la operación real.",
-        solution: "Definí la categoría, la marca, la oferta y las necesidades comerciales y funcionales del storefront; coordiné la implementación asistida y validé la integración con el catálogo, carrito y checkout de Shopify, junto con contenido, campañas y una capa propia de medición.",
+        solution: "Definí la categoría, la marca, la oferta y las necesidades comerciales y funcionales del storefront; coordiné la implementación asistida y validé la integración con el catálogo, carrito y checkout de Shopify, junto con contenido, campañas y una capa propia de medición. Ahora coordino la transición hacia una implementación independiente en WordPress/WooCommerce, con chatbot, cuentas con puntos y emails personalizados incorporados según mi declaración del 2 de octubre; la verificación final sigue pendiente.",
         role: "Fundador y operador de e-commerce",
         decisions: [
           { title: "Navegar por problemas, no solo por categorías", text: "La experiencia prioriza situaciones de uso —cargar, limpiar, ordenar o estar preparado— para acercar el catálogo a necesidades concretas del conductor." },
           { title: "Evolucionar hacia un storefront headless", text: "Después de una primera etapa con Lovable, coordiné la reestructuración de la experiencia con Shopify Hydrogen para tener mayor control sobre contenido, recorrido y sistema visual." },
           { title: "Complementar las plataformas con medición propia", text: "La arquitectura incorpora sesiones anónimas, UTMs, exclusión de tráfico interno y asociación sin datos personales entre adquisición y pedidos pagados." },
+          { title: "Preparar una alternativa WordPress/WooCommerce", text: "La nueva etapa incorpora chatbot, cuentas con puntos y emails personalizados. Se conserva la experiencia previa con Shopify/Hydrogen y se distingue implementación de validación y disponibilidad pública." },
         ],
-        features: ["Home y navegación orientadas a necesidades", "Colecciones y páginas de producto personalizadas", "Combos, descuentos, upsells y progreso de beneficios", "Carrito y checkout conectados a Shopify", "Búsqueda predictiva, políticas y soporte por WhatsApp", "Analytics first-party y panel administrativo protegido"],
-        limits: ["La tienda pública, el carrito y el checkout están operativos. Lo que todavía no está disponible es el acceso privado para que cada cliente inicie sesión y gestione su cuenta.", "El seguimiento first-party de pedidos pagados funciona en producción y forma parte de la operación habitual.", "Google Analytics 4 está activo y su revisión práctica es inicial; todavía no existe historial suficiente para atribución o mejoras causales."],
+        features: ["Home y navegación orientadas a necesidades", "Colecciones y páginas de producto personalizadas", "Combos, descuentos, upsells y progreso de beneficios", "Carrito y checkout conectados a Shopify", "Migración WordPress/WooCommerce en verificación final", "Chatbot incorporado en la nueva etapa", "Cuentas de clientes con sistema de puntos", "Emails personalizados en la nueva versión", "Analytics first-party y panel administrativo protegido"],
+        limits: ["Shopify/Hydrogen corresponde a la etapa anterior documentada. La transición a WordPress/WooCommerce todavía no se presenta como una migración cerrada.", "Chatbot, cuentas con puntos y emails personalizados están incorporados según la actualización del 2 de octubre de 2026; su validación final y disponibilidad pública siguen pendientes de confirmación.", "No se afirma IA generativa en el chatbot, reglas concretas de puntos ni tipos de emails sin evidencia. Las imágenes muestran la etapa anterior de Shopify/Hydrogen.", "Google Analytics 4 está activo y su revisión práctica es inicial; todavía no existe historial suficiente para atribución o mejoras causales."],
         outcomes: ["Negocio activo, con pedidos reales y campañas publicitarias en curso.", "Operación nacional que reúne venta, soporte, logística y aprendizaje continuo.", "Experiencia verificable en coordinación y operación de un e-commerce propio."],
         seoTitle: "Torvena — Caso de e-commerce de Alejandro Fink",
-        seoDescription: "Cómo Alejandro Fink opera Torvena y coordina su evolución: marca, storefront headless, Shopify, adquisición y medición sin inventar resultados.",
+        seoDescription: "Cómo Alejandro Fink opera Torvena y coordina su evolución entre Shopify y WordPress/WooCommerce, con adquisición, medición y límites explícitos.",
       },
       en: {
         title: "Torvena",
         category: "E-commerce · Owned business",
-        statusLabel: "Owned business · In production",
-        summary: "From zero to an Argentine e-commerce business operated firsthand: brand, catalog, storefront, acquisition, measurement and operations connected as one system.",
+        statusLabel: "Active business · Migration under verification",
+        summary: "An owned e-commerce business evolving toward WordPress and WooCommerce, with a chatbot, customer accounts with a points system and personalized emails. The new version is undergoing final verification.",
         problem: "Torvena began without a name, brand, catalog, suppliers or sales channel. The challenge was not to implement a predefined store, but to build a business around useful technology for vehicles and learn from real operations.",
-        solution: "I defined the storefront’s category, brand, offer, business needs and functional requirements; coordinated assisted implementation; and validated its integration with Shopify’s catalog, cart and checkout, alongside content, campaigns and a first-party measurement layer.",
+        solution: "I defined the storefront’s category, brand, offer, business needs and functional requirements; coordinated assisted implementation; and validated its integration with Shopify’s catalog, cart and checkout, alongside content, campaigns and a first-party measurement layer. I am now coordinating the transition to an independent WordPress/WooCommerce implementation, with a chatbot, accounts with points and personalized emails added according to my October 2 update; final verification remains pending.",
         role: "Founder and e-commerce operator",
         decisions: [
           { title: "Navigate by problems, not only categories", text: "The experience prioritizes situations —charging, cleaning, organizing or being prepared— to connect the catalog with real driver needs." },
           { title: "Evolve into a headless storefront", text: "After an initial Lovable stage, I coordinated the experience’s restructuring with Shopify Hydrogen to gain greater control over content, journeys and the visual system." },
           { title: "Add a first-party measurement layer", text: "The architecture includes anonymous sessions, UTMs, internal-traffic exclusion and a non-personal link between acquisition and paid orders." },
+          { title: "Prepare a WordPress/WooCommerce alternative", text: "The new stage adds a chatbot, accounts with points and personalized emails. Previous Shopify/Hydrogen experience is retained, while implementation is distinguished from validation and public availability." },
         ],
-        features: ["Need-led home and navigation", "Custom collections and product pages", "Bundles, discounts, upsells and benefit progress", "Shopify cart and checkout", "Predictive search, policies and WhatsApp support", "First-party analytics and a protected admin dashboard"],
-        limits: ["The public store, cart and checkout are operational. What is not available yet is private sign-in for customers to access and manage their accounts.", "First-party paid-order tracking runs in production and is part of day-to-day operations.", "Google Analytics 4 is active with initial hands-on review; there is not yet enough history for attribution or causal improvement claims."],
+        features: ["Need-led home and navigation", "Custom collections and product pages", "Bundles, discounts, upsells and benefit progress", "Shopify cart and checkout", "WordPress/WooCommerce migration undergoing final verification", "Chatbot added in the new stage", "Customer accounts with a points system", "Personalized emails in the new version", "First-party analytics and a protected admin dashboard"],
+        limits: ["Shopify/Hydrogen represents the previously documented stage. The transition to WordPress/WooCommerce is not presented as a completed migration.", "The chatbot, accounts with points and personalized emails were added according to the October 2, 2026 update; final validation and public availability still require confirmation.", "No generative AI, specific points rules or email types are claimed without evidence. The visuals show the previous Shopify/Hydrogen stage.", "Google Analytics 4 is active with initial hands-on review; there is not yet enough history for attribution or causal improvement claims."],
         outcomes: ["An active business with real orders and advertising campaigns underway.", "Nationwide operations combining sales, support, logistics and continuous learning.", "Verifiable experience coordinating and operating an owned e-commerce business."],
         seoTitle: "Torvena — Alejandro Fink e-commerce case study",
-        seoDescription: "How Alejandro Fink operates Torvena and coordinates its evolution: brand, headless storefront, Shopify, acquisition and measurement without invented results.",
+        seoDescription: "How Alejandro Fink operates Torvena and coordinates its evolution across Shopify and WordPress/WooCommerce, with acquisition, measurement and explicit limits.",
       },
     },
   },
@@ -437,6 +439,128 @@ export const projects: Project[] = [
       },
     },
   },
+  {
+    "id": "gaston-coronel",
+    "order": 7,
+    "slug": {
+      "es": "gaston-coronel",
+      "en": "gaston-coronel"
+    },
+    "caseType": "compact",
+    "status": "production",
+    "year": "2026",
+    "publicUrl": "https://drgastoncoronel.com.ar/",
+    "accent": "#254b3e",
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vinext",
+      "Tailwind CSS"
+    ],
+    "media": [
+      {
+        "src": "/media/projects/gaston-coronel/live-desktop.png",
+        "mobileSrc": "/media/projects/gaston-coronel/live-mobile.png",
+        "alt": {
+          "es": "Sitio real del Dr. Gastón Coronel, abogado en derecho inmobiliario y sucesorio en CABA",
+          "en": "Live website for Dr. Gastón Coronel, a property and inheritance lawyer in Buenos Aires"
+        },
+        "caption": {
+          "es": "Sitio público · captura real del 3 de octubre de 2026",
+          "en": "Public website · captured October 3, 2026"
+        },
+        "tone": "color"
+      }
+    ],
+    "content": {
+      "es": {
+        "title": "Gastón Coronel",
+        "category": "Sitio profesional · Servicios jurídicos",
+        "statusLabel": "Sitio profesional · En producción",
+        "summary": "Una presencia web para un abogado de CABA: especialización clara, relato cercano y una consulta guiada que prepara el contacto por WhatsApp o correo.",
+        "problem": "El desafío era presentar la práctica inmobiliaria y sucesoria de Gastón con claridad para personas que reconocen su situación cotidiana, pero no necesariamente el nombre jurídico de su problema. La web debía orientar el primer contacto sin prometer resultados ni reemplazar la consulta profesional.",
+        "solution": "Organicé la propuesta alrededor de situaciones concretas, especialización, forma de trabajo y trayectoria. Coordiné una experiencia editorial responsive con una guía de tres pasos que permite ordenar y revisar el mensaje antes de enviarlo desde WhatsApp o el correo del visitante.",
+        "role": "Dirección de posicionamiento, arquitectura de contenido, UX y diseño; coordinación de la implementación asistida por IA y revisión visual. Los briefs registran decisiones de Alejandro y aprobación de Gastón; el sitio público acredita el diseño y desarrollo a Alejandro Fink.",
+        "decisions": [
+          {
+            "title": "Empezar por la situación de la persona",
+            "text": "Sucesiones, operaciones inmobiliarias, alquileres y conflictos patrimoniales sirven como entradas comprensibles antes de presentar las áreas de práctica."
+          },
+          {
+            "title": "Una narrativa cercana y profesional",
+            "text": "La dirección elegida combina retrato, escenas, tipografía editorial y una paleta verde y crema para acompañar el relato, con adaptación a escritorio y móvil."
+          },
+          {
+            "title": "Preparar el contacto y conservar el envío humano",
+            "text": "La guía organiza el contexto y ofrece revisar el mensaje antes de abrir WhatsApp o correo. La persona decide enviarlo; no se presenta como recepción automática ni reserva confirmada."
+          }
+        ],
+        "features": [
+          "Presentación y especialización inmobiliaria y sucesoria",
+          "Situaciones concretas, trayectoria y forma de trabajo",
+          "Consulta guiada de tres pasos con revisión del mensaje",
+          "Enlaces a WhatsApp, correo y privacidad",
+          "Preguntas frecuentes y experiencia responsive"
+        ],
+        "limits": [
+          "La inspección pública verificó contenido y destinos de enlaces; no se completaron formularios ni se enviaron consultas reales. La recepción del mensaje no fue comprobada en esta revisión.",
+          "La guía prepara un mensaje: no confirma turnos, cobra consultas ni almacena el formulario en un backend, según el código revisado y el aviso público.",
+          "El stack corresponde al proyecto local inspeccionado; no implica dominio autónomo de todas sus dependencias.",
+          "No hay métricas verificadas de consultas, SEO, conversiones ni resultados comerciales atribuibles."
+        ],
+        "outcomes": [
+          "Sitio accesible en el dominio propio aportado por Alejandro.",
+          "Contenido público y capturas reales de escritorio y móvil conservados como evidencia fechada.",
+          "Diseño y desarrollo acreditados a Alejandro en el footer; alcance del proceso respaldado por briefs y código local."
+        ],
+        "seoTitle": "Gastón Coronel — Caso de sitio profesional de Alejandro Fink",
+        "seoDescription": "Posicionamiento, contenido, UX y ejecución asistida para una presencia profesional en CABA, con consulta guiada y contacto por WhatsApp o correo."
+      },
+      "en": {
+        "title": "Gastón Coronel",
+        "category": "Professional website · Legal services",
+        "statusLabel": "Professional website · In production",
+        "summary": "A web presence for a Buenos Aires lawyer: a clear practice focus, an approachable narrative and a guided inquiry that prepares contact via WhatsApp or email.",
+        "problem": "The challenge was to explain Gastón’s property and inheritance practice to people who recognize an everyday situation but may not know its legal name. The website needed to guide the first contact without promising outcomes or replacing a professional consultation.",
+        "solution": "I structured the offer around real situations, practice areas, working method and professional background. I coordinated a responsive editorial experience with a three-step guide that organizes a message for review before the visitor sends it through WhatsApp or their email app.",
+        "role": "Positioning, content architecture, UX and design direction; coordination of AI-assisted implementation and visual review. The briefs record Alejandro’s decisions and Gastón’s approval; the public website credits Alejandro Fink for design and development.",
+        "decisions": [
+          {
+            "title": "Start with the person’s situation",
+            "text": "Inheritance, property transactions, rentals and property-related disputes provide understandable entry points before introducing practice areas."
+          },
+          {
+            "title": "Build an approachable professional narrative",
+            "text": "The selected direction combines portraits, scenes, editorial typography and a green-and-cream palette, adapted for desktop and mobile."
+          },
+          {
+            "title": "Prepare contact while keeping the person in control",
+            "text": "The guide structures context and lets the visitor review the message before opening WhatsApp or email. Sending remains their decision; it is not automatic delivery or a confirmed booking."
+          }
+        ],
+        "features": [
+          "Property and inheritance practice presentation",
+          "Everyday situations, professional background and working method",
+          "Three-step inquiry guide with message review",
+          "WhatsApp, email and privacy links",
+          "Frequently asked questions and responsive experience"
+        ],
+        "limits": [
+          "Public inspection verified content and link destinations; no forms were completed and no real inquiries were sent. Message receipt was not tested in this review.",
+          "The guide prepares a message: it does not confirm appointments, collect consultation payments or store the form in a backend, according to the reviewed code and public notice.",
+          "The stack comes from the inspected local project; it does not imply autonomous expertise in every dependency.",
+          "There are no verified inquiry, SEO, conversion or attributable commercial-result metrics."
+        ],
+        "outcomes": [
+          "Website accessible on the domain supplied by Alejandro.",
+          "Public content and real desktop/mobile captures preserved as dated evidence.",
+          "The footer credits Alejandro for design and development; briefs and local code support the documented process scope."
+        ],
+        "seoTitle": "Gastón Coronel — Alejandro Fink professional website case study",
+        "seoDescription": "Positioning, content, UX and AI-assisted execution for a Buenos Aires professional website with a guided inquiry and WhatsApp or email contact."
+      }
+    }
+  },
 ];
 
 export function getProjectBySlug(locale: Locale, slug: string): Project | undefined {
@@ -449,7 +573,7 @@ export function getProjectById(id: string): Project | undefined {
 
 export function validateProjects(data: Project[]): string[] {
   const errors: string[] = [];
-  if (data.length !== 6) errors.push(`Expected 6 projects, received ${data.length}`);
+  if (data.length !== 7) errors.push(`Expected 7 projects, received ${data.length}`);
 
   const ids = new Set<string>();
   const orders = new Set<number>();

@@ -5,20 +5,41 @@ import { switchLocalePath } from "../lib/i18n";
 import { CONTACT_MIN_COMPLETION_MS, validateContactPayload, validateContactSubmission } from "../lib/contact";
 
 describe("project content model", () => {
-  it("contains six valid bilingual projects", () => {
-    expect(projects).toHaveLength(6);
+  it("contains seven valid bilingual projects", () => {
+    expect(projects).toHaveLength(7);
     expect(validateProjects(projects)).toEqual([]);
   });
 
   it("keeps factual public states visible", () => {
     expect(projects.map((project) => project.content.es.statusLabel)).toEqual([
-      "Negocio propio · En producción",
+      "Negocio activo · Migración en verificación",
       "Solución web · Operativa",
       "MVP de validación · Sin lanzamiento comercial",
       "Propuesta estratégica · Prototipo funcional",
       "Landing pública · En producción",
       "Portfolio aprobado · Activación pendiente",
+      "Sitio profesional · En producción",
     ]);
+  });
+
+  it("separates the new Torvena stage from historic media in both languages", () => {
+    const torvena = projects[0];
+    expect(torvena.id).toBe("torvena");
+    for (const locale of ["es", "en"] as const) {
+      expect(torvena.content[locale].summary).toMatch(/WordPress.*WooCommerce/);
+      expect(torvena.content[locale].summary).toMatch(/verifica/);
+      expect(torvena.media[0].caption[locale]).toMatch(/Shopify\/Hydrogen/);
+      expect(torvena.content[locale].limits.join(" ")).toMatch(/2.*2026/);
+    }
+  });
+
+  it("adds the professional website with a real domain and explicit contact limits", () => {
+    const gaston = projects.find((project) => project.id === "gaston-coronel");
+    expect(gaston?.publicUrl).toBe("https://drgastoncoronel.com.ar/");
+    expect(gaston?.slug).toEqual({ es: "gaston-coronel", en: "gaston-coronel" });
+    expect(gaston?.media[0].mobileSrc).toContain("gaston-coronel/live-mobile.png");
+    expect(gaston?.content.es.limits.join(" ")).toContain("no se completaron formularios");
+    expect(gaston?.content.en.limits.join(" ")).toContain("no forms were completed");
   });
 });
 
@@ -34,7 +55,14 @@ describe("canonical portfolio positioning", () => {
     const torvena = projects.find((project) => project.id === "torvena");
     expect(torvena?.content.es.role).toBe("Fundador y operador de e-commerce");
     expect(torvena?.content.en.role).toBe("Founder and e-commerce operator");
-    expect(torvena?.technologies).toEqual(["Shopify Hydrogen", "TypeScript", "Storefront API", "Supabase"]);
+    expect(torvena?.technologies).toEqual([
+      "Shopify Hydrogen",
+      "WordPress",
+      "WooCommerce",
+      "TypeScript",
+      "Storefront API",
+      "Supabase",
+    ]);
   });
 
   it("does not use prohibited engineering identities in visible content", () => {

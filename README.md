@@ -1,10 +1,11 @@
 # Alejandro Fink — portfolio bilingüe
 
-Portfolio profesional de Alejandro Fink construido con Next.js App Router, React, TypeScript y Vinext para OpenAI Sites/Cloudflare. La experiencia canónica combina e-commerce, producto, UX, desarrollo y operación digital sin separar la dirección artística de la utilidad comercial.
+Portfolio profesional de Alejandro Fink construido con Next.js App Router, React y TypeScript. Producción se aloja en SiteGround con Node.js y Next.js standalone desde el 4 de octubre de 2026. Vinext se conserva para desarrollo y compatibilidad con la versión anterior de Sites. La experiencia canónica combina e-commerce, producto, UX, desarrollo y operación digital.
 
 ## Estado
 
 - Sitio público: `https://www.alejandrofink.com/`.
+- Hosting vigente: SiteGround; DNS administrado en Porkbun, HTTPS obligatorio.
 - Origen canónico: `www.alejandrofink.com`.
 - Idiomas: español en la raíz e inglés bajo `/en`.
 - Experiencia vigente: V2 editorial; V1 permanece como archivo en `/v1` y no compite como ruta principal.
@@ -45,6 +46,7 @@ En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usar `np
 | `npm run dev` | servidor Vinext de desarrollo |
 | `npm run build` | build optimizado de producción |
 | `npm run start` | servidor del build local |
+| `npm run build:sites` / `npm run start:sites` | compatibilidad con el hosting anterior, conservada para recuperación |
 | `npm run lint` | ESLint para fuente; excluye builds y evidencia generada |
 | `npm run typecheck` | TypeScript estricto sin emitir archivos |
 | `npm test` | suite Vitest de contenido y contratos |
@@ -74,7 +76,7 @@ app/
 ├── robots.ts
 └── sitemap.ts
 components/v2/              # experiencia editorial vigente
-content/projects.ts         # fuente tipada de los seis casos
+content/projects.ts         # fuente tipada de los siete casos
 lib/                        # metadata, i18n, analytics, loader y URLs
 public/media/               # medios locales y atribuciones
 tests/                      # Vitest
@@ -109,7 +111,13 @@ Por lo tanto local y Preview permanecen en `noindex` aunque se copie accidentalm
 | `NEXT_PUBLIC_ANALYTICS_DEBUG` | `false` | depuración temporal controlada |
 | `CONTACT_PROVIDER` | `disabled` | integración heredada, no requerida por los CTAs actuales |
 
-Consultar `.env.example` para el contrato completo. El repositorio no versiona archivos `.env.production`: los valores de producción se administran en Sites y los secretos nunca se guardan en el árbol de código.
+Consultar `.env.example` para el contrato completo. El repositorio no versiona archivos `.env.production`: los valores de producción y secretos se administran en las variables de entorno de SiteGround. Los paquetes manuales pueden incluir exclusivamente los valores públicos necesarios para compilar.
+
+## Publicación en SiteGround
+
+Usar el preset Next.js, Node.js 22, pnpm y el comando de compilación `run build`. `next.config.ts` genera una salida standalone. Las imágenes locales se sirven directamente porque el servidor rechaza las consultas del optimizador de Next.js. Los archivos y estilos existentes conservan su presentación.
+
+La carga manual debe contener únicamente fuente pública y los medios referenciados; excluir `.git`, dependencias, builds, documentos profesionales privados, CVs, archivos de trabajo y secretos. La configuración `.openai/hosting.json` identifica la instancia histórica de Sites y se conserva para recuperación; no indica el destino vigente ni autoriza publicar allí.
 
 ## Contenido y claims
 

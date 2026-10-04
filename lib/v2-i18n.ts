@@ -83,6 +83,7 @@ export function emailContactUrl(locale: Locale): string {
 
 export const v2ContactProfiles = {
   linkedin: "https://www.linkedin.com/in/alejandro-fink/",
+  behance: "https://www.behance.net/alejandrofink",
   github: "https://github.com/alegfink",
 } as const;
 

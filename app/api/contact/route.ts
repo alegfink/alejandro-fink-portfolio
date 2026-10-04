@@ -1,12 +1,9 @@
+import { exceedsRateLimit } from "@/lib/contact-rate-limit";
 import { NextResponse } from "next/server";
 import { getContactConfig, validateContactSubmission } from "@/lib/contact";
 import { getSiteUrl } from "@/lib/urls";
 
 export const dynamic = "force-dynamic";
-
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1_000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
-const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
 
 type ProviderResponse = { ok?: boolean; code?: string; duplicate?: boolean };
 
@@ -15,20 +12,6 @@ async function anonymizedClientKey(request: Request) {
   const bytes = new TextEncoder().encode(forwarded);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return Array.from(new Uint8Array(digest).slice(0, 12), (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-function exceedsRateLimit(key: string, now = Date.now()) {
-  const current = rateLimitBuckets.get(key);
-  if (!current || current.resetAt <= now) {
-    rateLimitBuckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-  current.count += 1;
-  return current.count > RATE_LIMIT_MAX_REQUESTS;
-}
-
-export function clearContactRateLimitForTests() {
-  rateLimitBuckets.clear();
 }
 
 export async function POST(request: Request) {
